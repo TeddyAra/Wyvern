@@ -1,0 +1,37 @@
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+#include <stdexcept>
+#include <iostream>
+#include <memory>
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw_gl3.h"
+
+#include "Window.h"
+#include "FontManager.h"
+
+int main() {
+	bool succeeded;
+
+	std::shared_ptr<Window> window = std::make_shared<Window>(1600, 900, "Hi", succeeded);
+	if (!succeeded) {
+		std::cout << "Something went wrong with GLFW/GLEW initialization or window creation" << std::endl;
+		return -1;
+	}
+
+	FontManager::addFont("assets/SourceSansPro", 16.0f);
+
+	window->addUI("Two", 1600, 100, 0, 25);
+
+	while (!window->shouldWindowClose()) {
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwPollEvents();
+		window->draw();
+		glfwSwapBuffers(window->get());
+	}
+
+	window->terminate();
+	return 0;
+}
