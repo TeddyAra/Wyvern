@@ -7,20 +7,11 @@
 std::vector<ImFont*> FontManager::fonts;
 
 void FontManager::addFont(std::string location, float size) {
-	std::cout << "Works" << std::endl;
 	ImGuiIO& io = ImGui::GetIO();
 
 	addFontVariant(io, location + "-Regular.ttf", size);
 	addFontVariant(io, location + "-Bold.ttf", size);
 	addFontVariant(io, location + "-Italic.ttf", size);
-
-	for (ImFont* font : fonts) {
-		if (font == nullptr) {
-			std::cout << "Empty" << std::endl;
-		} else {
-			std::cout << "Not empty" << std::endl;
-		}
-	}
 }
 
 void FontManager::addFontVariant(ImGuiIO& io, std::string location, float size) {
@@ -28,8 +19,9 @@ void FontManager::addFontVariant(ImGuiIO& io, std::string location, float size) 
 	FILE* file;
 	errno_t err;
 
-	std::cout << "Opening " << location.c_str() << std::endl;
-
+	// Check if font exists
+	// If it does, add it like normal
+	// If it doesn't, add a nullptr
 	if ((err = fopen_s(&file, location.c_str(), "r")) != 0) {
 		fonts.push_back(nullptr);
 	} else {

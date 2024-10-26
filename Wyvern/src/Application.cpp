@@ -13,6 +13,7 @@
 #include "FontManager.h"
 
 int main() {
+	// Create a window
 	bool succeeded;
 
 	std::shared_ptr<Window> window = std::make_shared<Window>(1600, 900, "Hi", succeeded);
@@ -21,10 +22,11 @@ int main() {
 		return -1;
 	}
 
+	// Add font and UI
 	FontManager::addFont("assets/SourceSansPro", 16.0f);
-
 	window->addUI("Two", 1600, 100, 0, 25);
 
+	// Main loop
 	while (!window->shouldWindowClose()) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
@@ -32,6 +34,7 @@ int main() {
 		glfwSwapBuffers(window->get());
 	}
 
+	// End of program
 	window->terminate();
 	return 0;
 }

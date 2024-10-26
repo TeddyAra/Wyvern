@@ -9,11 +9,13 @@
 Window::Window(int width, int height, std::string name, bool& succeeded)
 	: window(nullptr)
 {
+	// Initialize GLFW
 	if (!glfwInit()) {
 		succeeded = false;
 		return;
 	}	
 
+	// Create a window
 	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
 	if (!window) {
@@ -24,6 +26,7 @@ Window::Window(int width, int height, std::string name, bool& succeeded)
 
 	glfwMakeContextCurrent(window);
 
+	// Initialize GLEW
 	if (glewInit() != GLEW_OK) {
 		succeeded = false;
 		return;
@@ -32,10 +35,13 @@ Window::Window(int width, int height, std::string name, bool& succeeded)
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 	succeeded = true;
 
+	// Initialize ImGui
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 	ImGui::StyleColorsDark();
+	
 
+	// Create a menu bar
 	menuBar = std::make_unique<MenuBar>(window, 25);
 }
 
@@ -64,11 +70,11 @@ void Window::addUI(std::string name, int width, int height, int posX, int posY) 
 void Window::draw() {
 	ImGui_ImplGlfwGL3_NewFrame();
 
+	menuBar->draw();
+
 	for (auto bar : ui) {
 		bar->draw();
 	}
-
-	menuBar->draw();
 
 	ImGui::Render();
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

@@ -16,9 +16,19 @@ public:
 	void draw();
 
 private:
+	void checkMove();
+	bool checkResize();
+
 	GLFWwindow* window;
+	int currentCursor;
 	int height;
 	bool dragging;
+	bool resizing;
+	bool top;
+	bool right;
+	bool bottom;
+	bool left;
 	ImVec2 globalCursorPos;
 	ImVec2 winStartPos;
+	ImVec2 winStartSize;
 };
