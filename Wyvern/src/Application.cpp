@@ -16,7 +16,7 @@ int main() {
 	// Create a window
 	bool succeeded;
 
-	std::shared_ptr<Window> window = std::make_shared<Window>(1600, 900, "Hi", succeeded);
+	std::shared_ptr<Window> window = std::make_shared<Window>(1600, 900, 400, 200, "Wyvern", true, succeeded);
 	if (!succeeded) {
 		std::cout << "Something went wrong with GLFW/GLEW initialization or window creation" << std::endl;
 		return -1;

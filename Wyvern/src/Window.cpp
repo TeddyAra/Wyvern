@@ -6,8 +6,10 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
-Window::Window(int width, int height, std::string name, bool& succeeded)
-	: window(nullptr)
+// TODO:	Fix cursors for corners
+
+Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::string name, bool hideTitleBar, bool& succeeded)
+	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), resizing(false), dragging(false), top(false), right(false), bottom(false), left(false), titleBarHidden(hideTitleBar)
 {
 	// Initialize GLFW
 	if (!glfwInit()) {
@@ -16,8 +18,10 @@ Window::Window(int width, int height, std::string name, bool& succeeded)
 	}	
 
 	// Create a window
-	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	if (hideTitleBar)
+		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
+
 	if (!window) {
 		glfwTerminate();
 		succeeded = false;
@@ -39,10 +43,16 @@ Window::Window(int width, int height, std::string name, bool& succeeded)
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 	ImGui::StyleColorsDark();
-	
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
 	// Create a menu bar
-	menuBar = std::make_unique<MenuBar>(window, 25);
+	titleBar = std::make_unique<TitleBar>(window, 25);
+
+	cursorDiagonalRight = LoadCursor(NULL, IDC_SIZENESW);
+	cursorDiagonalLeft = LoadCursor(NULL, IDC_SIZENWSE);
+	cursorHorizontal = LoadCursor(NULL, IDC_SIZEWE);
+	cursorVertical = LoadCursor(NULL, IDC_SIZENS);
+	cursorNormal = LoadCursor(NULL, IDC_ARROW);
 }
 
 Window::~Window() {
@@ -68,9 +78,14 @@ void Window::addUI(std::string name, int width, int height, int posX, int posY) 
 }
 
 void Window::draw() {
+	if (titleBarHidden) {
+		checkResize();
+		checkMove();
+	}
+
 	ImGui_ImplGlfwGL3_NewFrame();
 
-	menuBar->draw();
+	titleBar->draw();
 
 	for (auto bar : ui) {
 		bar->draw();
@@ -78,4 +93,152 @@ void Window::draw() {
 
 	ImGui::Render();
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Window::checkMove() {
+	if (resizing) return;
+
+	// Check if bar is being hovered over
+	bool hovering = titleBar->isHovering();
+
+	// Start of dragging
+	if (!dragging && hovering && ImGui::IsMouseDown(0)) {
+		dragging = true;
+
+		int winX, winY;
+		glfwGetWindowPos(window, &winX, &winY);
+		winStartPos = ImVec2(winX, winY);
+
+		double cursorX, cursorY;
+		glfwGetCursorPos(window, &cursorX, &cursorY);
+		globalCursorPos = ImVec2(winX + cursorX, winY + cursorY);
+	}
+
+	// End of dragging
+	if (dragging && !ImGui::IsMouseDown(0)) {
+		dragging = false;
+	}
+
+	// Dragging
+	if (dragging) {
+		// Get window and cursor position
+		int winX, winY;
+		glfwGetWindowPos(window, &winX, &winY);
+
+		double cursorX, cursorY;
+		glfwGetCursorPos(window, &cursorX, &cursorY);
+		ImVec2 cursorCurrentPos = ImVec2(winX + cursorX, winY + cursorY);
+
+		// Calculate difference in cursor position
+		ImVec2 delta = ImVec2(cursorCurrentPos.x - globalCursorPos.x, cursorCurrentPos.y - globalCursorPos.y);
+
+		// Set window to new position
+		glfwSetWindowPos(window, winStartPos.x + delta.x, winStartPos.y + delta.y);
+	}
+}
+
+void Window::checkResize() {
+	if (dragging) return;
+
+	if (!resizing) {
+		// Get cursor position
+		double cursorX, cursorY;
+		glfwGetCursorPos(window, &cursorX, &cursorY);
+		ImVec2 cursorPos = ImVec2(cursorX, cursorY);
+
+		// Get window size
+		int windowWidth, windowHeight;
+		glfwGetWindowSize(window, &windowWidth, &windowHeight);
+		ImVec2 windowSize(windowWidth, windowHeight);
+
+		// Detect where the cursor is
+		int borderDetection = 5;
+		top = glm::abs(cursorPos.y) < borderDetection;
+		right = glm::abs(cursorPos.x - windowSize.x) < borderDetection;
+		bottom = glm::abs(cursorPos.y - windowSize.y) < borderDetection;
+		left = glm::abs(cursorPos.x) < borderDetection;
+
+		// Show the cursor
+		if ((top && right) || (bottom && left)) {
+			SetCursor(cursorDiagonalRight);
+		} else if ((top && left) || (bottom && right)) {
+			SetCursor(cursorDiagonalLeft);
+		} else if (left || right) {
+			SetCursor(cursorHorizontal);
+		} else if (top || bottom) {
+			SetCursor(cursorVertical);
+		} else {
+			SetCursor(cursorNormal);
+		}
+
+		if (ImGui::IsMouseDown(0) && top + right + bottom + left != 0) {
+			resizing = true;
+
+			int winWidth, winHeight;
+			glfwGetWindowSize(window, &winWidth, &winHeight);
+			winStartSize = ImVec2(winWidth, winHeight);
+
+			int winX, winY;
+			glfwGetWindowPos(window, &winX, &winY);
+			winStartPos = ImVec2(winX, winY);
+
+			double cursorX, cursorY;
+			glfwGetCursorPos(window, &cursorX, &cursorY);
+			globalCursorPos = ImVec2(winX + cursorX, winY + cursorY);
+		}
+	} else {
+		int winX, winY;
+		glfwGetWindowPos(window, &winX, &winY);
+		double cursorX, cursorY;
+		glfwGetCursorPos(window, &cursorX, &cursorY);
+		ImVec2 delta = ImVec2(winX + cursorX - globalCursorPos.x, winY + cursorY - globalCursorPos.y);
+
+		int winWidth, winHeight;
+		if (top) {
+			glfwGetWindowSize(window, &winWidth, &winHeight);
+			glfwGetWindowPos(window, &winX, &winY);
+			int height = winStartSize.y - delta.y;
+			int posY = winStartPos.y + delta.y;
+			if (height < minWinSize.y) {
+				height = minWinSize.y;
+				posY = winStartPos.y + winStartSize.y - minWinSize.y;
+			}
+
+			glfwSetWindowSize(window, winWidth, height);
+			glfwSetWindowPos(window, winX, posY);
+		}
+
+		if (right) {
+			glfwGetWindowSize(window, &winWidth, &winHeight);
+			int width = winStartSize.x + delta.x;
+			if (width < minWinSize.x) width = minWinSize.x;
+
+			glfwSetWindowSize(window, width, winHeight);
+		}
+
+		if (bottom) {
+			glfwGetWindowSize(window, &winWidth, &winHeight);
+			int height = winStartSize.y + delta.y;
+			if (height < minWinSize.y) height = minWinSize.y;
+
+			glfwSetWindowSize(window, winWidth, height);
+		}
+
+		if (left) {
+			glfwGetWindowSize(window, &winWidth, &winHeight);
+			glfwGetWindowPos(window, &winX, &winY);
+			int width = winStartSize.x - delta.x;
+			int posX = winStartPos.x + delta.x;
+			if (width < minWinSize.x) {
+				width = minWinSize.x;
+				posX = winStartPos.x + winStartSize.x - minWinSize.x;
+			}
+			glfwSetWindowSize(window, width, winHeight);
+			glfwSetWindowPos(window, posX, winY);
+		}
+
+		if (!ImGui::IsMouseDown(0)) {
+			resizing = false;
+		}
+	}
 }
