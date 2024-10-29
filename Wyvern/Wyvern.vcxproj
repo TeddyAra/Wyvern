@@ -592,6 +592,7 @@
     <Image Include="assets\reaction.png" />
   </ItemGroup>
   <ItemGroup>
+    <Font Include="assets\FontAwesome.ttf" />
     <Font Include="assets\SourceSansPro-Bold.ttf" />
     <Font Include="assets\SourceSansPro-Regular.ttf" />
   </ItemGroup>

@@ -12,6 +12,12 @@
 
 #include "UIBar.h"
 #include "TitleBar.h"
+#include "FontManager.h"
+
+enum TextType {
+	header,
+	text
+};
 
 class Window {
 public:
@@ -23,6 +29,7 @@ public:
 	void terminate();
 	void addUI(std::string name, int width, int height, int posX, int posY);
 	void draw();
+	void addFont(std::string font, FontType type);
 
 private:
 	GLFWwindow* window;

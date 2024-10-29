@@ -17,11 +17,12 @@ class FontManager {
 public:
 	FontManager() = delete;
 
-	static void addFont(std::string location, float size);
-	static ImFont* getFont(int index, FontType type);
+	static void addFont(std::string location, float size, bool single = false);
+	static ImFont* getFont(std::string name, FontType type);
 
 private:
-	static void addFontVariant(ImGuiIO& io, std::string location, float size);
+	static bool addFontVariant(ImGuiIO& io, std::string location, float size, bool iconFont = false);
 
 	static std::vector<ImFont*> fonts;
+	static std::map<std::string, int> fontIndices;
 };

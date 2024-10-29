@@ -6,10 +6,10 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
-// TODO:	Fix cursors for corners
-
 Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::string name, bool hideTitleBar, bool& succeeded)
-	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), resizing(false), dragging(false), top(false), right(false), bottom(false), left(false), titleBarHidden(hideTitleBar)
+	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), titleBarHidden(hideTitleBar),
+	resizing(false), dragging(false), top(false), right(false), bottom(false), left(false),
+	cursorDiagonalRight(NULL), cursorDiagonalLeft(NULL), cursorHorizontal(NULL), cursorVertical(NULL), cursorNormal(NULL)
 {
 	// Initialize GLFW
 	if (!glfwInit()) {
@@ -93,6 +93,10 @@ void Window::draw() {
 
 	ImGui::Render();
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Window::addFont(std::string font, FontType type) {
+	titleBar->addFont(font, type);
 }
 
 void Window::checkMove() {

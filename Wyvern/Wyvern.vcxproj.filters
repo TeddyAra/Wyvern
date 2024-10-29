@@ -1378,5 +1378,6 @@
   <ItemGroup>
     <Font Include="assets\SourceSansPro-Bold.ttf" />
     <Font Include="assets\SourceSansPro-Regular.ttf" />
+    <Font Include="assets\FontAwesome.ttf" />
   </ItemGroup>
 </Project>

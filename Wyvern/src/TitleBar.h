@@ -6,7 +6,10 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
+#include "FontManager.h"
+
 #include <memory>
+#include <string>
 
 class TitleBar {
 public:
@@ -15,11 +18,16 @@ public:
 
 	void draw();
 	bool isHovering();
+	void addFont(std::string font, FontType type);
 
 private:
 	void checkHover();
 
-	GLFWwindow* window;
+	GLFWwindow* window; 
+	int fontCount;
+	ImFont* headerFont;
+	ImFont* textFont;
+	ImFont* iconFont;
 	int height;
 	bool hovering;
 };

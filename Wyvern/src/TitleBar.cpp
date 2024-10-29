@@ -5,7 +5,7 @@
 #include "FontManager.h"
 
 TitleBar::TitleBar(GLFWwindow* window, int height)
-	: window(window), height(height), hovering(false)
+	: window(window), height(height), hovering(false), headerFont(nullptr), textFont(nullptr), iconFont(nullptr), fontCount(0)
 {
 
 }
@@ -34,13 +34,13 @@ void TitleBar::draw() {
 	// Check if the user is hovering over the title bar
 	checkHover();
 
-	// Get the font
-	ImFont* font = FontManager::getFont(0, FontType::bold);
-	if (font != nullptr)
-		ImGui::PushFont(font);
+	// Apply the font
+	ImGui::PushFont(iconFont);
 
 	// Bar elements
-	ImGui::Button("FILE", ImVec2(50, 25));
+	//ImGui::Button("FILE", ImVec2(50, 25));
+	const char* icon = u8"\uf0c7";
+	ImGui::Button(icon, ImVec2(25, 25));
 	ImGui::Text("Hi");
 
 	// End of bar
@@ -51,6 +51,25 @@ void TitleBar::draw() {
 
 bool TitleBar::isHovering() {
 	return hovering;
+}
+
+void TitleBar::addFont(std::string font, FontType fontType) {
+	switch (fontCount) {
+
+	case 0:
+		iconFont = FontManager::getFont(font, fontType);
+		break;
+
+	case 1:
+		headerFont = FontManager::getFont(font, fontType);
+		break;
+
+	case 2:
+		textFont = FontManager::getFont(font, fontType);
+		break;
+	}
+
+	fontCount++;
 }
 
 void TitleBar::checkHover() {
