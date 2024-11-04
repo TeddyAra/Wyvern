@@ -7,7 +7,7 @@
 #include "imgui/imgui_impl_glfw_gl3.h"
 
 Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::string name, bool hideTitleBar, bool& succeeded)
-	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), titleBarHidden(hideTitleBar),
+	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), titleBarHidden(hideTitleBar), titleBarHeight(25),
 	resizing(false), dragging(false), top(false), right(false), bottom(false), left(false),
 	cursorDiagonalRight(NULL), cursorDiagonalLeft(NULL), cursorHorizontal(NULL), cursorVertical(NULL), cursorNormal(NULL)
 {
@@ -46,7 +46,7 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
 	// Create a menu bar
-	titleBar = std::make_unique<TitleBar>(window, 25);
+	titleBar = std::make_unique<TitleBar>(window, titleBarHeight);
 
 	cursorDiagonalRight = LoadCursor(NULL, IDC_SIZENESW);
 	cursorDiagonalLeft = LoadCursor(NULL, IDC_SIZENWSE);
@@ -68,13 +68,15 @@ GLFWwindow* Window::get() {
 }
 
 void Window::terminate() {
-	glfwTerminate();
+	glfwTerminate(); 
 	ImGui_ImplGlfwGL3_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void Window::addUI(std::string name, int width, int height, int posX, int posY) {
-	ui.push_back(std::make_shared<UIBar>(window, name, width, height, posX, posY));
+std::shared_ptr<UIBar> Window::addUI(std::string name, bool horizontal, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left) {
+	std::shared_ptr<UIBar> bar = std::make_shared<UIBar>(window, name, horizontal, titleBarHeight, top, right, bottom, left);
+	ui.push_back(bar);
+	return bar;
 }
 
 void Window::draw() {
@@ -97,6 +99,10 @@ void Window::draw() {
 
 void Window::addFont(std::string font, FontType type) {
 	titleBar->addFont(font, type);
+
+	for (auto bar : ui) {
+		bar->addFont(font, type);
+	}
 }
 
 void Window::checkMove() {

@@ -13,7 +13,6 @@
 #include "FontManager.h"
 
 int main() {
-
 	// Create a window
 	bool succeeded;
 
@@ -23,10 +22,21 @@ int main() {
 		return -1;
 	}
 
-	// Add fonts and UI
+	// Add UI
+	auto menu = window->addUI("Menu", true, 150, 0, 0, 0);
+	auto properties = window->addUI("Properties", false, 0, 300, 300, 0);
+	auto hierarchy = window->addUI("Hierarchy", false, menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
+	auto viewport = window->addUI("Viewport", false, menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0);
+
+	menu->newZone();
+	menu->addWidget(WidgetType::LargeButton, "Test1", u8"\uf0c7", NULL);
+	menu->addWidget(WidgetType::SmallButton, "Test2", NULL, NULL);
+	menu->addWidget(WidgetType::SmallButton, "Test3", NULL, NULL);
+	menu->addWidget(WidgetType::SmallButton, "Test4", NULL, NULL);
+
+	// Add fonts
 	FontManager::addFont("assets/SourceSansPro", 16.0f);
 	FontManager::addFont("assets/FontAwesome", 16.0f, true);
-	window->addUI("Two", 1600, 100, 0, 25);
 	window->addFont("FontAwesome", FontType::regular);
 	window->addFont("SourceSansPro", FontType::bold);
 	window->addFont("SourceSansPro", FontType::regular);

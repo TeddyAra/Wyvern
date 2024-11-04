@@ -51,6 +51,12 @@
     <ClCompile Include="src\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UIWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIZone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -951,6 +957,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FontManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIZone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
