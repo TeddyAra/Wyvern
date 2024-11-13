@@ -1,7 +1,7 @@
 #include "UIWidget.h"
 
-UIWidget::UIWidget(WidgetType type, std::string title, const char* icon, std::function<void()> function)
-	: type(type), title(title), icon(icon), function(function)
+UIWidget::UIWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command)
+	: type(type), title(title), icon(icon), command(command)
 {
 
 }
@@ -22,6 +22,6 @@ const char* UIWidget::getIcon() {
 	return icon;
 }
 
-void UIWidget::activate() {
-	function();
+void UIWidget::execute() {
+	command->execute();
 }

@@ -2,6 +2,9 @@
 
 #include <functional>
 #include <string>
+#include <memory>
+
+#include "ICommand.h"
 
 enum WidgetType {
 	LargeButton,
@@ -12,17 +15,17 @@ enum WidgetType {
 
 class UIWidget {
 public:
-	UIWidget(WidgetType type, std::string title, const char* icon, std::function<void()> function);
+	UIWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command);
 	~UIWidget();
 
 	WidgetType getType();
 	std::string getTitle();
 	const char* getIcon();
-	void activate();
+	void execute();
 
 private:
 	WidgetType type;
 	std::string title;
 	const char* icon;
-	std::function<void()> function;
+	std::shared_ptr<ICommand> command;
 };

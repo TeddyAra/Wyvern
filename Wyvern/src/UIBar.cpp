@@ -83,10 +83,13 @@ void UIBar::draw() {
 		return;
 	}
 
-	ImGui::Columns(zones.size());
+	if (zones.size() != 1) {
+		ImGui::Columns(zones.size());
+		ImGui::SetColumnWidth(0, 200);
+	}
 
 	for (int i = 0; i < zones.size(); i++) {
-		std::vector<UIWidget> widgets = zones[i].getWidgets();
+		std::vector<std::shared_ptr<UIWidget>> widgets = zones[i]->getWidgets();
 
 		int smallWidgetCount = -1;
 		ImGui::BeginGroup();
@@ -95,17 +98,19 @@ void UIBar::draw() {
 			smallWidgetCount++;
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 1);
 
-			switch (widgets[j].getType()) {
+			switch (widgets[j]->getType()) {
 			case WidgetType::LargeButton:
 				ImGui::PushFont(iconFont);
 				ImGui::SetWindowFontScale(1.5f);
-				ImGui::Button(widgets[j].getIcon(), ImVec2(60, 70));
+				if (ImGui::Button(widgets[j]->getIcon(), ImVec2(60, 70))) {
+					widgets[j]->execute();
+				}
 				ImGui::SetWindowFontScale(1.0f);
 				ImGui::PopFont();
 
 				ImGui::PushFont(headerFont);
-				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30 - (ImGui::CalcTextSize(widgets[j].getTitle().c_str()).x / 2));
-				ImGui::Text(widgets[j].getTitle().c_str(), ImVec2(60, 10));
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30 - (ImGui::CalcTextSize(widgets[j]->getTitle().c_str()).x / 2));
+				ImGui::Text(widgets[j]->getTitle().c_str(), ImVec2(60, 10));
 				ImGui::PopFont();
 
 				smallWidgetCount--;
@@ -114,7 +119,7 @@ void UIBar::draw() {
 
 			case WidgetType::SmallButton:
 				ImGui::PushFont(headerFont);
-				ImGui::Button(std::string(widgets[j].getTitle()).c_str(), ImVec2(90, 20));
+				ImGui::Button(std::string(widgets[j]->getTitle()).c_str(), ImVec2(90, 20));
 				ImGui::PopFont();
 				break;
 			}
@@ -128,8 +133,10 @@ void UIBar::draw() {
 
 		ImGui::EndGroup();
 
-		if (i != zones.size() - 1) 
+		if (i != zones.size() - 1 && zones.size() != 1) {
 			ImGui::NextColumn();
+			ImGui::SetColumnWidth(i, 200);
+		}
 	}
 
 	ImGui::End();
@@ -146,12 +153,12 @@ std::shared_ptr<int> UIBar::getHeightPtr() {
 }
 
 void UIBar::newZone() {
-	zones.push_back(UIZone());
+	zones.push_back(std::make_shared<UIZone>());
 }
 
-void UIBar::addWidget(WidgetType type, std::string title, const char* icon, std::function<void()> function) {
+void UIBar::addWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command) {
 	if (zones.size() != 0) {
-		zones[zones.size() - 1].addWidget(type, title, icon, function);
+		zones[zones.size() - 1]->addWidget(type, title, icon, command);
 	} else {
 		std::cout << "No zone created yet!" << std::endl;
 	}

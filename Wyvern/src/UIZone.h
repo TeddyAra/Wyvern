@@ -10,9 +10,9 @@ public:
 	UIZone();
 	~UIZone();
 
-	void addWidget(WidgetType type, std::string title, const char* icon, std::function<void()> function);
-	std::vector<UIWidget> getWidgets();
+	void addWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command);
+	std::vector<std::shared_ptr<UIWidget>> getWidgets();
 
 private:
-	std::vector<UIWidget> widgets;
+	std::vector<std::shared_ptr<UIWidget>> widgets;
 };

@@ -9,6 +9,7 @@
 
 #include "UIZone.h"
 #include "FontManager.h"
+#include "ICommand.h"
 
 using SizeOrOffset = std::variant<int, std::shared_ptr<int>>;
 
@@ -22,7 +23,7 @@ public:
 	std::shared_ptr<int> getWidthPtr();
 	std::shared_ptr<int> getHeightPtr();
 	void newZone();
-	void addWidget(WidgetType type, std::string title, const char* icon, std::function<void()> function);
+	void addWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command);
 	void addFont(std::string font, FontType type);
 
 private:
@@ -43,5 +44,5 @@ private:
 	ImFont* textFont;
 	ImFont* iconFont;
 
-	std::vector<UIZone> zones;
+	std::vector<std::shared_ptr<UIZone>> zones;
 };
