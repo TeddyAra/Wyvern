@@ -20,9 +20,11 @@ public:
 	~UIBar();
 
 	void draw();
+	void horizontalDraw();
+	void verticalDraw();
 	std::shared_ptr<int> getWidthPtr();
 	std::shared_ptr<int> getHeightPtr();
-	void newZone();
+	void newZone(std::string title);
 	void addWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command);
 	void addFont(std::string font, FontType type);
 

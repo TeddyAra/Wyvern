@@ -1,6 +1,8 @@
 #include "UIZone.h"
 
-UIZone::UIZone() {
+UIZone::UIZone(std::string title)
+	: title(title)
+{
 
 }
 
@@ -14,4 +16,8 @@ void UIZone::addWidget(WidgetType type, std::string title, const char* icon, std
 
 std::vector<std::shared_ptr<UIWidget>> UIZone::getWidgets() {
 	return widgets;
+}
+
+std::string UIZone::getTitle() {
+	return title;
 }

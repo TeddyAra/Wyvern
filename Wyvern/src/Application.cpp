@@ -21,8 +21,25 @@ Application::Application() {
 
 	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>();
 
-	menu->newZone();
-	menu->addWidget(WidgetType::LargeButton, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->newZone("Zone 1");
+	properties->addWidget(WidgetType::Toggle, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::InputFloat, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::Toggle, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+
+	properties->newZone("Zone 2");
+	properties->addWidget(WidgetType::InputFloat, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::Toggle, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::InputFloat, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+
+	properties->newZone("Zone 3");
+	properties->addWidget(WidgetType::Toggle, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::InputFloat, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::Toggle, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+
+	properties->newZone("Zone 4");
+	properties->addWidget(WidgetType::InputFloat, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::Toggle, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	properties->addWidget(WidgetType::InputFloat, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
 
 	// Add fonts
 	FontManager::addFont("assets/SourceSansPro", 16.0f);

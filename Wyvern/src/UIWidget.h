@@ -10,7 +10,7 @@ enum WidgetType {
 	LargeButton,
 	SmallButton,
 	Toggle,
-	Input
+	InputFloat
 };
 
 class UIWidget {
@@ -21,6 +21,8 @@ public:
 	WidgetType getType();
 	std::string getTitle();
 	const char* getIcon();
+	bool* getBool();
+	float* getFloat();
 	void execute();
 
 private:
@@ -28,4 +30,6 @@ private:
 	std::string title;
 	const char* icon;
 	std::shared_ptr<ICommand> command;
+	bool* varBool;
+	float* varFloat;
 };

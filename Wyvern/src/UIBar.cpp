@@ -83,65 +83,222 @@ void UIBar::draw() {
 		return;
 	}
 
-	if (zones.size() != 1) {
-		ImGui::Columns(zones.size());
-		ImGui::SetColumnWidth(0, 200);
-	}
-
-	for (int i = 0; i < zones.size(); i++) {
-		std::vector<std::shared_ptr<UIWidget>> widgets = zones[i]->getWidgets();
-
-		int smallWidgetCount = -1;
-		ImGui::BeginGroup();
-
-		for (int j = 0; j < widgets.size(); j++) {
-			smallWidgetCount++;
-			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 1);
-
-			switch (widgets[j]->getType()) {
-			case WidgetType::LargeButton:
-				ImGui::PushFont(iconFont);
-				ImGui::SetWindowFontScale(1.5f);
-				if (ImGui::Button(widgets[j]->getIcon(), ImVec2(60, 70))) {
-					widgets[j]->execute();
-				}
-				ImGui::SetWindowFontScale(1.0f);
-				ImGui::PopFont();
-
-				ImGui::PushFont(headerFont);
-				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 30 - (ImGui::CalcTextSize(widgets[j]->getTitle().c_str()).x / 2));
-				ImGui::Text(widgets[j]->getTitle().c_str(), ImVec2(60, 10));
-				ImGui::PopFont();
-
-				smallWidgetCount--;
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 1);
-				break;
-
-			case WidgetType::SmallButton:
-				ImGui::PushFont(headerFont);
-				ImGui::Button(std::string(widgets[j]->getTitle()).c_str(), ImVec2(90, 20));
-				ImGui::PopFont();
-				break;
-			}
-
-			if (smallWidgetCount == -1) {
-				ImGui::EndGroup();
-				ImGui::SameLine();
-				ImGui::BeginGroup();
-			}
-		}
-
-		ImGui::EndGroup();
-
-		if (i != zones.size() - 1 && zones.size() != 1) {
-			ImGui::NextColumn();
-			ImGui::SetColumnWidth(i, 200);
-		}
+	if (horizontal) {
+		horizontalDraw();
+	} else {
+		verticalDraw();
 	}
 
 	ImGui::End();
 
 	ImGui::PopStyleVar();
+}
+
+void UIBar::horizontalDraw() {
+	int padding = 15;
+	int topOffset = 24;
+	int textHeight = 10;
+	int bigHeight = 150 - 2 * padding - topOffset - 6;
+	int smallHeight = (bigHeight - 2 * padding) / 3 - 2;
+	int posX = padding;
+	int originalY = topOffset + padding;
+	int posY = originalY;
+	int smallWidth = 60;
+	int bigWidth = 90;
+
+	for (int i = 0; i < zones.size(); i++) {
+		ImGui::PushID(i);
+		std::vector<std::shared_ptr<UIWidget>> widgets = zones[i]->getWidgets();
+
+		int smallWidgetCount = 0;
+		int minX = posX;
+
+		for (int j = 0; j < widgets.size(); j++) {
+			ImGui::SetCursorPosX(posX);
+			ImGui::SetCursorPosY(posY);
+
+			switch (widgets[j]->getType()) {
+			case WidgetType::LargeButton:
+				if (smallWidgetCount != 0) {
+					posY = originalY;
+					posX += bigWidth + padding;
+					smallWidgetCount = 0;
+
+					ImGui::SetCursorPosX(posX);
+					ImGui::SetCursorPosY(posY);
+				}
+
+				ImGui::PushFont(iconFont);
+				ImGui::SetWindowFontScale(1.5f);
+				if (ImGui::Button(widgets[j]->getIcon(), ImVec2(60, bigHeight))) {
+					widgets[j]->execute();
+				}
+				ImGui::SetWindowFontScale(1.0f);
+				ImGui::PopFont();
+
+				ImGui::SetCursorPosX(posX + smallWidth / 2 - (ImGui::CalcTextSize(widgets[j]->getTitle().c_str()).x / 2));
+				ImGui::SetCursorPosY(posY + bigHeight - 20);
+
+				ImGui::PushFont(headerFont);
+				ImGui::Text(widgets[j]->getTitle().c_str(), ImVec2(smallWidth, 10));
+				ImGui::PopFont();
+
+				posX += smallWidth + padding;
+				break;
+
+			case WidgetType::SmallButton:
+				smallWidgetCount++;
+
+				if (ImGui::Button(" ", ImVec2(bigWidth, smallHeight))) {
+					widgets[j]->execute();
+				}
+
+				ImGui::SetCursorPosX(posX + 5);
+				ImGui::SetCursorPosY(posY + smallHeight / 2 - (ImGui::CalcTextSize(widgets[j]->getIcon()).y / 2));
+
+				ImGui::PushFont(iconFont);
+				ImGui::Text(widgets[j]->getIcon());
+				ImGui::PopFont();
+
+				ImGui::SetCursorPosX(posX + 25);
+				ImGui::SetCursorPosY(posY + smallHeight / 2 - (ImGui::CalcTextSize(widgets[j]->getTitle().c_str()).y / 2));
+
+				ImGui::PushFont(headerFont);
+				ImGui::Text(widgets[j]->getTitle().c_str());
+				ImGui::PopFont();
+
+				if (smallWidgetCount != 3) {
+					posY += smallHeight + padding;
+				}
+				else {
+					smallWidgetCount = 0;
+					posY = originalY;
+					posX += bigWidth + padding;
+				}
+				break;
+
+			case WidgetType::Toggle:
+				smallWidgetCount++;
+
+				ImGui::PushFont(headerFont);
+				ImGui::Checkbox(widgets[j]->getTitle().c_str(), widgets[j]->getBool());
+				ImGui::PopFont();
+
+				if (smallWidgetCount != 3) {
+					posY += smallHeight + padding;
+				}
+				else {
+					smallWidgetCount = 0;
+					posY = originalY;
+					posX += bigWidth + padding;
+				}
+				break;
+
+			case WidgetType::InputFloat:
+				smallWidgetCount++;
+
+				ImGui::PushFont(headerFont);
+				ImGui::PushItemWidth(bigWidth);
+				ImGui::InputFloat("", widgets[j]->getFloat());
+				ImGui::PopFont();
+
+				if (smallWidgetCount != 3) {
+					posY += smallHeight + padding;
+				}
+				else {
+					smallWidgetCount = 0;
+					posY = originalY;
+					posX += bigWidth + padding;
+				}
+				break;
+			}
+		}
+
+		int maxX = posX - padding;
+		ImGui::SetCursorPosX(minX + (maxX - minX) / 2 - (ImGui::CalcTextSize(zones[i]->getTitle().c_str()).x / 2));
+		ImGui::SetCursorPosY(132);
+
+		ImGui::PushFont(textFont);
+		ImGui::Text(zones[i]->getTitle().c_str());
+		ImGui::PopFont();
+
+		if (i != zones.size() - 1) {
+			ImDrawList* drawList = ImGui::GetWindowDrawList();
+			ImVec2 windowPos = ImGui::GetWindowPos();
+			drawList->AddLine(ImVec2(windowPos.x + posX, windowPos.y + originalY), ImVec2(windowPos.x + posX, windowPos.y + originalY + bigHeight), 0xFF3E3E47, 2.0f);
+			posX += padding;
+			posY = originalY;
+		}
+
+		ImGui::PopID();
+	}
+}
+
+void UIBar::verticalDraw() {
+	int topOffset = 24;
+	int padding = 15;
+	int posY = 0;
+	int leftPosX = padding;
+	int leftSize = 70;
+	int rightSize = ImGui::GetWindowWidth() - padding * 3 - leftSize;
+	int height = 30;
+	int rightPosXMin = leftPosX + leftSize + padding;
+	int rightPosXMax = ImGui::GetWindowWidth() - padding;
+
+	for (int i = 0; i < zones.size(); i++) {
+		ImGui::PushID(i);
+		std::vector<std::shared_ptr<UIWidget>> widgets = zones[i]->getWidgets();
+
+		if (ImGui::CollapsingHeader(zones[i]->getTitle().c_str())) {
+			posY = ImGui::GetCursorPosY();
+
+			for (int j = 0; j < widgets.size(); j++) {
+				ImGui::SetCursorPosX(leftPosX);
+				ImGui::SetCursorPosY(posY + height / 2 - ImGui::CalcTextSize(widgets[j]->getTitle().c_str()).y / 2);
+
+				ImGui::PushFont(headerFont);
+				ImGui::Text(widgets[j]->getTitle().c_str());
+				ImGui::PopFont();
+
+				switch (widgets[j]->getType()) {
+				case WidgetType::InputFloat:
+					ImGui::SetCursorPosX(rightPosXMin);
+					ImGui::SetCursorPosY(posY + 4);
+
+					ImGui::PushItemWidth(rightSize - 8);
+					ImGui::InputFloat("", widgets[j]->getFloat());
+					break;
+
+				case WidgetType::Toggle:
+					ImGui::SetCursorPosX(rightPosXMax - 30);
+					ImGui::SetCursorPosY(posY + 4);
+
+					ImGui::PushFont(headerFont);
+					ImGui::Checkbox(std::string("##" + std::to_string(j + 1)).c_str(), widgets[j]->getBool());
+					ImGui::PopFont();
+					break;
+				}
+
+				posY += height;
+
+				ImDrawList* drawList = ImGui::GetWindowDrawList();
+				ImVec2 windowPos = ImGui::GetWindowPos();
+				drawList->AddLine(ImVec2(windowPos.x + rightPosXMin - padding / 2, windowPos.y + posY - ImGui::GetScrollY() - height + 6),
+					ImVec2(windowPos.x + rightPosXMin - padding / 2, windowPos.y + posY - ImGui::GetScrollY() - 6),
+					0xFF3E3E47, 2.0f);
+
+				if (j != widgets.size() - 1) {
+					ImDrawList* drawList = ImGui::GetWindowDrawList();
+					ImVec2 windowPos = ImGui::GetWindowPos();
+					drawList->AddLine(ImVec2(windowPos.x + leftPosX, windowPos.y + posY - ImGui::GetScrollY()), 
+						ImVec2(windowPos.x + rightPosXMax, windowPos.y + posY - ImGui::GetScrollY()), 
+						0xFF3E3E47, 2.0f);
+				}
+			}
+		}
+
+		ImGui::PopID();
+	}
 }
 
 std::shared_ptr<int> UIBar::getWidthPtr() {
@@ -152,8 +309,8 @@ std::shared_ptr<int> UIBar::getHeightPtr() {
 	return std::shared_ptr<int>(&height);
 }
 
-void UIBar::newZone() {
-	zones.push_back(std::make_shared<UIZone>());
+void UIBar::newZone(std::string title) {
+	zones.push_back(std::make_shared<UIZone>(title));
 }
 
 void UIBar::addWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command) {

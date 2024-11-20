@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Windows.h>
+#include <WinUser.h>
+
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
@@ -7,8 +10,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <Windows.h>
-#include <WinUser.h>
 #include <variant>
 
 #include "UIBar.h"
