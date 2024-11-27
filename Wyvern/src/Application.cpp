@@ -1,6 +1,8 @@
 #include "Application.h"
 
-#include "cmds/DebugCommand.h"
+#include "DebugCommand.h"
+#include "UndoCommand.h"
+#include "RedoCommand.h"
 #include "InteractionController.h"
 
 Application::Application() {
@@ -14,32 +16,17 @@ Application::Application() {
 	}
 
 	// Add UI
-	auto menu = window->addUI("Menu", true, 150, 0, 0, 0);
-	auto properties = window->addUI("Properties", false, 0, 300, 300, 0);
-	auto hierarchy = window->addUI("Hierarchy", false, menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
-	auto viewport = window->addUI("Viewport", false, menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0);
+	auto menu = window->addUI(UIType::Menu, "Menu", 150, 0, 0, 0);
+	auto properties = window->addUI(UIType::List, "Properties", 0, 300, 300, 0);
+	auto hierarchy = window->addUI(UIType::List, "Hierarchy", menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
+	auto viewport = window->addUI(UIType::View, "Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0);
 
 	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>();
 
-	properties->newZone("Zone 1");
-	properties->addWidget(WidgetType::Toggle, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::InputFloat, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::Toggle, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-
-	properties->newZone("Zone 2");
-	properties->addWidget(WidgetType::InputFloat, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::Toggle, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::InputFloat, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-
-	properties->newZone("Zone 3");
-	properties->addWidget(WidgetType::Toggle, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::InputFloat, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::Toggle, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-
-	properties->newZone("Zone 4");
-	properties->addWidget(WidgetType::InputFloat, "Test1", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::Toggle, "Test2", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
-	properties->addWidget(WidgetType::InputFloat, "Test3", u8"\uf0c7", std::make_shared<DebugCommand>(controller));
+	menu->newZone("Zone 1");
+	menu->addWidget(WidgetType::InputFloat,		"Debug", u8"\uf0c7",	std::make_shared<DebugCommand>(controller));
+	menu->addWidget(WidgetType::SmallButton,	"Undo", u8"\uf0c7",		std::make_shared<UndoCommand>(controller));
+	menu->addWidget(WidgetType::SmallButton,	"Redo", u8"\uf0c7",		std::make_shared<RedoCommand>(controller));
 
 	// Add fonts
 	FontManager::addFont("assets/SourceSansPro", 16.0f);

@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning( disable : 4244 ) 
 
 #include <Windows.h>
 #include <WinUser.h>
@@ -13,6 +14,10 @@
 #include <variant>
 
 #include "UIBar.h"
+#include "UIBarMenu.h"
+#include "UIBarList.h"
+#include "Viewport.h"
+
 #include "TitleBar.h"
 #include "FontManager.h"
 
@@ -21,6 +26,12 @@ using SizeOrOffset = std::variant<int, std::shared_ptr<int>>;
 enum TextType {
 	header,
 	text
+};
+
+enum UIType {
+	List,
+	Menu,
+	View
 };
 
 class Window {
@@ -39,7 +50,7 @@ public:
 	 *
 	 * @return Returns the created UI bar
 	 */
-	std::shared_ptr<UIBar> addUI(std::string name, bool horizontal, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left);
+	std::shared_ptr<UIBar> addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left);
 	void draw();
 	void addFont(std::string font, FontType type);
 
@@ -56,6 +67,8 @@ private:
 	bool right;
 	bool bottom;
 	bool left;
+	bool prevMouse;
+
 	ImVec2 globalCursorPos;
 	ImVec2 winStartPos;
 	ImVec2 winStartSize;

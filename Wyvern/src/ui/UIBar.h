@@ -1,4 +1,5 @@
 #pragma once 
+#pragma warning( disable : 4244 ) 
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -15,26 +16,28 @@ using SizeOrOffset = std::variant<int, std::shared_ptr<int>>;
 
 class UIBar {
 public:
-	UIBar(GLFWwindow* window, std::string name, bool horizontal, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left);
-
+	UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left);
 	~UIBar();
 
-	void draw();
-	void horizontalDraw();
-	void verticalDraw();
+	virtual void draw() = 0;
+	virtual void drawBigButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
+	virtual void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
+	virtual void drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
+	virtual void drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
+	void render();
 	std::shared_ptr<int> getWidthPtr();
 	std::shared_ptr<int> getHeightPtr();
 	void newZone(std::string title);
 	void addWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command);
 	void addFont(std::string font, FontType type);
 
-private:
+protected:
 	GLFWwindow* window;
 	std::string name;
 	int width;
 	int height;
 	int titleBarHeight;
-	bool horizontal;
+	int widgetIndex;
 
 	SizeOrOffset top;
 	SizeOrOffset right;

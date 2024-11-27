@@ -23,6 +23,7 @@ public:
 	const char* getIcon();
 	bool* getBool();
 	float* getFloat();
+	void setArgs(const std::vector<std::any>& args = std::vector<std::any>());
 	void execute();
 
 private:

@@ -42,6 +42,10 @@ float* UIWidget::getFloat() {
 	return varFloat;
 }
 
+void UIWidget::setArgs(const std::vector<std::any>& args) {
+	command->setArgs(args);
+}
+
 void UIWidget::execute() {
 	command->execute();
 }

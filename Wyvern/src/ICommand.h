@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <vector>
+#include <any>
 
-#include "InteractionController.h"
+class InteractionController;
 
 class ICommand {
 public:
@@ -10,7 +12,11 @@ public:
 		: controller(controller) {}
 	virtual void execute() = 0;
 	virtual ~ICommand() = default;
+	void setArgs(std::vector<std::any> args) {
+		this->args = args;
+	}
 
 protected:
+	std::vector<std::any> args;
 	std::shared_ptr<InteractionController> controller;
 };

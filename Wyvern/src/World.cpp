@@ -1,7 +1,9 @@
 #include "World.h"
 
+#include <iostream>
+
 World::World() 
-	: selected(1) 
+	: debug(0.0f) 
 {
 
 }
@@ -10,6 +12,11 @@ World::~World() {
 
 }
 
-int World::getSelected() {
-	return selected;
+float World::getDebug() {
+	return debug;
+}
+
+void World::setDebug(float debug) {
+	this->debug = debug;
+	std::cout << "Debug float changed to " << debug << std::endl;
 }

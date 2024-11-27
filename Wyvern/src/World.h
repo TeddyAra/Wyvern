@@ -5,8 +5,9 @@ public:
 	World();
 	~World();
 
-	int getSelected();
+	float getDebug();
+	void setDebug(float debug);
 
 private:
-	int selected;
+	float debug;
 };

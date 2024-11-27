@@ -8,7 +8,7 @@
 
 Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::string name, bool hideTitleBar, bool& succeeded)
 	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), titleBarHidden(hideTitleBar), titleBarHeight(25),
-	resizing(false), dragging(false), top(false), right(false), bottom(false), left(false),
+	resizing(false), dragging(false), top(false), right(false), bottom(false), left(false), prevMouse(false),
 	cursorDiagonalRight(NULL), cursorDiagonalLeft(NULL), cursorHorizontal(NULL), cursorVertical(NULL), cursorNormal(NULL)
 {
 	// Initialize GLFW
@@ -43,7 +43,9 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 	ImGui::StyleColorsDark();
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
 	// Create a menu bar
 	titleBar = std::make_unique<TitleBar>(window, titleBarHeight);
@@ -73,9 +75,27 @@ void Window::terminate() {
 	ImGui::DestroyContext();
 }
 
-std::shared_ptr<UIBar> Window::addUI(std::string name, bool horizontal, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left) {
-	std::shared_ptr<UIBar> bar = std::make_shared<UIBar>(window, name, horizontal, titleBarHeight, top, right, bottom, left);
-	ui.push_back(bar);
+std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left) {
+	std::shared_ptr<UIBar> bar;
+
+	switch (type) {
+	case UIType::Menu:
+		bar = std::make_shared<UIBarMenu>(window, name, titleBarHeight, top, right, bottom, left);
+		break;
+
+	case UIType::List:
+		bar = std::make_shared<UIBarList>(window, name, titleBarHeight, top, right, bottom, left);
+		break;
+	
+	case UIType::View:
+		bar = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left);
+		break;
+	}
+
+	if (bar) {
+		ui.push_back(bar);
+	}
+
 	return bar;
 }
 
@@ -83,6 +103,7 @@ void Window::draw() {
 	if (titleBarHidden) {
 		checkResize();
 		checkMove();
+		prevMouse = ImGui::IsMouseDown(0);
 	}
 
 	ImGui_ImplGlfwGL3_NewFrame();
@@ -90,7 +111,7 @@ void Window::draw() {
 	titleBar->draw();
 
 	for (auto bar : ui) {
-		bar->draw();
+		bar->render();
 	}
 
 	ImGui::Render();
@@ -181,7 +202,7 @@ void Window::checkResize() {
 			SetCursor(cursorNormal);
 		}
 
-		if (ImGui::IsMouseDown(0) && top + right + bottom + left != 0) {
+		if (ImGui::IsMouseDown(0) && !prevMouse && top + right + bottom + left != 0) {
 			resizing = true;
 
 			int winWidth, winHeight;

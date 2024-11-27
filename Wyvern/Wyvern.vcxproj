@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;src;src\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;src;src\vendor;src\cmds;src\UI</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,14 +135,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\cmds\DebugCommand.cpp" />
+    <ClCompile Include="src\cmds\RedoCommand.cpp" />
+    <ClCompile Include="src\cmds\UndoCommand.cpp" />
+    <ClCompile Include="src\HistoryManager.cpp" />
     <ClCompile Include="src\InteractionController.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\FontManager.cpp" />
-    <ClCompile Include="src\TitleBar.cpp" />
-    <ClCompile Include="src\UIBar.cpp" />
-    <ClCompile Include="src\UIWidget.cpp" />
-    <ClCompile Include="src\UIZone.cpp" />
+    <ClCompile Include="src\ui\TitleBar.cpp" />
+    <ClCompile Include="src\ui\UIBar.cpp" />
+    <ClCompile Include="src\ui\UIBarList.cpp" />
+    <ClCompile Include="src\ui\UIBarMenu.cpp" />
+    <ClCompile Include="src\ui\UIWidget.cpp" />
+    <ClCompile Include="src\ui\UIZone.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\glm\glm.cppm" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
@@ -150,18 +155,24 @@
     <ClCompile Include="src\vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_impl_glfw_gl3.cpp" />
     <ClCompile Include="src\vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\cmds\DebugCommand.h" />
+    <ClInclude Include="src\cmds\RedoCommand.h" />
+    <ClInclude Include="src\cmds\UndoCommand.h" />
+    <ClInclude Include="src\HistoryManager.h" />
     <ClInclude Include="src\ICommand.h" />
     <ClInclude Include="src\FontManager.h" />
     <ClInclude Include="src\InteractionController.h" />
-    <ClInclude Include="src\UIBar.h" />
-    <ClInclude Include="src\UIWidget.h" />
-    <ClInclude Include="src\UIZone.h" />
+    <ClInclude Include="src\ui\UIBar.h" />
+    <ClInclude Include="src\ui\UIBarList.h" />
+    <ClInclude Include="src\ui\UIBarMenu.h" />
+    <ClInclude Include="src\ui\UIWidget.h" />
+    <ClInclude Include="src\ui\UIZone.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_decl.hpp" />
@@ -457,8 +468,9 @@
     <ClInclude Include="src\vendor\imgui\stb_rect_pack.h" />
     <ClInclude Include="src\vendor\imgui\stb_textedit.h" />
     <ClInclude Include="src\vendor\imgui\stb_truetype.h" />
-    <ClInclude Include="src\TitleBar.h" />
+    <ClInclude Include="src\ui\TitleBar.h" />
     <ClInclude Include="src\vendor\stb_image\stb_image.h" />
+    <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
