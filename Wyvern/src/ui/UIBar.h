@@ -1,9 +1,6 @@
 #pragma once 
 #pragma warning( disable : 4244 ) 
 
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
 #include <string>
 #include <memory>
 #include <variant>
@@ -11,12 +8,13 @@
 #include "UIZone.h"
 #include "FontManager.h"
 #include "ICommand.h"
+#include "Renderer.h"
 
 using SizeOrOffset = std::variant<int, std::shared_ptr<int>>;
 
 class UIBar {
 public:
-	UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left);
+	UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI = false);
 	~UIBar();
 
 	virtual void draw() = 0;
@@ -34,6 +32,7 @@ public:
 protected:
 	GLFWwindow* window;
 	std::string name;
+	bool ignoreUI;
 	int width;
 	int height;
 	int titleBarHeight;

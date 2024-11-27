@@ -19,7 +19,7 @@ Application::Application() {
 	auto menu = window->addUI(UIType::Menu, "Menu", 150, 0, 0, 0);
 	auto properties = window->addUI(UIType::List, "Properties", 0, 300, 300, 0);
 	auto hierarchy = window->addUI(UIType::List, "Hierarchy", menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
-	auto viewport = window->addUI(UIType::View, "Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0);
+	auto viewport = window->addUI(UIType::View, "Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, true);
 
 	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>();
 

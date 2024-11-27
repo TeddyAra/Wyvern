@@ -39,6 +39,8 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 	succeeded = true;
 
+	glfwSwapInterval(1);
+
 	// Initialize ImGui
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
@@ -75,20 +77,20 @@ void Window::terminate() {
 	ImGui::DestroyContext();
 }
 
-std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left) {
+std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI) {
 	std::shared_ptr<UIBar> bar;
 
 	switch (type) {
 	case UIType::Menu:
-		bar = std::make_shared<UIBarMenu>(window, name, titleBarHeight, top, right, bottom, left);
+		bar = std::make_shared<UIBarMenu>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
 		break;
 
 	case UIType::List:
-		bar = std::make_shared<UIBarList>(window, name, titleBarHeight, top, right, bottom, left);
+		bar = std::make_shared<UIBarList>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
 		break;
 	
 	case UIType::View:
-		bar = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left);
+		bar = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
 		break;
 	}
 
@@ -111,11 +113,18 @@ void Window::draw() {
 	titleBar->draw();
 
 	for (auto bar : ui) {
+		if (typeid(*bar) == typeid(Viewport)) bar->render();
+	}
+
+	for (auto bar : ui) {
+		if (typeid(*bar) == typeid(Viewport)) continue;
 		bar->render();
 	}
 
 	ImGui::Render();
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
+	//glfwSwapBuffers(window);
 }
 
 void Window::addFont(std::string font, FontType type) {

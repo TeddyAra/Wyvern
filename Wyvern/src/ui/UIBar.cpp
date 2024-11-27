@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-UIBar::UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left)
-	: window(window), name(name), titleBarHeight(titleBarHeight), 
+UIBar::UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI)
+	: window(window), name(name), ignoreUI(ignoreUI), titleBarHeight(titleBarHeight), 
 	top(top), right(right), bottom(bottom), left(left), 
 	width(0), height(0), fontCount(0), iconFont(nullptr), textFont(nullptr), headerFont(nullptr), widgetIndex(0)
 {
@@ -77,7 +77,7 @@ void UIBar::render() {
 
 	ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 
-	if (zones.size() == 0) {
+	if (zones.size() == 0 && !ignoreUI) {
 		ImGui::End();
 		ImGui::PopStyleVar();
 		return;

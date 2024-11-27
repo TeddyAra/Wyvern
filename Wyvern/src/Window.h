@@ -1,12 +1,9 @@
 #pragma once
 #pragma warning( disable : 4244 ) 
 
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <WinUser.h>
-
-#define GLEW_STATIC
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
 
 #include <string>
 #include <vector>
@@ -17,6 +14,7 @@
 #include "UIBarMenu.h"
 #include "UIBarList.h"
 #include "Viewport.h"
+#include "Renderer.h"
 
 #include "TitleBar.h"
 #include "FontManager.h"
@@ -50,7 +48,7 @@ public:
 	 *
 	 * @return Returns the created UI bar
 	 */
-	std::shared_ptr<UIBar> addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left);
+	std::shared_ptr<UIBar> addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI = false);
 	void draw();
 	void addFont(std::string font, FontType type);
 

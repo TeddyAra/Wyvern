@@ -5,8 +5,8 @@
 
 class UIBarList : public UIBar {
 public:
-	UIBarList(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left)
-		: UIBar(window, name, titleBarHeight, top, right, bottom, left) {}
+	UIBarList(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI)
+		: UIBar(window, name, titleBarHeight, top, right, bottom, left, ignoreUI) {}
 	void draw() override;
 	void drawBigButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
 	void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
