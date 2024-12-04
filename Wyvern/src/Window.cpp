@@ -48,6 +48,7 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	// Create a menu bar
 	titleBar = std::make_unique<TitleBar>(window, titleBarHeight);

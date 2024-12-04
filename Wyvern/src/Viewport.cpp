@@ -3,9 +3,13 @@
 #include <iostream>
 
 void Viewport::draw() {
-	int displayWidth, displayHeight;
-	glfwGetFramebufferSize(window, &displayWidth, &displayHeight);
-	glViewport(0, 0, displayWidth, displayHeight);
+	ImVec2 viewportSize = ImGui::GetWindowSize();
+	ImVec2 viewportPos = ImGui::GetWindowPos();
+
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	viewportPos.y = (viewportPos.y + viewportSize.y - windowHeight) * -1;
+	glViewport(viewportPos.x, viewportPos.y, viewportSize.x, viewportSize.y);
 
 	renderer->render();
 	//glfwSwapBuffers(window);
