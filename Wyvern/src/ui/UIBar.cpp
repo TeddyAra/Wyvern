@@ -1,7 +1,8 @@
 #include "UIBar.h"
 
 #include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw_gl3.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include <iostream>
 
@@ -22,7 +23,10 @@ void UIBar::render() {
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 	windowHeight -= titleBarHeight;
 
-	ImVec2 pos = ImVec2(0, titleBarHeight);
+	int windowPosX, windowPosY;
+	glfwGetWindowPos(window, &windowPosX, &windowPosY);
+
+	ImVec2 pos = ImVec2(windowPosX, windowPosY + titleBarHeight);
 	ImVec2 imSize = ImVec2(windowWidth, windowHeight);
 
 	if (std::holds_alternative<int>(top)) {
@@ -39,7 +43,7 @@ void UIBar::render() {
 		int amount = std::get<int>(right);
 		if (amount != 0) {
 			imSize.x = amount;
-			pos.x = windowWidth - amount;
+			pos.x = windowPosX + windowWidth - amount;
 		}
 	} else {
 		int amount = *std::get<std::shared_ptr<int>>(right);
@@ -50,7 +54,7 @@ void UIBar::render() {
 		int amount = std::get<int>(bottom);
 		if (amount != 0) {
 			imSize.y = amount;
-			pos.y = windowHeight + titleBarHeight - amount;
+			pos.y = windowPosY + windowHeight + titleBarHeight - amount;
 		}
 	} else {
 		int amount = *std::get<std::shared_ptr<int>>(bottom);
@@ -69,6 +73,8 @@ void UIBar::render() {
 
 	width = imSize.x;
 	height = imSize.y;
+	posX = pos.x;
+	posY = pos.y;
 
 	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
 	ImGui::SetNextWindowSize(imSize, ImGuiCond_Always);
@@ -77,7 +83,7 @@ void UIBar::render() {
 
 	ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 
-	if (zones.size() == 0 && !ignoreUI) {
+	if (zones.size() == 0 || !ignoreUI) {
 		ImGui::End();
 		ImGui::PopStyleVar();
 		return;

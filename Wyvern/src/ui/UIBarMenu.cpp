@@ -141,7 +141,8 @@ void UIBarMenu::drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, i
 
 	ImGui::PushFont(headerFont);
 	ImGui::PushItemWidth(bigWidth);
-	if (ImGui::InputFloat("", widgets[index]->getFloat(), 0.0f, 0.0f, -1, ImGuiInputTextFlags_EnterReturnsTrue)) {
+	//if (ImGui::InputFloat("", widgets[index]->getFloat(), 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
+	if (ImGui::InputFloat("", widgets[index]->getFloat(), 0.0f, 0.0f, "%.3f")) {
 		std::vector<std::any> args { *widgets[index]->getFloat() };
 		widgets[index]->setArgs(args);
 		widgets[index]->execute();

@@ -4,7 +4,8 @@
 #include <iostream>
 
 #include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw_gl3.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::string name, bool hideTitleBar, bool& succeeded)
 	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), titleBarHidden(hideTitleBar), titleBarHeight(25),
@@ -43,12 +44,14 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 
 	// Initialize ImGui
 	ImGui::CreateContext();
-	ImGui_ImplGlfwGL3_Init(window, true);
-	ImGui::StyleColorsDark();
 
 	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2(width, height);
 	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
 
 	// Create a menu bar
 	titleBar = std::make_unique<TitleBar>(window, titleBarHeight);
@@ -73,8 +76,9 @@ GLFWwindow* Window::get() {
 }
 
 void Window::terminate() {
-	glfwTerminate(); 
-	ImGui_ImplGlfwGL3_Shutdown();
+	glfwTerminate();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
@@ -103,29 +107,52 @@ std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset
 }
 
 void Window::draw() {
+	// Handle resizing and moving
 	if (titleBarHidden) {
 		checkResize();
 		checkMove();
 		prevMouse = ImGui::IsMouseDown(0);
 	}
 
-	ImGui_ImplGlfwGL3_NewFrame();
+	// Clear everything
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Start new ImGui frame
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+
+	// Draw title bar
 	titleBar->draw();
 
-	for (auto bar : ui) {
-		if (typeid(*bar) == typeid(Viewport)) bar->render();
-	}
-
-	for (auto bar : ui) {
-		if (typeid(*bar) == typeid(Viewport)) continue;
+	// Draw UI bars
+	/*for (auto bar : ui) {
 		bar->render();
+	}*/
+
+	// Draw viewport
+	for (auto bar : ui) {
+		if (typeid(*bar) == typeid(Viewport)) {
+			bar->render();
+			break;
+		}
 	}
 
-	ImGui::Render();
-	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+	// Render ImGui
+	ImGui::Render(); 
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	//glfwSwapBuffers(window);
+	// Draw viewport
+	for (auto bar : ui) {
+		if (typeid(*bar) == typeid(Viewport)) {
+			bar->draw();
+			break;
+		}
+	}
+
+	glfwSwapBuffers(window);
+	glfwPollEvents();
 }
 
 void Window::addFont(std::string font, FontType type) {

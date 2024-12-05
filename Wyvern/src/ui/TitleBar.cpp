@@ -15,12 +15,15 @@ TitleBar::~TitleBar() {
 }
 
 void TitleBar::draw() {
-	// Get window size
+	// Get window size and pos
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
+	int windowPosX, windowPosY;
+	glfwGetWindowPos(window, &windowPosX, &windowPosY);
+
 	// Set bar position and size
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(windowPosX, windowPosY), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(windowWidth, height), ImGuiCond_Always);
 
 	// Remove rounding, minimum size, and padding

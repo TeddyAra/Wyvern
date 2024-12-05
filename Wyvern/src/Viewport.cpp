@@ -3,15 +3,23 @@
 #include <iostream>
 
 void Viewport::draw() {
-	ImVec2 viewportSize = ImGui::GetWindowSize();
-	ImVec2 viewportPos = ImGui::GetWindowPos();
-
+	int displayWidth, displayHeight;
+	glfwGetFramebufferSize(window, &displayWidth, &displayHeight);
+	
 	int windowWidth, windowHeight;
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
-	viewportPos.y = (viewportPos.y + viewportSize.y - windowHeight) * -1;
-	glViewport(viewportPos.x, viewportPos.y, viewportSize.x, viewportSize.y);
+	
+	int windowPosX, windowPosY;
+	glfwGetWindowPos(window, &windowPosX, &windowPosY);
+	
+	ImVec2 pos = ImVec2(posX - windowPosX, (posY - windowPosY + height - windowHeight) * -1);
+	glViewport(pos.x, pos.y, width, height);
 
 	renderer->render();
-	//glfwSwapBuffers(window);
-	//glfwPollEvents();
+
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+		ImGui::UpdatePlatformWindows();
+		glfwMakeContextCurrent(window);
+	}
 }

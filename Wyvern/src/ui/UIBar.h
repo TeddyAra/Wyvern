@@ -32,9 +32,12 @@ public:
 protected:
 	GLFWwindow* window;
 	std::string name;
-	bool ignoreUI;
 	int width;
 	int height;
+	int posX;
+	int posY;
+
+	bool ignoreUI;
 	int titleBarHeight;
 	int widgetIndex;
 
