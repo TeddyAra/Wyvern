@@ -52,4 +52,6 @@ protected:
 	ImFont* iconFont;
 
 	std::vector<std::shared_ptr<UIZone>> zones;
+
+	void calcSizeAndPos();
 };

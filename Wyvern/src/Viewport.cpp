@@ -3,7 +3,7 @@
 #include <iostream>
 
 void Viewport::draw() {
-	int displayWidth, displayHeight;
+	/*int displayWidth, displayHeight;
 	glfwGetFramebufferSize(window, &displayWidth, &displayHeight);
 	
 	int windowWidth, windowHeight;
@@ -21,5 +21,22 @@ void Viewport::draw() {
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
 		ImGui::UpdatePlatformWindows();
 		glfwMakeContextCurrent(window);
+	}*/
+
+	if (!resized) {
+		ImVec2 region = ImGui::GetContentRegionAvail();
+		renderer->updateSize(region.x, region.y);
+		resized = true;
 	}
+
+	renderer->render();
+	ImGui::Image((intptr_t)renderer->getTex(), renderer->getSize());
+}
+
+void Viewport::clear() {
+	renderer->clear();
+}
+
+void Viewport::resize() {
+	resized = false;
 }

@@ -56,6 +56,7 @@ private:
 	GLFWwindow* window;
 	std::vector<std::shared_ptr<UIBar>> ui;
 	std::unique_ptr<TitleBar> titleBar;
+	std::shared_ptr<Viewport> viewport;
 	int titleBarHeight;
 	bool titleBarHidden;
 

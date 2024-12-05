@@ -19,8 +19,8 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	}	
 
 	// Create a window
-	if (hideTitleBar)
-		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	if (hideTitleBar) glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 	window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
 
 	if (!window) {
@@ -48,7 +48,7 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2(width, height);
 	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
@@ -95,8 +95,8 @@ std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset
 		break;
 	
 	case UIType::View:
-		bar = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
-		break;
+		viewport = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
+		return viewport;
 	}
 
 	if (bar) {
@@ -114,9 +114,8 @@ void Window::draw() {
 		prevMouse = ImGui::IsMouseDown(0);
 	}
 
-	// Clear everything
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Clear the buffer
+	viewport->clear();
 
 	// Start new ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -127,31 +126,18 @@ void Window::draw() {
 	titleBar->draw();
 
 	// Draw UI bars
-	/*for (auto bar : ui) {
+	for (auto bar : ui) {
 		bar->render();
-	}*/
+	}
 
 	// Draw viewport
-	for (auto bar : ui) {
-		if (typeid(*bar) == typeid(Viewport)) {
-			bar->render();
-			break;
-		}
-	}
+	viewport->render();
 
 	// Render ImGui
-	ImGui::Render(); 
+	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	// Draw viewport
-	for (auto bar : ui) {
-		if (typeid(*bar) == typeid(Viewport)) {
-			bar->draw();
-			break;
-		}
-	}
-
-	glfwSwapBuffers(window);
+	//glfwSwapBuffers(window);
 	glfwPollEvents();
 }
 
@@ -308,5 +294,7 @@ void Window::checkResize() {
 		if (!ImGui::IsMouseDown(0)) {
 			resizing = false;
 		}
+
+		viewport->resize();
 	}
 }

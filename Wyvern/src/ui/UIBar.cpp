@@ -19,71 +19,16 @@ UIBar::~UIBar() {
 }
 
 void UIBar::render() {
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(window, &windowWidth, &windowHeight);
-	windowHeight -= titleBarHeight;
+	calcSizeAndPos();
 
-	int windowPosX, windowPosY;
-	glfwGetWindowPos(window, &windowPosX, &windowPosY);
-
-	ImVec2 pos = ImVec2(windowPosX, windowPosY + titleBarHeight);
-	ImVec2 imSize = ImVec2(windowWidth, windowHeight);
-
-	if (std::holds_alternative<int>(top)) {
-		int amount = std::get<int>(top);
-		if (amount != 0) 
-			imSize.y = amount;
-	} else {
-		int amount = *std::get<std::shared_ptr<int>>(top);
-		imSize.y -= amount;
-		pos.y += amount;
-	}
-
-	if (std::holds_alternative<int>(right)) {
-		int amount = std::get<int>(right);
-		if (amount != 0) {
-			imSize.x = amount;
-			pos.x = windowPosX + windowWidth - amount;
-		}
-	} else {
-		int amount = *std::get<std::shared_ptr<int>>(right);
-		imSize.x -= amount;
-	}
-
-	if (std::holds_alternative<int>(bottom)) {
-		int amount = std::get<int>(bottom);
-		if (amount != 0) {
-			imSize.y = amount;
-			pos.y = windowPosY + windowHeight + titleBarHeight - amount;
-		}
-	} else {
-		int amount = *std::get<std::shared_ptr<int>>(bottom);
-		imSize.y -= amount;
-	}
-
-	if (std::holds_alternative<int>(left)) {
-		int amount = std::get<int>(left);
-		if (amount != 0)
-			imSize.x = amount;
-	} else {
-		int amount = *std::get<std::shared_ptr<int>>(left);
-		imSize.x -= amount;
-		pos.x += amount;
-	}
-
-	width = imSize.x;
-	height = imSize.y;
-	posX = pos.x;
-	posY = pos.y;
-
-	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-	ImGui::SetNextWindowSize(imSize, ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(posX, posY), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(width, height), ImGuiCond_Always);
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 
 	ImGui::Begin(name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 
-	if (zones.size() == 0 || !ignoreUI) {
+	if (zones.size() == 0 && !ignoreUI) {
 		ImGui::End();
 		ImGui::PopStyleVar();
 		return;
@@ -96,10 +41,12 @@ void UIBar::render() {
 }
 
 std::shared_ptr<int> UIBar::getWidthPtr() {
+	if (width == 0) calcSizeAndPos();
 	return std::shared_ptr<int>(&width);
 }
 
 std::shared_ptr<int> UIBar::getHeightPtr() {
+	if (height == 0) calcSizeAndPos();
 	return std::shared_ptr<int>(&height);
 }
 
@@ -132,4 +79,60 @@ void UIBar::addFont(std::string font, FontType fontType) {
 	}
 
 	fontCount++;
+}
+
+void UIBar::calcSizeAndPos() {
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	windowHeight -= titleBarHeight;
+
+	ImVec2 pos = ImVec2(0, titleBarHeight);
+	ImVec2 imSize = ImVec2(windowWidth, windowHeight);
+
+	if (std::holds_alternative<int>(top)) {
+		int amount = std::get<int>(top);
+		if (amount != 0)
+			imSize.y = amount;
+	} else {
+		int amount = *std::get<std::shared_ptr<int>>(top);
+		imSize.y -= amount;
+		pos.y += amount;
+	}
+
+	if (std::holds_alternative<int>(right)) {
+		int amount = std::get<int>(right);
+		if (amount != 0) {
+			imSize.x = amount;
+			pos.x = windowWidth - amount;
+		}
+	} else {
+		int amount = *std::get<std::shared_ptr<int>>(right);
+		imSize.x -= amount;
+	}
+
+	if (std::holds_alternative<int>(bottom)) {
+		int amount = std::get<int>(bottom);
+		if (amount != 0) {
+			imSize.y = amount;
+			pos.y = windowHeight + titleBarHeight - amount;
+		}
+	} else {
+		int amount = *std::get<std::shared_ptr<int>>(bottom);
+		imSize.y -= amount;
+	}
+
+	if (std::holds_alternative<int>(left)) {
+		int amount = std::get<int>(left);
+		if (amount != 0)
+			imSize.x = amount;
+	} else {
+		int amount = *std::get<std::shared_ptr<int>>(left);
+		imSize.x -= amount;
+		pos.x += amount;
+	}
+
+	width = imSize.x;
+	height = imSize.y;
+	posX = pos.x;
+	posY = pos.y;
 }
