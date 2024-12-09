@@ -4,13 +4,19 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include "World.h"
+
 class Renderer {
 public:
-	Renderer(GLFWwindow* window);
+	Renderer(GLFWwindow* window, std::shared_ptr<World> world);
 	~Renderer();
 
 	void render();
@@ -21,6 +27,7 @@ public:
 
 private:
 	GLFWwindow* window;
+	std::shared_ptr<World> world;
 
 	GLuint VAO; // Vertex array object
 	GLuint VBO; // Vertex buffer object

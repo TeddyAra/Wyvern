@@ -4,6 +4,7 @@
 #include "UndoCommand.h"
 #include "RedoCommand.h"
 #include "InteractionController.h"
+#include "World.h"
 
 Application::Application() {
 	// Create a window
@@ -15,13 +16,15 @@ Application::Application() {
 		return;
 	}
 
+	// Create world and interaction controller
+	world = std::make_shared<World>();
+	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>(world);
+
 	// Add UI
 	auto menu = window->addUI(UIType::Menu, "Menu", 150, 0, 0, 0);
 	auto properties = window->addUI(UIType::List, "Properties", 0, 300, 300, 0);
 	auto hierarchy = window->addUI(UIType::List, "Hierarchy", menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
-	auto viewport = window->addUI(UIType::View, "Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, true);
-
-	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>();
+	auto viewport = window->addViewport("Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, world);
 
 	menu->newZone("Zone 1");
 	menu->addWidget(WidgetType::InputFloat,		"Debug", u8"\uf0c7",	std::make_shared<DebugCommand>(controller));
@@ -45,8 +48,8 @@ void Application::run() {
 
 	// Main loop
 	while (!window->shouldWindowClose()) {
-		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
+		world->updateCamera();
 		window->draw();
 		glfwSwapBuffers(window->get());
 	}

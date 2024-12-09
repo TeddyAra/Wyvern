@@ -15,6 +15,7 @@
 #include "UIBarList.h"
 #include "Viewport.h"
 #include "Renderer.h"
+#include "Input.h"
 
 #include "TitleBar.h"
 #include "FontManager.h"
@@ -28,8 +29,7 @@ enum TextType {
 
 enum UIType {
 	List,
-	Menu,
-	View
+	Menu
 };
 
 class Window {
@@ -49,6 +49,7 @@ public:
 	 * @return Returns the created UI bar
 	 */
 	std::shared_ptr<UIBar> addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI = false);
+	std::shared_ptr<Viewport> addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world);
 	void draw();
 	void addFont(std::string font, FontType type);
 

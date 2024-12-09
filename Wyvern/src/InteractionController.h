@@ -13,7 +13,7 @@ class HistoryManager;
 
 class InteractionController {
 public:
-	InteractionController();
+	InteractionController(std::shared_ptr<World> world);
 	~InteractionController();
 
 	float getDebug();
@@ -23,6 +23,6 @@ public:
 	void redo();
 
 private:
-	std::unique_ptr<World> world;
+	std::shared_ptr<World> world;
 	std::unique_ptr<HistoryManager> history;
 };

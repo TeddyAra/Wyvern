@@ -8,19 +8,22 @@ const unsigned int indices[] = {
 };
 
 const float vertices[] = {
-	-0.25f, -0.25f, 0.0f, 0.0f,
-	 0.25f, -0.25f, 1.0f, 0.0f,
-	-0.25f,  0.25f, 0.0f, 1.0f,
-	 0.25f,  0.25f, 1.0f, 1.0f
+	-0.25f, 1.00f, 0.0f, 0.0f, 0.0f,
+	 0.25f, 1.00f, 0.0f, 1.0f, 0.0f,
+	-0.25f, 2.0f,  0.0f, 0.0f, 1.0f,
+	 0.25f, 2.0f,  0.0f, 1.0f, 1.0f
 };
+
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 	std::cerr << "OpenGL Debug Message: " << message << std::endl;
 }
 
-Renderer::Renderer(GLFWwindow* window)
-	: window(window), VAO(0), VBO(0), EBO(0), FBO(0), RBO(0), shaderProgram(0)
+Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world)
+	: window(window), world(world), VAO(0), VBO(0), EBO(0), FBO(0), RBO(0), shaderProgram(0)
 {
 	//std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
+	const int size = 64;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -44,14 +47,14 @@ Renderer::Renderer(GLFWwindow* window)
 
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 
 	glGenRenderbuffers(1, &RBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 64, 64);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size, size);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -66,24 +69,27 @@ Renderer::Renderer(GLFWwindow* window)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), vertices, GL_STATIC_DRAW);
 
 	// index, size, type, normalized, stride, pointer
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	const char* vertexShaderSource = R"(
 		#version 330
-		layout(location = 0) in vec2 aPos;
+		layout(location = 0) in vec3 aPos;
 		layout(location = 1) in vec2 aTexCoord;
 
 		out vec2 TexCoord;
 
+		uniform mat4 view;
+		uniform mat4 projection;
+
 		void main() {
-			gl_Position = vec4(aPos, 0.0f, 1.0f);
+			gl_Position = projection * view * vec4(aPos, 1.0f);
 			TexCoord = aTexCoord;
 		}
 	)";
@@ -152,14 +158,21 @@ void Renderer::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glViewport(0, 0, texSize.x, texSize.y);
 
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+
+	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(world->getCamera()->getViewMatrix()));
+
+	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	glm::mat4 projection = glm::perspective(glm::radians(world->getCamera()->getFov()), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
-
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, windowWidth, windowHeight);

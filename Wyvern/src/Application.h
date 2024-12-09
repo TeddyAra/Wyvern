@@ -24,5 +24,6 @@ public:
 
 private:
 	std::shared_ptr<Window> window;
+	std::shared_ptr<World> world;
 	bool succeeded;
 };

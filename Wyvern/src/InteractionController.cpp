@@ -3,8 +3,8 @@
 #include "World.h"
 #include "HistoryManager.h"
 
-InteractionController::InteractionController() 
-	: world(std::make_unique<World>()), history(std::make_unique<HistoryManager>()) 
+InteractionController::InteractionController(std::shared_ptr<World> world) 
+	: world(world), history(std::make_unique<HistoryManager>()) 
 {
 
 }

@@ -8,7 +8,8 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::string name, bool hideTitleBar, bool& succeeded)
-	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), titleBarHidden(hideTitleBar), titleBarHeight(25),
+	: window(nullptr), minWinSize(ImVec2(minimumWidth, minimumHeight)), 
+	titleBarHidden(hideTitleBar), titleBarHeight(25),
 	resizing(false), dragging(false), top(false), right(false), bottom(false), left(false), prevMouse(false),
 	cursorDiagonalRight(NULL), cursorDiagonalLeft(NULL), cursorHorizontal(NULL), cursorVertical(NULL), cursorNormal(NULL)
 {
@@ -41,6 +42,8 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	succeeded = true;
 
 	glfwSwapInterval(1);
+	glfwSetCursorPosCallback(window, Input::mouseCallback);
+	Input::setWindow(window);
 
 	// Initialize ImGui
 	ImGui::CreateContext();
@@ -93,10 +96,6 @@ std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset
 	case UIType::List:
 		bar = std::make_shared<UIBarList>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
 		break;
-	
-	case UIType::View:
-		viewport = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, ignoreUI);
-		return viewport;
 	}
 
 	if (bar) {
@@ -104,6 +103,11 @@ std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset
 	}
 
 	return bar;
+}
+
+std::shared_ptr<Viewport> Window::addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world) {
+	viewport = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, true, world);
+	return viewport;
 }
 
 void Window::draw() {
@@ -139,6 +143,7 @@ void Window::draw() {
 
 	//glfwSwapBuffers(window);
 	glfwPollEvents();
+	Input::update();
 }
 
 void Window::addFont(std::string font, FontType type) {
