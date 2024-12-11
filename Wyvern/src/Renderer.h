@@ -12,11 +12,16 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include <string>
+
 #include "World.h"
+#include "Shader.h"
+#include "Buffer.h"
+#include "Framebuffer.h"
 
 class Renderer {
 public:
-	Renderer(GLFWwindow* window, std::shared_ptr<World> world);
+	Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string& shaderPath);
 	~Renderer();
 
 	void render();
@@ -29,15 +34,20 @@ private:
 	GLFWwindow* window;
 	std::shared_ptr<World> world;
 
-	GLuint VAO; // Vertex array object
-	GLuint VBO; // Vertex buffer object
-	GLuint EBO; // Element buffer object
+	std::unique_ptr<Shader> shader;
+	std::unique_ptr<Buffer> buffer;
+	std::unique_ptr<Framebuffer> framebuffer;
 
-	GLuint FBO; // Frame buffer object
-	GLuint RBO; // Render buffer object
+	//GLuint VAO; // Vertex array object
+	//GLuint VBO; // Vertex buffer object
+	//GLuint EBO; // Element buffer object
 
-	GLuint tex;
+	//GLuint FBO; // Frame buffer object
+	//GLuint RBO; // Render buffer object
 
-	GLuint shaderProgram;
+	//GLuint tex;
+
 	ImVec2 texSize;
+
+	void setupOpenGLState();
 };

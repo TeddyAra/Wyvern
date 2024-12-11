@@ -49,7 +49,7 @@ public:
 	 * @return Returns the created UI bar
 	 */
 	std::shared_ptr<UIBar> addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI = false);
-	std::shared_ptr<Viewport> addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world);
+	std::shared_ptr<Viewport> addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world, std::string& shaderPath);
 	void draw();
 	void addFont(std::string font, FontType type);
 

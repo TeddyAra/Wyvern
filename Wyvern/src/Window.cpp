@@ -105,8 +105,8 @@ std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset
 	return bar;
 }
 
-std::shared_ptr<Viewport> Window::addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world) {
-	viewport = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, true, world);
+std::shared_ptr<Viewport> Window::addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world, std::string& shaderPath) {
+	viewport = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, true, world, shaderPath);
 	return viewport;
 }
 

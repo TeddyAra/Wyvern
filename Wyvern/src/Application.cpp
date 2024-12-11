@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <string>
+
 #include "DebugCommand.h"
 #include "UndoCommand.h"
 #include "RedoCommand.h"
@@ -20,11 +22,14 @@ Application::Application() {
 	world = std::make_shared<World>();
 	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>(world);
 
+	// Path to shader
+	std::string shaderPath = "assets/shader.shader";
+
 	// Add UI
 	auto menu = window->addUI(UIType::Menu, "Menu", 150, 0, 0, 0);
 	auto properties = window->addUI(UIType::List, "Properties", 0, 300, 300, 0);
 	auto hierarchy = window->addUI(UIType::List, "Hierarchy", menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
-	auto viewport = window->addViewport("Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, world);
+	auto viewport = window->addViewport("Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, world, shaderPath);
 
 	menu->newZone("Zone 1");
 	menu->addWidget(WidgetType::InputFloat,		"Debug", u8"\uf0c7",	std::make_shared<DebugCommand>(controller));
@@ -46,10 +51,12 @@ Application::~Application() {
 void Application::run() {
 	if (!succeeded) return;
 
+	world->start();
+
 	// Main loop
 	while (!window->shouldWindowClose()) {
 		glfwPollEvents();
-		world->updateCamera();
+		world->update();
 		window->draw();
 		glfwSwapBuffers(window->get());
 	}

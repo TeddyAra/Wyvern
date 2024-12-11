@@ -2,16 +2,15 @@
 
 #include <memory>
 #include <iostream>
+#include <string>
 
 #include "UIBar.h"
 #include "Renderer.h"
 
 class Viewport : public UIBar {
 public:
-	//Viewport(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI)
-	//	: UIBar(window, name, titleBarHeight, top, right, bottom, left, ignoreUI), resized(false) {}
-	Viewport(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI, std::shared_ptr<World> world)
-		: UIBar(window, name, titleBarHeight, top, right, bottom, left, ignoreUI), renderer(std::make_unique<Renderer>(window, world)), resized(false) {}
+	Viewport(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI, std::shared_ptr<World> world, std::string& shaderPath)
+		: UIBar(window, name, titleBarHeight, top, right, bottom, left, ignoreUI), renderer(std::make_unique<Renderer>(window, world, shaderPath)), resized(false) {}
 	void draw() override;
 	void drawBigButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override {};
 	void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override {};

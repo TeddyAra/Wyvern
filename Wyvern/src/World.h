@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "Camera.h"
-#include "CameraController.h"
+#include "Transform.h"
 
 class World {
 public:
@@ -11,14 +12,17 @@ public:
 	~World();
 
 	std::shared_ptr<Camera> getCamera();
-	void updateCamera();
+	void start();
+	void update();
+
+	void addObject(std::shared_ptr<Transform> object);
 
 	float getDebug();
 	void setDebug(float debug);
 
 private:
+	std::vector<std::shared_ptr<Transform>> objects;
 	std::shared_ptr<Camera> camera;
-	std::shared_ptr<CameraController> controller;
 
 	float debug;
 };
