@@ -19,7 +19,9 @@ void CameraBehaviour::update(Transform& transform) {
 
 	transform.translate(translation);
 
-	glm::vec2 mouseDelta = Input::getDeltaMousePosition();
-	transform.rotateAroundAxis(transform.getRight(), mouseDelta.y);
-	transform.rotateAroundAxis(glm::vec3(0, 1, 0), mouseDelta.x);
+	if (Input::getMouse(1)) {
+		glm::vec2 mouseDelta = Input::getDeltaMousePosition();
+		transform.rotateAroundAxis(transform.getRight(), mouseDelta.y);
+		transform.rotateAroundAxis(glm::vec3(0, 1, 0), mouseDelta.x);
+	}
 }

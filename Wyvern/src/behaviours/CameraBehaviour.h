@@ -8,7 +8,7 @@ public:
 	void update(Transform& transform) override;
 
 private:
-	const float slowSpeed = 1.0f;
-	const float fastSpeed = 2.0f;
-	const float sensitivity = 0.25f;
+	const float slowSpeed = 0.4f;
+	const float fastSpeed = 0.8f;
+	const float sensitivity = 0.15f;
 };

@@ -26,41 +26,10 @@ Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string
 	setupOpenGLState();
 
 	buffer = std::make_unique<Buffer>(vertices, sizeof(vertices), indices, sizeof(indices));
+	buffer->addLayout(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	buffer->addLayout(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
 	framebuffer = std::make_unique<Framebuffer>(size, size);
-
-	// index, size, type, normalized, stride, pointer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	//const char* vertexShaderSource = R"(
-	//	#version 330
-	//	layout(location = 0) in vec3 aPos;
-	//	layout(location = 1) in vec2 aTexCoord;
-
-	//	out vec2 TexCoord;
-
-	//	uniform mat4 view;
-	//	uniform mat4 projection;
-
-	//	void main() {
-	//		gl_Position = projection * view * vec4(aPos, 1.0f);
-	//		TexCoord = aTexCoord;
-	//	}
-	//)";
-
-	//const char* fragmentShaderSource = R"(
-	//	#version 330
-	//	in vec2 TexCoord;
-	//	
-	//	out vec4 FragColor;
-
-	//	void main() {
-	//		FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f); //vec4(TexCoord, 0.0f, 1.0f);
-	//	}
-	//)";
 
 	shader = std::make_unique<Shader>(shaderPath);
 }

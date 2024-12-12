@@ -12,8 +12,8 @@ public:
 	void bind();
 	void unbind();
 
+	void addLayout(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* offset);
+
 private:
 	GLuint VAO, VBO, EBO;
-
-	void setupVertexAttributes();
 };
