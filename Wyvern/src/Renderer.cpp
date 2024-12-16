@@ -3,15 +3,61 @@
 #include <iostream>
 
 const unsigned int indices[] = {
-	0, 2, 3,
-	0, 3, 1
+	 0,  2,  3,
+	 0,  3,  1,
+	 
+	 4,  6,  7,
+	 4,  7,  5,
+	 
+	 8, 10, 11,
+	 8, 11,  9,
+
+	12, 14, 15,
+	12, 15, 13,
+
+	16, 18, 19,
+	16, 19, 17,
+
+	20, 22, 23,
+	20, 23, 21
 };
 
 const float vertices[] = {
-	-0.25f, -0.25f, 0.0f, 0.0f, 0.0f,
-	 0.25f, -0.25f, 0.0f, 1.0f, 0.0f,
-	-0.25f,  0.25f, 0.0f, 0.0f, 1.0f,
-	 0.25f,  0.25f, 0.0f, 1.0f, 1.0f
+	// Front face
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
+
+	// Back face
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
+						  		 
+	// Top face		  		 
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
+
+	// Bottom face
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  1.0f,
+
+	// Left face
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
+
+	// Right face
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  1.0f
 };
 
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
@@ -21,6 +67,14 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string& shaderPath)
 	: window(window), world(world), shader(nullptr), buffer(nullptr)
 {
+	std::shared_ptr<Transform> object = std::make_shared<Transform>();
+	world->addObject(object);
+
+	object = std::make_shared<Transform>();
+	object->translate(2.0f, 0.0f, 0.0f);
+	object->rotateAroundAxis(glm::vec3(0.0f, 1.0f, 0.0f), 30);
+	world->addObject(object);
+
 	const int size = 64;
 
 	setupOpenGLState();
@@ -39,31 +93,45 @@ Renderer::~Renderer() {
 }
 
 void Renderer::render() {
+	// Bind everything
 	shader->bind();
 	buffer->bind();
-
 	framebuffer->bind();
+
+	// Set viewport
 	glViewport(0, 0, texSize.x, texSize.y);
 
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(window, &windowWidth, &windowHeight);
-
+	// Set view matrix
 	GLuint viewLoc = glGetUniformLocation(shader->getID(), "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(world->getCamera()->getViewMatrix()));
-
+	
+	// Set projection matrix
 	GLuint projectionLoc = glGetUniformLocation(shader->getID(), "projection");
-	glm::mat4 projection = glm::perspective(glm::radians(world->getCamera()->getFov()), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(world->getCamera()->getFov()), texSize.x / texSize.y, 0.1f, 100.0f);
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	// Get objects
+	std::vector<std::shared_ptr<Transform>> objects = world->getObjects();
+	std::vector<std::shared_ptr<Transform>> selected = world->getSelected();
 
+	for (std::shared_ptr<Transform> object : objects) {
+		// Set model matrix
+		GLuint modelLoc = glGetUniformLocation(shader->getID(), "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(object->getModelMatrix()));
+
+		// Set colour
+		GLuint colLoc = glGetUniformLocation(shader->getID(), "col");
+		float col = std::find(selected.begin(), selected.end(), object) != selected.end() ? 1.0f : 0.0f;
+		glUniform1f(colLoc, col);
+
+		// Draw object
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	}
+
+	// Unbind everything
 	buffer->unbind();
 	shader->unbind();
 	framebuffer->unbind();
-	glViewport(0, 0, windowWidth, windowHeight);
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 GLuint Renderer::getTex() {
@@ -78,10 +146,11 @@ void Renderer::clear() {
 	framebuffer->unbind();
 }
 
-void Renderer::updateSize(int width, int height) { 
+void Renderer::updateSize(int posX, int posY, int width, int height) {
 	std::cout << "Setting size to " << width << ", " << height << std::endl;
 	framebuffer->updateTextureSize(width, height);
 	texSize = ImVec2(width, height);
+	world->updateViewport(posX, posY, width, height);
 }
 
 ImVec2 Renderer::getSize() {

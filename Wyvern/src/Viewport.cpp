@@ -3,9 +3,11 @@
 #include <iostream>
 
 void Viewport::draw() {
+	ImVec2 viewportPos = ImVec2(ImGui::GetWindowPos().x + ImGui::GetCursorPosX(), ImGui::GetWindowPos().y + ImGui::GetCursorPosY());
+
 	if (!resized) {
 		ImVec2 region = ImGui::GetContentRegionAvail();
-		renderer->updateSize(region.x, region.y);
+		renderer->updateSize(viewportPos.x, viewportPos.y, region.x, region.y);
 		resized = true;
 	}
 

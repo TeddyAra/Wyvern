@@ -1,5 +1,7 @@
 #include "Buffer.h"
 
+#include <iostream>
+
 Buffer::Buffer(const float* vertices, size_t vertexSize, const GLuint* indices, size_t indexSize) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

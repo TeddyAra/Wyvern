@@ -27,7 +27,7 @@ public:
 	void render();
 	GLuint getTex();
 	void clear();
-	void updateSize(int width, int height);
+	void updateSize(int posX, int posY, int width, int height);
 	ImVec2 getSize();
 
 private:
@@ -37,15 +37,6 @@ private:
 	std::unique_ptr<Shader> shader;
 	std::unique_ptr<Buffer> buffer;
 	std::unique_ptr<Framebuffer> framebuffer;
-
-	//GLuint VAO; // Vertex array object
-	//GLuint VBO; // Vertex buffer object
-	//GLuint EBO; // Element buffer object
-
-	//GLuint FBO; // Frame buffer object
-	//GLuint RBO; // Render buffer object
-
-	//GLuint tex;
 
 	ImVec2 texSize;
 

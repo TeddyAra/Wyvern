@@ -7,10 +7,12 @@ out vec2 TexCoord;
 
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 model;
+uniform float col;
 
 void main() {
-	gl_Position = projection * view * vec4(aPos, 1.0f);
-	TexCoord = aTexCoord;
+	gl_Position = projection * view * model * vec4(aPos, 1.0f);
+	TexCoord = aTexCoord + vec2(col, col);
 }
 
 #shader fragment

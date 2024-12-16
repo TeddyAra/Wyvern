@@ -153,10 +153,10 @@ public:
 	glm::mat4 getModelMatrix() {
 		glm::mat4 matrix = glm::mat4(1.0f);
 
-		matrix = glm::scale(matrix, scale);
-		matrix = glm::translate(matrix, -origin);
-		matrix *= glm::mat4_cast(rotation);
 		matrix = glm::translate(matrix, position);
+		matrix *= glm::mat4_cast(rotation);
+		matrix = glm::translate(matrix, -origin);
+		matrix = glm::scale(matrix, scale);
 
 		return matrix;
 	}
