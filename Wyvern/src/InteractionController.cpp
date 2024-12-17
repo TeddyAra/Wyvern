@@ -21,6 +21,10 @@ void InteractionController::setDebug(float debug) {
 	world->setDebug(debug);
 }
 
+void InteractionController::createObject() {
+	world->createObject();
+}
+
 void InteractionController::addToHistory(std::shared_ptr<ICommand> command) {
 	history->addCommand(command);
 }

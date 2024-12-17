@@ -18,7 +18,10 @@ public:
 
 	float getDebug();
 	void setDebug(float debug);
+	void createObject();
+
 	void addToHistory(std::shared_ptr<ICommand> command);
+	
 	void undo();
 	void redo();
 

@@ -91,6 +91,7 @@ void Input::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 glm::vec3 Input::posToRayDirection(glm::vec2 pos, glm::vec2 viewportSize, float fov) {
+	// TODO: Quick fix, flipped mouseX and mouseY to be from 1 to -1 instead of from -1 to 1
 	float mouseX = (pos.x / viewportSize.x) * -2.0f + 1.0f;
 	float mouseY = (pos.y / viewportSize.y) * -2.0f + 1.0f;
 

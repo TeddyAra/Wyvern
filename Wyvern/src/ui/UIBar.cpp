@@ -15,7 +15,7 @@ UIBar::UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOff
 }
 
 UIBar::~UIBar() {
-
+	// TODO: When the application closes through alt+f4, there's something going wrong here
 }
 
 void UIBar::render() {

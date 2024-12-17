@@ -29,6 +29,7 @@ public:
 
 	float getDebug();
 	void setDebug(float debug);
+	void createObject();
 
 private:
 	std::vector<std::shared_ptr<Transform>> objects;

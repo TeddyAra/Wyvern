@@ -5,6 +5,7 @@
 #include "DebugCommand.h"
 #include "UndoCommand.h"
 #include "RedoCommand.h"
+#include "CreateObjectCommand.h"
 #include "InteractionController.h"
 #include "World.h"
 
@@ -32,9 +33,10 @@ Application::Application() {
 	auto viewport = window->addViewport("Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, world, shaderPath);
 
 	menu->newZone("Zone 1");
-	menu->addWidget(WidgetType::InputFloat,		"Debug", u8"\uf0c7",	std::make_shared<DebugCommand>(controller));
-	menu->addWidget(WidgetType::SmallButton,	"Undo", u8"\uf0c7",		std::make_shared<UndoCommand>(controller));
-	menu->addWidget(WidgetType::SmallButton,	"Redo", u8"\uf0c7",		std::make_shared<RedoCommand>(controller));
+	menu->addWidget(WidgetType::InputFloat,		"Debug",	u8"\uf0c7",	std::make_shared<DebugCommand>(controller));
+	menu->addWidget(WidgetType::SmallButton,	"Undo",		u8"\uf0e2", std::make_shared<UndoCommand>(controller));
+	menu->addWidget(WidgetType::SmallButton,	"Redo",		u8"\uf01e", std::make_shared<RedoCommand>(controller));
+	menu->addWidget(WidgetType::LargeButton,	"Create",	u8"\uf0fe", std::make_shared<CreateObjectCommand>(controller));
 
 	// Add fonts
 	FontManager::addFont("assets/SourceSansPro", 16.0f);

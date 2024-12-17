@@ -114,6 +114,7 @@ void World::checkIntersections() {
 		glm::vec3 rayDirection = Input::getRelativeDirection(camera->getViewMatrix(), Input::posToRayDirection(mousePos, viewportSize, camera->getFov()));
 		rayDirection = glm::normalize(rayDirection) * 1000.0f;
 
+		// TODO: Either shortestDistance or the intersection itself isn't entirely accurate
 		float shortestDistance = std::numeric_limits<float>::max();
 		glm::vec2 shortestBaryPosition;
 		std::shared_ptr<Transform> closestObject = NULL;
@@ -189,4 +190,10 @@ void World::checkIntersections() {
 
 		if (closestObject) selected.push_back(closestObject);
 	}
+}
+
+void World::createObject() {
+	std::shared_ptr<Transform> object = std::make_shared<Transform>();
+	object->translate(debug, 0.0f, 0.0f);
+	objects.push_back(object);
 }
