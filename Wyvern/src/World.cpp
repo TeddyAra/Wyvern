@@ -82,6 +82,7 @@ std::vector<std::shared_ptr<Transform>> World::getSelected() {
 
 void World::addObject(std::shared_ptr<Transform> object) {
 	objects.push_back(object);
+	Physics::addObject(object);
 }
 
 float World::getDebug() {
@@ -112,88 +113,20 @@ void World::checkIntersections() {
 
 		glm::vec3 rayOrigin = camera->getPosition();
 		glm::vec3 rayDirection = Input::getRelativeDirection(camera->getViewMatrix(), Input::posToRayDirection(mousePos, viewportSize, camera->getFov()));
-		rayDirection = glm::normalize(rayDirection) * 1000.0f;
+		rayDirection = glm::normalize(rayDirection);
 
 		// TODO: Either shortestDistance or the intersection itself isn't entirely accurate
-		float shortestDistance = std::numeric_limits<float>::max();
-		glm::vec2 shortestBaryPosition;
-		std::shared_ptr<Transform> closestObject = NULL;
-
-		for (std::shared_ptr<Transform> object : objects) {
-			/*glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), object->getPosition()) * glm::mat4_cast(object->getRotation()) * glm::scale(glm::mat4(1.0f), object->getScale());
-			modelMatrix = glm::inverse(modelMatrix);
-
-			glm::vec3 localRayOrigin = glm::vec3(modelMatrix * glm::vec4(rayOrigin, 1.0f));
-			glm::vec3 localRayDirection = glm::normalize(glm::vec3(modelMatrix * glm::vec4(rayDirection, 1.0f)));
-
-			glm::vec3 min = glm::vec3(-1.0f, -1.0f, -1.0f);
-			glm::vec3 max = glm::vec3( 1.0f,  1.0f,  1.0f);
-
-			float tmin = (min.x - localRayOrigin.x) / localRayDirection.x;
-			float tmax = (max.x - localRayOrigin.x) / localRayDirection.x;
-
-			if (tmin > tmax) std::swap(tmin, tmax);
-
-			float tymin = (min.y - localRayOrigin.y) / localRayDirection.y;
-			float tymax = (max.y - localRayOrigin.y) / localRayDirection.y;
-
-			if (tymin > tymax) std::swap(tymin, tymax);
-
-			if ((tmin > tymax) || (tymin > tmax)) continue;
-
-			if (tymin > tmin) tmin = tymin;
-			if (tymax < tmax) tmax = tymax;
-
-			float tzmin = (min.z - localRayOrigin.z) / localRayDirection.z;
-			float tzmax = (max.z - localRayOrigin.z) / localRayDirection.z;
-
-			if (tzmin > tzmax) std::swap(tzmin, tzmax);
-
-			if ((tmin > tzmax) || (tzmin > tmax)) continue;
-
-			if (tzmin > tmin) tmin = tzmin;
-			if (tzmax < tmax) tmax = tzmax;
-
-			std::cout << "Selected" << std::endl;
-
-			selected.push_back(object);
-			return;*/
-
-			glm::vec2 currentBaryPosition;
-			float currentShortest = std::numeric_limits<float>::max();
-
-			glm::mat4 matrix = object->getModelMatrix();
-
-			for (int i = 0; i < sizeof(indices) / sizeof(indices[0]); i += 3) {
-				glm::vec2 baryPosition;
-				float distance;
-
-				glm::vec3 pos1 = glm::vec3(matrix * glm::vec4(vertices[indices[i]],	    1.0f));
-				glm::vec3 pos2 = glm::vec3(matrix * glm::vec4(vertices[indices[i + 1]], 1.0f));
-				glm::vec3 pos3 = glm::vec3(matrix * glm::vec4(vertices[indices[i + 2]], 1.0f));
-
-				if (glm::intersectRayTriangle(rayOrigin, rayDirection, pos1, pos2, pos3, baryPosition, distance)) {
-					if (distance < currentShortest) {
-						currentBaryPosition = baryPosition;
-						currentShortest = distance;
-						std::cout << "Intersect" << std::endl;
-					}
-				}
-			}
-
-			if (currentShortest < shortestDistance) {
-				shortestDistance = currentShortest;
-				shortestBaryPosition = currentBaryPosition;
-				closestObject = object;
-			}
+		HitInfo info;
+		if (Physics::ray(rayOrigin, rayDirection, info)) {
+			selected.push_back(info.object);
 		}
-
-		if (closestObject) selected.push_back(closestObject);
 	}
 }
 
 void World::createObject() {
 	std::shared_ptr<Transform> object = std::make_shared<Transform>();
 	object->translate(debug, 0.0f, 0.0f);
+	object->setCollider(std::make_shared<BoxCollider>());
 	objects.push_back(object);
+	Physics::addObject(object);
 }

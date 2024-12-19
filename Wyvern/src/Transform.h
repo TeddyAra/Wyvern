@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Behaviour.h"
+#include "Collider.h"
 
 class Transform {
 public:
@@ -14,6 +15,15 @@ public:
 		: position(glm::vec3(0, 0, 0)), rotation(glm::quat(glm::vec3(0, 0, 0))), scale(glm::vec3(1, 1, 1)), 
 		origin(glm::vec3(0.5f, 0.5f, 0.5f)), front(glm::vec3(0, 0, 1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)) {}
 	virtual ~Transform() = default;
+
+	// Collider
+	void setCollider(std::shared_ptr<Collider> collider) {
+		this->collider = collider;
+	}
+
+	std::shared_ptr<Collider> getCollider() {
+		return collider;
+	}
 
 	// Position
 	glm::vec3 getPosition() {
@@ -190,6 +200,7 @@ protected:
 	glm::vec3 up;
 
 	std::shared_ptr<Behaviour> behaviour;
+	std::shared_ptr<Collider> collider;
 
 	void updateDirectionVectors() {
 		front = rotation * glm::vec3(0, 0, 1);

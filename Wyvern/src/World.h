@@ -11,6 +11,8 @@
 
 #include "Camera.h"
 #include "Transform.h"
+#include "Physics.h"
+#include "BoxCollider.h"
 
 class World {
 public:
