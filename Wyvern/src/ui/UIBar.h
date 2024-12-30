@@ -32,8 +32,8 @@ public:
 protected:
 	GLFWwindow* window;
 	std::string name;
-	int width;
-	int height;
+	std::shared_ptr<int> width;
+	std::shared_ptr<int> height;
 	int posX;
 	int posY;
 

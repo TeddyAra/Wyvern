@@ -9,20 +9,20 @@
 UIBar::UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI)
 	: window(window), name(name), ignoreUI(ignoreUI), titleBarHeight(titleBarHeight), 
 	top(top), right(right), bottom(bottom), left(left), 
-	width(0), height(0), fontCount(0), iconFont(nullptr), textFont(nullptr), headerFont(nullptr), widgetIndex(0)
+	width(std::make_shared<int>(0)), height(std::make_shared<int>(0)), fontCount(0), iconFont(nullptr), textFont(nullptr), headerFont(nullptr), widgetIndex(0)
 {
 
 }
 
 UIBar::~UIBar() {
-	// TODO: When the application closes through alt+f4, there's something going wrong here
+	zones.clear();
 }
 
 void UIBar::render() {
 	calcSizeAndPos();
 
 	ImGui::SetNextWindowPos(ImVec2(posX, posY), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(width, height), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(*width, *height), ImGuiCond_Always);
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 
@@ -42,12 +42,12 @@ void UIBar::render() {
 
 std::shared_ptr<int> UIBar::getWidthPtr() {
 	if (width == 0) calcSizeAndPos();
-	return std::shared_ptr<int>(&width);
+	return width;
 }
 
 std::shared_ptr<int> UIBar::getHeightPtr() {
 	if (height == 0) calcSizeAndPos();
-	return std::shared_ptr<int>(&height);
+	return height;
 }
 
 void UIBar::newZone(std::string title) {
@@ -131,8 +131,8 @@ void UIBar::calcSizeAndPos() {
 		pos.x += amount;
 	}
 
-	width = imSize.x;
-	height = imSize.y;
+	*width = imSize.x;
+	*height = imSize.y;
 	posX = pos.x;
 	posY = pos.y;
 }

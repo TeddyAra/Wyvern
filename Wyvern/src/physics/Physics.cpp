@@ -3,10 +3,10 @@
 #include <iostream>
 
 std::vector<std::shared_ptr<Transform>> Physics::objects;
+std::map<int, std::string> Physics::layers;
 
 void Physics::addObject(std::shared_ptr<Transform> object) {
 	objects.push_back(object);
-	std::cout << "Added: " << objects.size() << std::endl;
 }
 
 void Physics::removeObject(std::shared_ptr<Transform> object) {
@@ -16,24 +16,19 @@ void Physics::removeObject(std::shared_ptr<Transform> object) {
 	}
 }
 
-bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info) {
-	const float distance = 1; //1000.0f;
-	direction = glm::normalize(direction) * distance;
+bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int layer) {
+	direction = glm::normalize(direction);
 	
 	float shortestDistance = std::numeric_limits<float>::max();
-	glm::vec2 shortestBaryPosition;
+	glm::vec2 shortestBaryPosition(0.0f, 0.0f);
 	std::shared_ptr<Transform> closestObject = nullptr;
 
 	glm::vec3 closestPos1;
 	glm::vec3 closestPos2;
 	glm::vec3 closestPos3;
-	
-	std::cout << objects.size() << std::endl;
 
 	for (std::shared_ptr<Transform> object : objects) {
-		std::cout << "Object" << std::endl;
-
-		if (!object->getCollider()) continue;
+		if (!object->getCollider() || (!object->checkLayer(layer) && layer >= 0)) continue;
 
 		std::vector<glm::vec3> vertices = object->getCollider()->getVertices();
 		std::vector<unsigned int> indices = object->getCollider()->getIndices();
@@ -49,6 +44,8 @@ bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info) {
 			glm::vec3 pos3 = glm::vec3(matrix * glm::vec4(vertices[indices[i + 2]], 1.0f));
 
 			if (glm::intersectRayTriangle(origin, direction, pos1, pos2, pos3, triangleBaryPosition, triangleDistance)) {
+				if (triangleDistance < 0) continue;
+
 				if (triangleDistance < shortestDistance) {
 					shortestDistance = triangleDistance;
 					shortestBaryPosition = triangleBaryPosition;
@@ -77,4 +74,41 @@ bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info) {
 	info.normal = normal;
 	info.object = closestObject;
 	return true;
+}
+
+void Physics::addLayer(int ID, const std::string& layer) {
+	if (ID < 0) {
+		std::cerr << "Layer must have a positive ID" << std::endl;
+		return;
+	}
+
+	if (layers.find(ID) != layers.end()) {
+		std::cout << "Layer with ID " << ID << " already exists" << std::endl;
+		return;
+	}
+
+	layers[ID] = layer;
+}
+
+int Physics::getLayerIndex(const std::string& layer) {
+	int ID = -1;
+
+	std::map<int, std::string>::iterator it;
+	for (it = layers.begin(); it != layers.end(); it++) {
+		if (it->second == layer) {
+			ID = it->first;
+			break;
+		}
+	}
+
+	if (ID >= 0) {
+		return ID;
+	} else {
+		std::cerr << "Layer " << layer << " does not exist" << std::endl;
+		return -1;
+	}
+}
+
+std::string Physics::vec3ToString(glm::vec3 vec) {
+	return std::string("(" + std::to_string(vec.x) + ", " + std::to_string(vec.y) + ", " + std::to_string(vec.z) + ")");
 }

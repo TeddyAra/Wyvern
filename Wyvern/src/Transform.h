@@ -8,12 +8,13 @@
 
 #include "Behaviour.h"
 #include "Collider.h"
+#include "BoxCollider.h"
 
 class Transform {
 public:
 	Transform() 
 		: position(glm::vec3(0, 0, 0)), rotation(glm::quat(glm::vec3(0, 0, 0))), scale(glm::vec3(1, 1, 1)), 
-		origin(glm::vec3(0.5f, 0.5f, 0.5f)), front(glm::vec3(0, 0, 1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)) {}
+		origin(glm::vec3(0.5f, 0.5f, 0.5f)), front(glm::vec3(0, 0, 1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)), collider(std::make_shared<BoxCollider>()) {}
 	virtual ~Transform() = default;
 
 	// Collider
@@ -103,6 +104,22 @@ public:
 		updateDirectionVectors();
 	}
 
+	void lookAt(glm::vec3 target) {
+		glm::vec3 forward = glm::normalize(target - position);
+
+		if (glm::length(forward) < 1e-6f) {
+			return;
+		}
+
+		glm::vec3 up = glm::abs(forward.y) > 0.99f ? glm::vec3(0.0f, 0.0f, 1.0f) : glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 right = glm::normalize(glm::cross(up, forward));
+		glm::vec3 correctedUp = glm::cross(forward, right);
+
+		glm::mat3 rotationMatrix = glm::mat3(right, correctedUp, forward);
+		rotation = glm::quat_cast(rotationMatrix);
+		updateDirectionVectors();
+	}
+
 	// Scale
 	glm::vec3 getScale() {
 		return scale;
@@ -165,7 +182,7 @@ public:
 
 		matrix = glm::translate(matrix, position);
 		matrix *= glm::mat4_cast(rotation);
-		matrix = glm::translate(matrix, -origin);
+		//matrix = glm::translate(matrix, -origin);
 		matrix = glm::scale(matrix, scale);
 
 		return matrix;
@@ -188,6 +205,19 @@ public:
 		}
 	}
 
+	// Layers
+	void addLayer(int ID) {
+		layers.push_back(ID);
+	}
+
+	void removeLayer(int ID) {
+		layers.erase(std::remove(layers.begin(), layers.end(), ID), layers.end());
+	}
+
+	bool checkLayer(int ID) {
+		return (std::find(layers.begin(), layers.end(), ID) != layers.end());
+	}
+
 protected:
 	glm::vec3 position;
 	glm::quat rotation;
@@ -201,6 +231,8 @@ protected:
 
 	std::shared_ptr<Behaviour> behaviour;
 	std::shared_ptr<Collider> collider;
+
+	std::vector<int> layers;
 
 	void updateDirectionVectors() {
 		front = rotation * glm::vec3(0, 0, 1);

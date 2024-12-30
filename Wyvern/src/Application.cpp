@@ -13,14 +13,19 @@ Application::Application() {
 	// Create a window
 	succeeded;
 
-	window = std::make_shared<Window>(1600, 900, 400, 200, "Wyvern", true, succeeded);
+	window = std::make_shared<Window>(1600, 900, 400, 200, "Wyvern", false, succeeded);
 	if (!succeeded) {
 		std::cout << "Something went wrong with GLFW/GLEW initialization or window creation" << std::endl;
 		return;
 	}
 
+	// Add physics layers
+	Physics::addLayer(0, "main");
+	Physics::addLayer(1, "transform");
+
 	// Create world and interaction controller
 	world = std::make_shared<World>();
+	world->setDefaultLayer(Physics::getLayerIndex("main"));
 	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>(world);
 
 	// Path to shader

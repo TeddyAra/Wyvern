@@ -4,45 +4,39 @@
 
 #include "CameraBehaviour.h"
 
-const glm::vec3 vertices[] = {
-	{ -0.5f, -0.5f, -0.5f },
-	{  0.5f, -0.5f, -0.5f },
-	{ -0.5f,  0.5f, -0.5f },
-	{  0.5f,  0.5f, -0.5f },
-	{ -0.5f, -0.5f,  0.5f },
-	{  0.5f, -0.5f,  0.5f },
-	{ -0.5f,  0.5f,  0.5f },
-	{  0.5f,  0.5f,  0.5f }
-};
-
-const unsigned int indices[] = {
-	0, 2, 3,
-	0, 3, 1,
-
-	1, 3, 7,
-	1, 7, 5,
-
-	5, 7, 6,
-	5, 6, 4,
-
-	4, 6, 2,
-	4, 2, 0,
-
-	4, 0, 1,
-	4, 1, 5,
-
-	2, 6, 7,
-	2, 7, 3
-};
-
 World::World() 
 	: debug(0.0f), camera(std::make_shared<Camera>(60))
 {
 	camera->setBehaviour(std::make_shared<CameraBehaviour>());
+
+	glm::vec3 directions[] = {
+		{  1.0f,  0.0f,  0.0f },
+		{ -1.0f,  0.0f,  0.0f },
+		{  0.0f,  1.0f,  0.0f },
+		{  0.0f, -1.0f,  0.0f },
+		{  0.0f,  0.0f,  1.0f },
+		{  0.0f,  0.0f, -1.0f }
+	};
+
+	for (const glm::vec3& direction : directions) {
+		std::shared_ptr<Transform> tool = std::make_shared<Transform>();
+		tool->setScale(0.1f, 0.1f, 2.0f);
+		tool->lookAt(direction);
+		tool->translate(direction * 2.0f);
+
+		tool->removeLayer(Physics::getLayerIndex("main"));
+		tool->addLayer(Physics::getLayerIndex("transform"));
+		tool->setCollider(std::make_shared<CylinderCollider>());
+
+		transform.push_back(tool);
+		Physics::addObject(tool);
+	}
 }
 
 World::~World() {
-
+	objects.clear();
+	selected.clear();
+	transform.clear();
 }
 
 std::shared_ptr<Camera> World::getCamera() {
@@ -80,6 +74,10 @@ std::vector<std::shared_ptr<Transform>> World::getSelected() {
 	return selected;
 }
 
+std::vector<std::shared_ptr<Transform>> World::getTransformTools() {
+	return transform;
+}
+
 void World::addObject(std::shared_ptr<Transform> object) {
 	objects.push_back(object);
 	Physics::addObject(object);
@@ -91,33 +89,34 @@ float World::getDebug() {
 
 void World::setDebug(float debug) {
 	this->debug = debug;
-	std::cout << "Debug float changed to " << debug << std::endl;
 }
 
 void World::checkIntersections() {
 	if (Input::getMouseDown(0)) {
-		std::cout << "Click" << std::endl;
-
+		// Ignore mouse click if it isn't in the viewport
 		if (!Input::isPosInsideRect(Input::getMousePosition(), viewportPos, viewportSize)) {
-			std::cout << "Ignored" << std::endl;
 			return;
 		}
 
+		glm::vec2 mousePos = Input::getMousePosition() - viewportPos;
+
+		glm::vec3 rayOrigin = camera->getPosition();
+		glm::vec3 rayDirection = camera->getModelMatrix() * glm::vec4(Input::posToRayDirection(mousePos, viewportSize, camera->getFov()), 0.0f);
+		rayDirection = glm::normalize(rayDirection);
+
+		HitInfo info;
+		if (Physics::ray(rayOrigin, rayDirection, info, Physics::getLayerIndex("transform"))) {
+			std::cout << "Transform" << std::endl;
+			return;
+		}
+
+		// Clear selection if left control isn't held
 		if (!Input::getKey(GLFW_KEY_LEFT_CONTROL)) {
-			std::cout << "Clear" << std::endl;
 			selected.clear();
 		}
 
-		glm::vec2 mousePos = Input::getMousePosition() - viewportPos;
-		std::cout << "Mouse position: " << mousePos.x << " " << mousePos.y << std::endl;
-
-		glm::vec3 rayOrigin = camera->getPosition();
-		glm::vec3 rayDirection = Input::getRelativeDirection(camera->getViewMatrix(), Input::posToRayDirection(mousePos, viewportSize, camera->getFov()));
-		rayDirection = glm::normalize(rayDirection);
-
-		// TODO: Either shortestDistance or the intersection itself isn't entirely accurate
-		HitInfo info;
-		if (Physics::ray(rayOrigin, rayDirection, info)) {
+		if (Physics::ray(rayOrigin, rayDirection, info, Physics::getLayerIndex("main"))) {
+			std::cout << "Main" << std::endl;
 			selected.push_back(info.object);
 		}
 	}
@@ -126,7 +125,11 @@ void World::checkIntersections() {
 void World::createObject() {
 	std::shared_ptr<Transform> object = std::make_shared<Transform>();
 	object->translate(debug, 0.0f, 0.0f);
-	object->setCollider(std::make_shared<BoxCollider>());
-	objects.push_back(object);
-	Physics::addObject(object);
+	object->setScale(1.0f, 1.0f, 1.0f);
+	object->addLayer(defaultLayer);
+	addObject(object);
+}
+
+void World::setDefaultLayer(int ID) {
+	defaultLayer = ID;
 }

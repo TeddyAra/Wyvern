@@ -91,8 +91,7 @@ void Input::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 glm::vec3 Input::posToRayDirection(glm::vec2 pos, glm::vec2 viewportSize, float fov) {
-	// TODO: Quick fix, flipped mouseX and mouseY to be from 1 to -1 instead of from -1 to 1
-	float mouseX = (pos.x / viewportSize.x) * -2.0f + 1.0f;
+	float mouseX = (pos.x / viewportSize.x) *  2.0f - 1.0f;
 	float mouseY = (pos.y / viewportSize.y) * -2.0f + 1.0f;
 
 	float ratio = viewportSize.x / viewportSize.y;
@@ -115,12 +114,6 @@ glm::vec3 Input::posToRayDirection(glm::vec2 pos, float viewportWidth, float vie
 
 glm::vec3 Input::posToRayDirection(float posX, float posY, float viewportWidth, float viewportHeight, float fov) {
 	return Input::posToRayDirection(glm::vec2(posX, posY), glm::vec2(viewportWidth, viewportHeight), fov);
-}
-
-glm::vec3 Input::getRelativeDirection(glm::mat4 viewMatrix, glm::vec3 direction) {
-	glm::mat4 inverseMatrix = glm::inverse(viewMatrix);
-	glm::vec4 transformedRay = inverseMatrix * glm::vec4(direction, 0.0f);
-	return glm::vec3(transformedRay);
 }
 
 bool Input::isPosInsideRect(glm::vec2 pos, glm::vec2 rectPos, glm::vec2 rectSize) {

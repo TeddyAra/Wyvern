@@ -11,6 +11,7 @@ public:
 	~Camera();
 
 	glm::mat4 getViewMatrix();
+	glm::mat4 getProjectionMatrix(glm::vec2 viewportSize);
 
 	void setFov(float fov);
 	float getFov();

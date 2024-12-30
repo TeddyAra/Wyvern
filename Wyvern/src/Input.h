@@ -34,8 +34,6 @@ public:
 	static glm::vec3 posToRayDirection(glm::vec2 pos, float viewportWidth, float viewportHeight, float fov);
 	static glm::vec3 posToRayDirection(float posX, float posY, float viewportWidth, float viewportHeight, float fov);
 
-	static glm::vec3 getRelativeDirection(glm::mat4 viewMatrix, glm::vec3 direction);
-
 	static bool isPosInsideRect(glm::vec2 pos, glm::vec2 rectPos, glm::vec2 rectSize);
 	static bool isPosInsideRect(float posX, float posY, glm::vec2 rectPos, glm::vec2 rectSize);
 	static bool isPosInsideRect(glm::vec2 pos, float rectPosX, float rectPosY, glm::vec2 rectSize);

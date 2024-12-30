@@ -67,7 +67,7 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 }
 
 Window::~Window() {
-	//terminate();
+	ui.clear();
 }
 
 bool Window::shouldWindowClose() {
@@ -79,10 +79,12 @@ GLFWwindow* Window::get() {
 }
 
 void Window::terminate() {
-	glfwTerminate();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }
 
 std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI) {

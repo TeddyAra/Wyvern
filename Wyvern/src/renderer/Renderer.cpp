@@ -67,14 +67,6 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string& shaderPath)
 	: window(window), world(world), shader(nullptr), buffer(nullptr)
 {
-	std::shared_ptr<Transform> object = std::make_shared<Transform>();
-	world->addObject(object);
-
-	object = std::make_shared<Transform>();
-	object->translate(2.0f, 0.0f, 0.0f);
-	object->rotateAroundAxis(glm::vec3(0.0f, 1.0f, 0.0f), 30);
-	world->addObject(object);
-
 	const int size = 64;
 
 	setupOpenGLState();
@@ -97,6 +89,7 @@ void Renderer::render() {
 	shader->bind();
 	buffer->bind();
 	framebuffer->bind();
+	glEnable(GL_DEPTH_TEST);
 
 	// Set viewport
 	glViewport(0, 0, texSize.x, texSize.y);
@@ -107,25 +100,40 @@ void Renderer::render() {
 	
 	// Set projection matrix
 	GLuint projectionLoc = glGetUniformLocation(shader->getID(), "projection");
-	glm::mat4 projection = glm::perspective(glm::radians(world->getCamera()->getFov()), texSize.x / texSize.y, 0.1f, 100.0f);
+	glm::mat4 projection = world->getCamera()->getProjectionMatrix(glm::vec2(texSize.x, texSize.y));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	// Get objects
 	std::vector<std::shared_ptr<Transform>> objects = world->getObjects();
 	std::vector<std::shared_ptr<Transform>> selected = world->getSelected();
+	std::vector<std::shared_ptr<Transform>> transform = world->getTransformTools();
+
+	GLuint transformLoc = glGetUniformLocation(shader->getID(), "transform");
+	glUniform1i(transformLoc, 0);
+
+	GLuint modelLoc = glGetUniformLocation(shader->getID(), "model");
 
 	for (std::shared_ptr<Transform> object : objects) {
 		// Set model matrix
-		GLuint modelLoc = glGetUniformLocation(shader->getID(), "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(object->getModelMatrix()));
-
-		// Set colour
-		GLuint colLoc = glGetUniformLocation(shader->getID(), "col");
-		float col = std::find(selected.begin(), selected.end(), object) != selected.end() ? 1.0f : 0.0f;
-		glUniform1f(colLoc, col);
 
 		// Draw object
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	}
+
+	if (selected.size() > 0) {
+		glDisable(GL_DEPTH_TEST);
+
+		for (int i = 0; i < transform.size(); i++) {
+			// Set transform
+			glUniform1i(transformLoc, i + 1);
+
+			// Set model matrix
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform[i]->getModelMatrix()));
+
+			// Draw object
+			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+		}
 	}
 
 	// Unbind everything
@@ -141,7 +149,6 @@ GLuint Renderer::getTex() {
 void Renderer::clear() {
 	framebuffer->bind();
 	glViewport(0, 0, texSize.x, texSize.y);
-	glClearColor(1.0f, 0.0f, 0.0f, 0.5f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	framebuffer->unbind();
 }
