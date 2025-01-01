@@ -9,8 +9,8 @@
 
 class Viewport : public UIBar {
 public:
-	Viewport(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI, std::shared_ptr<World> world, std::string& shaderPath)
-		: UIBar(window, name, titleBarHeight, top, right, bottom, left, ignoreUI), renderer(std::make_unique<Renderer>(window, world, shaderPath)), resized(false) {}
+	Viewport(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, bool ignoreUI, std::shared_ptr<World> world, std::string& mainShaderPath, std::string& transformShaderPath)
+		: UIBar(window, name, titleBarHeight, top, right, bottom, left, ignoreUI), renderer(std::make_shared<Renderer>(window, world, mainShaderPath, transformShaderPath)), resized(false) {}
 	void draw() override;
 	void drawBigButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override {};
 	void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override {};
@@ -19,8 +19,9 @@ public:
 
 	void clear();
 	void resize();
+	std::shared_ptr<Renderer> getRenderer();
 
 private:
-	std::unique_ptr<Renderer> renderer;
+	std::shared_ptr<Renderer> renderer;
 	bool resized;
 };

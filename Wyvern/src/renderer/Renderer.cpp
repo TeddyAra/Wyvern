@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-const unsigned int indices[] = {
+const unsigned int mainIndices[] = {
 	 0,  2,  3,
 	 0,  3,  1,
 	 
@@ -22,127 +22,285 @@ const unsigned int indices[] = {
 	20, 23, 21
 };
 
-const float vertices[] = {
+const float mainVertices[] = {
+/*
+*	Vertex---------------  UV------------  Normal---------------
+*	x      y      z        u      v        x      y      z
+*/
+
 	// Front face
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
-
-	// Back face
-	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
-						  		 
-	// Top face		  		 
-	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
-
-	// Bottom face
-	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f,  1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f,  1.0f,
-
-	// Left face
-	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  1.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
-
-	// Right face
-	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f,  1.0f
+	-0.5f, -0.5f, -0.5f,    0.0f,  0.0f,    0.0f,  0.0f, -1.0f,
+	 0.5f, -0.5f, -0.5f,    1.0f,  0.0f,    0.0f,  0.0f, -1.0f,
+	-0.5f,  0.5f, -0.5f,    0.0f,  1.0f,    0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,    1.0f,  1.0f,    0.0f,  0.0f, -1.0f,
+						    			    
+	// Back face		    			    
+	 0.5f, -0.5f,  0.5f,    0.0f,  0.0f,    0.0f,  0.0f,  1.0f,
+	-0.5f, -0.5f,  0.5f,    1.0f,  0.0f,    0.0f,  0.0f,  1.0f,
+	 0.5f,  0.5f,  0.5f,    0.0f,  1.0f,    0.0f,  0.0f,  1.0f,
+	-0.5f,  0.5f,  0.5f,    1.0f,  1.0f,    0.0f,  0.0f,  1.0f,
+						    		 	    
+	// Top face		  		   			    
+	-0.5f,  0.5f, -0.5f,    0.0f,  0.0f,    0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,    1.0f,  0.0f,    0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,    0.0f,  1.0f,    0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,    1.0f,  1.0f,    0.0f,  1.0f,  0.0f,
+						    			    
+	// Bottom face		    			    
+	-0.5f, -0.5f, -0.5f,    0.0f,  0.0f,    0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,    1.0f,  0.0f,    0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,    0.0f,  1.0f,    0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,    1.0f,  1.0f,    0.0f, -1.0f,  0.0f,
+						    			    
+	// Left face		    			    
+	-0.5f, -0.5f,  0.5f,    0.0f,  0.0f, -  1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,    1.0f,  0.0f, -  1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,    0.0f,  1.0f, -  1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,    1.0f,  1.0f, -  1.0f,  0.0f,  0.0f,
+						    			    
+	// Right face		    			    
+	 0.5f, -0.5f, -0.5f,    0.0f,  0.0f,    1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,    1.0f,  0.0f,    1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,    0.0f,  1.0f,    1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,    1.0f,  1.0f,    1.0f,  0.0f,  0.0f
 };
+
+void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices) {
+	const int faceCount = 16;
+	const float coneHeight = 0.1f;
+	const float coneRadius = 1.0f;
+
+	glm::vec3 axis(0.0f, 0.0f, 1.0f);
+
+	vertices.push_back(glm::vec3(0.0f, 0.0f, -0.5f));
+	vertices.push_back(glm::vec3(0.0f, 0.0f,  0.5f - coneHeight));
+	vertices.push_back(glm::vec3(0.0f, 0.0f,  0.5f));
+
+	for (float i = 0; i < 360; i += 360 / faceCount) {
+		glm::vec3 vertex(0.0f, 0.5f, 0.0f);
+
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(i), axis);
+		vertex = glm::vec3(rotationMatrix * glm::vec4(vertex, 0.0f));
+
+		vertices.push_back(vertex - glm::vec3(0.0f, 0.0f, 0.5f));
+		vertices.push_back(vertex + glm::vec3(0.0f, 0.0f, 0.5f - coneHeight));
+		vertices.push_back(glm::normalize(vertex) * coneRadius + glm::vec3(0.0f, 0.0f, 0.5f - coneHeight));
+	}
+
+	if (vertices.size() < 12) {
+		std::cerr << "Cylinder objects do not have enough faces" << std::endl;
+		return;
+	}
+
+	for (int i = 6; i < vertices.size(); i += 3) {
+		// Bottom
+		indices.push_back(0    );
+		indices.push_back(i - 3);
+		indices.push_back(i    );
+
+		// Side
+		indices.push_back(i - 3);
+		indices.push_back(i - 2);
+		indices.push_back(i + 1);
+
+		indices.push_back(i - 3);
+		indices.push_back(i + 1);
+		indices.push_back(i    );
+
+		// Cone bottom
+		indices.push_back(1    );
+		indices.push_back(i - 1);
+		indices.push_back(i + 2);
+
+		// Cone top
+		indices.push_back(i - 1);
+		indices.push_back(2    );
+		indices.push_back(i + 2);
+	}
+
+	int max = vertices.size() - 3;
+
+	// Bottom
+	indices.push_back(0);
+	indices.push_back(max);
+	indices.push_back(3);
+
+	// Side
+	indices.push_back(max);
+	indices.push_back(max + 1);
+	indices.push_back(4);
+
+	indices.push_back(max);
+	indices.push_back(4);
+	indices.push_back(3);
+
+	// Cone bottom
+	indices.push_back(1);
+	indices.push_back(max + 2);
+	indices.push_back(5);
+
+	// Cone top
+	indices.push_back(max + 2);
+	indices.push_back(2);
+	indices.push_back(5);
+}
 
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 	std::cerr << "OpenGL Debug Message: " << message << std::endl;
 }
 
-Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string& shaderPath)
-	: window(window), world(world), shader(nullptr), buffer(nullptr)
+Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string& mainShaderPath, std::string& transformShaderPath)
+	: window(window), world(world), skybox(nullptr),
+	mainBuffer(nullptr), mainShader(nullptr),
+	transformBuffer(nullptr), transformShader(nullptr)
 {
-	const int size = 64;
-
 	setupOpenGLState();
 
-	buffer = std::make_unique<Buffer>(vertices, sizeof(vertices), indices, sizeof(indices));
-	buffer->addLayout(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	buffer->addLayout(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	fillTransformVectors(transformIndices, transformVertices);
 
+	// Main buffer and shader
+	mainBuffer = std::make_unique<Buffer>(mainVertices, sizeof(mainVertices), mainIndices, sizeof(mainIndices));
+	mainBuffer->addLayout(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	mainBuffer->addLayout(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	mainBuffer->addLayout(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+
+	mainShader = std::make_unique<Shader>(mainShaderPath);
+
+	// Transform buffer and shader
+	transformBuffer = std::make_unique<Buffer>(reinterpret_cast<const float*>(transformVertices.data()), transformVertices.size() * sizeof(glm::vec3), transformIndices.data(), transformIndices.size() * sizeof(unsigned int));
+	transformBuffer->addLayout(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	transformShader = std::make_unique<Shader>(transformShaderPath);
+
+	// Frame buffer
+	const int size = 64;
 	framebuffer = std::make_unique<Framebuffer>(size, size);
-
-	shader = std::make_unique<Shader>(shaderPath);
 }
 
 Renderer::~Renderer() {
 
 }
 
+void Renderer::addTexture(const char* name, const char* path) {
+	std::shared_ptr<Texture> texture = std::make_shared<Texture>(name, path, GL_TEXTURE0 + textures.size());
+	textures.push_back(texture);
+}
+
 void Renderer::render() {
 	// Bind everything
-	shader->bind();
-	buffer->bind();
+	mainShader->bind();
+	mainBuffer->bind();
 	framebuffer->bind();
-	glEnable(GL_DEPTH_TEST);
 
 	// Set viewport
 	glViewport(0, 0, texSize.x, texSize.y);
 
-	// Set view matrix
-	GLuint viewLoc = glGetUniformLocation(shader->getID(), "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(world->getCamera()->getViewMatrix()));
+	// Set texture
+	GLuint texture = getTexture("polyfoam");
+	if (texture == 0) return;
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// Set uniforms
+	GLuint sunDirLoc = glGetUniformLocation(mainShader->getID(), "sunDirection");
+	GLuint sunStrLoc = glGetUniformLocation(mainShader->getID(), "sunStrength");
+	GLuint ambLightLoc = glGetUniformLocation(mainShader->getID(), "ambientLight");
+	GLuint ambStrLoc = glGetUniformLocation(mainShader->getID(), "ambientStrength");
+
+	GLuint viewLoc = glGetUniformLocation(mainShader->getID(), "view");
+	GLuint projectionLoc = glGetUniformLocation(mainShader->getID(), "projection");
+	GLuint modelLoc = glGetUniformLocation(mainShader->getID(), "model");
+
+	GLuint colourLoc = glGetUniformLocation(mainShader->getID(), "colour");
+	GLuint scaleLoc = glGetUniformLocation(mainShader->getID(), "scale");
+
+	glm::vec3 sunDirection = world->getSunDirection();
+	glUniform3f(sunDirLoc, sunDirection.x, sunDirection.y, sunDirection.z);
+
+	float sunStrength = world->getSunStrength();
+	glUniform1f(sunStrLoc, sunStrength);
+
+	glm::vec3 ambientLight = world->getAmbientLight();
+	glUniform3f(ambLightLoc, ambientLight.r, ambientLight.g, ambientLight.b);
+
+	float ambientStrength = world->getAmbientStrength();
+	glUniform1f(ambStrLoc, ambientStrength);
+
+	glm::mat4 view = world->getCamera()->getViewMatrix();
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	
-	// Set projection matrix
-	GLuint projectionLoc = glGetUniformLocation(shader->getID(), "projection");
 	glm::mat4 projection = world->getCamera()->getProjectionMatrix(glm::vec2(texSize.x, texSize.y));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	// Get objects
-	std::vector<std::shared_ptr<Transform>> objects = world->getObjects();
-	std::vector<std::shared_ptr<Transform>> selected = world->getSelected();
-	std::vector<std::shared_ptr<Transform>> transform = world->getTransformTools();
-
-	GLuint transformLoc = glGetUniformLocation(shader->getID(), "transform");
-	glUniform1i(transformLoc, 0);
-
-	GLuint modelLoc = glGetUniformLocation(shader->getID(), "model");
-
+	std::vector<std::shared_ptr<Transform>>& objects = world->getObjects();
+	std::vector<std::shared_ptr<Transform>>& selected = world->getSelected();
+	std::vector<std::shared_ptr<Transform>>& transform = world->getTransformTools();
+	
 	for (std::shared_ptr<Transform> object : objects) {
-		// Set model matrix
+		if (!object->checkLayer(Physics::getLayerIndex("main"))) continue;
+
+		// Set uniforms
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(object->getModelMatrix()));
 
+		glm::vec3 colour = object->getColour();
+		glUniform3f(colourLoc, colour.r, colour.g, colour.g);
+
+		glm::vec3 scale = object->getScale();
+		glUniform3f(scaleLoc, scale.x, scale.y, scale.z);
+
 		// Draw object
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(mainIndices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	}
 
+	transformBuffer->bind();
+	transformShader->bind();
+
+	viewLoc = glGetUniformLocation(transformShader->getID(), "view");
+	modelLoc = glGetUniformLocation(transformShader->getID(), "model");
+	projectionLoc = glGetUniformLocation(transformShader->getID(), "projection");
+	colourLoc = glGetUniformLocation(transformShader->getID(), "colour");
+
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	
 	if (selected.size() > 0) {
 		glDisable(GL_DEPTH_TEST);
 
 		for (int i = 0; i < transform.size(); i++) {
-			// Set transform
-			glUniform1i(transformLoc, i + 1);
+			glm::vec4 colour(1.0f, 1.0f, 1.0f, 1.0f);
 
-			// Set model matrix
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform[i]->getModelMatrix()));
+			// Set colour
+			switch (i) {
+				case 0: case 1:
+					colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					break;
+				case 2: case 3:
+					colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					break;
+				case 4: case 5:
+					colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+					break;
+			}
+
+			glUniform4f(colourLoc, colour.r, colour.g, colour.b, colour.a);
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(selected[0]->getModelMatrix() * transform[i]->getModelMatrix()));
 
 			// Draw object
-			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, transformIndices.size(), GL_UNSIGNED_INT, 0);
 		}
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
+	drawLines();
+
 	// Unbind everything
-	buffer->unbind();
-	shader->unbind();
+	transformBuffer->unbind();
+	transformShader->unbind();
 	framebuffer->unbind();
 }
 
-GLuint Renderer::getTex() {
+GLuint Renderer::getFramebufferTexture() {
 	return framebuffer->getTexture();
 }
 
@@ -164,6 +322,48 @@ ImVec2 Renderer::getSize() {
 	return texSize;
 }
 
+void Renderer::addSkybox(std::vector<std::string> faces) {
+	skybox = std::make_unique<Skybox>(faces);
+}
+
+void Renderer::addLine(glm::vec3 posA, glm::vec3 posB, glm::vec4 colour) {
+	Line line(posA, posB, colour);
+	lines.push_back(line);
+}
+
+void Renderer::clearLines() {
+	lines.clear();
+}
+
+void Renderer::drawLines() {
+	GLuint modelLoc = glGetUniformLocation(transformShader->getID(), "model");
+	GLuint colourLoc = glGetUniformLocation(transformShader->getID(), "colour");
+
+	glm::mat4 unitMat(1.0f);
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(unitMat));
+
+	for (const Line& line : lines) {
+		glUniform4f(colourLoc, line.colour.r, line.colour.g, line.colour.b, line.colour.a);
+
+		glLineWidth(2.0f);
+		glBegin(GL_LINES);
+		glVertex3f(line.posA.x, line.posA.y, line.posA.z);
+		glVertex3f(line.posB.x, line.posB.y, line.posB.z);
+		glEnd();
+	}
+}
+
+GLuint Renderer::getTexture(const char* name) {
+	for (std::shared_ptr<Texture> tex : textures) {
+		if (tex->getName() == std::string(name)) {
+			return tex->getID();
+		}
+	}
+
+	std::cerr << "No texture with the name " << name << " was found" << std::endl;
+	return 0;
+}
+
 void Renderer::setupOpenGLState() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -172,6 +372,7 @@ void Renderer::setupOpenGLState() {
 	glDepthFunc(GL_LESS);
 
 	glEnable(GL_TEXTURE_2D);
+	stbi_set_flip_vertically_on_load(true);
 
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

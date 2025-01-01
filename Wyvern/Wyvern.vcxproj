@@ -156,6 +156,7 @@
     <ClCompile Include="src\physics\Physics.cpp" />
     <ClCompile Include="src\renderer\Renderer.cpp" />
     <ClCompile Include="src\renderer\Shader.cpp" />
+    <ClCompile Include="src\renderer\Skybox.cpp" />
     <ClCompile Include="src\renderer\Texture.cpp" />
     <ClCompile Include="src\ui\TitleBar.cpp" />
     <ClCompile Include="src\ui\UIBar.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="src\physics\Physics.h" />
     <ClInclude Include="src\renderer\Renderer.h" />
     <ClInclude Include="src\renderer\Shader.h" />
+    <ClInclude Include="src\renderer\Skybox.h" />
     <ClInclude Include="src\renderer\Texture.h" />
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\ui\UIBar.h" />
@@ -510,7 +512,8 @@
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shader.shader" />
+    <None Include="assets\mainShader.shader" />
+    <None Include="assets\transformShader.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />

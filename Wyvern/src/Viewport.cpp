@@ -12,7 +12,7 @@ void Viewport::draw() {
 	}
 
 	renderer->render();
-	ImGui::Image((intptr_t)renderer->getTex(), renderer->getSize());
+	ImGui::Image((intptr_t)renderer->getFramebufferTexture(), renderer->getSize());
 }
 
 void Viewport::clear() {
@@ -21,4 +21,8 @@ void Viewport::clear() {
 
 void Viewport::resize() {
 	resized = false;
+}
+
+std::shared_ptr<Renderer> Viewport::getRenderer() {
+	return renderer;
 }

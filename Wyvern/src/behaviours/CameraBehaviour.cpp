@@ -3,7 +3,7 @@
 #include "Transform.h"
 
 void CameraBehaviour::start(Transform& transform) {
-	
+	transform.setPosition(0.0f, 2.0f, 0.0f);
 }
 
 void CameraBehaviour::update(Transform& transform) {

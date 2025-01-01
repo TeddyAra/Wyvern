@@ -135,6 +135,9 @@
     <ClCompile Include="src\physics\CylinderCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1130,6 +1133,9 @@
     <ClInclude Include="src\physics\CylinderCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\renderer\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1546,7 +1552,8 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="assets\shader.shader" />
+    <None Include="assets\mainShader.shader" />
+    <None Include="assets\transformShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\reaction.png">

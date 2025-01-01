@@ -18,7 +18,7 @@
 
 class World {
 public:
-	World();
+	World(int defaultLayer);
 	~World();
 
 	std::shared_ptr<Camera> getCamera();
@@ -27,14 +27,19 @@ public:
 
 	void updateViewport(float posX, float posY, float viewportWidth, float viewportHeight);
 
-	std::vector<std::shared_ptr<Transform>> getObjects();
-	std::vector<std::shared_ptr<Transform>> getSelected();
-	std::vector<std::shared_ptr<Transform>> getTransformTools();
+	std::vector<std::shared_ptr<Transform>>& getObjects();
+	std::vector<std::shared_ptr<Transform>>& getSelected();
+	std::vector<std::shared_ptr<Transform>>& getTransformTools();
 	void addObject(std::shared_ptr<Transform> object);
 
 	float getDebug();
 	void setDebug(float debug);
 	void createObject();
+
+	glm::vec3 getSunDirection();
+	float getSunStrength();
+	glm::vec3 getAmbientLight();
+	float getAmbientStrength();
 
 	void setDefaultLayer(int ID);
 
@@ -48,6 +53,11 @@ private:
 	glm::vec2 viewportSize;
 
 	void checkIntersections();
+
+	glm::vec3 sunDirection;
+	float sunStrength;
+	glm::vec3 ambientLight;
+	float ambientStrength;
 
 	int defaultLayer;
 	float debug;

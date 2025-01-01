@@ -13,8 +13,9 @@
 class Transform {
 public:
 	Transform() 
-		: position(glm::vec3(0, 0, 0)), rotation(glm::quat(glm::vec3(0, 0, 0))), scale(glm::vec3(1, 1, 1)), 
-		origin(glm::vec3(0.5f, 0.5f, 0.5f)), front(glm::vec3(0, 0, 1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)), collider(std::make_shared<BoxCollider>()) {}
+		: position(glm::vec3(0, 0, 0)), rotation(glm::quat(glm::vec3(0, 0, 0))), scale(glm::vec3(1, 1, 1)), origin(glm::vec3(0.5f, 0.5f, 0.5f)), 
+		front(glm::vec3(0, 0, 1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)), 
+		collider(std::make_shared<BoxCollider>()), colour(glm::vec3(0.9f, 0.9f, 0.9f)) {}
 	virtual ~Transform() = default;
 
 	// Collider
@@ -218,6 +219,19 @@ public:
 		return (std::find(layers.begin(), layers.end(), ID) != layers.end());
 	}
 
+	// Appearance
+	void setColour(glm::vec3 colour) {
+		this->colour = colour;
+	}
+
+	void setColour(float red, float green, float blue) {
+		colour = glm::vec3(red, green, blue);
+	}
+
+	glm::vec3 getColour() {
+		return colour;
+	}
+
 protected:
 	glm::vec3 position;
 	glm::quat rotation;
@@ -228,6 +242,8 @@ protected:
 	glm::vec3 front;
 	glm::vec3 right;
 	glm::vec3 up;
+
+	glm::vec3 colour;
 
 	std::shared_ptr<Behaviour> behaviour;
 	std::shared_ptr<Collider> collider;

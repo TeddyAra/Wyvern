@@ -4,8 +4,10 @@
 
 #include "CameraBehaviour.h"
 
-World::World() 
-	: debug(0.0f), camera(std::make_shared<Camera>(60))
+World::World(int defaultLayer)
+	: debug(0.0f), camera(std::make_shared<Camera>(60)), defaultLayer(defaultLayer), 
+	sunDirection(glm::normalize(glm::vec3(0.1f, -1.0f, 0.5f))), sunStrength(0.8f),
+	ambientLight(glm::vec3(0.0f, 0.15f, 0.85f)), ambientStrength(0.1f)
 {
 	camera->setBehaviour(std::make_shared<CameraBehaviour>());
 
@@ -31,6 +33,15 @@ World::World()
 		transform.push_back(tool);
 		Physics::addObject(tool);
 	}
+
+	const float baseWidth = 100.0f;
+	const float baseHeight = 25.0f;
+
+	std::shared_ptr<Transform> base = std::make_shared<Transform>();
+	base->setScale(baseWidth, baseHeight, baseWidth);
+	base->setPosition(0.0f, baseHeight * -0.5f, 0.0f);
+	base->addLayer(defaultLayer);
+	addObject(base);
 }
 
 World::~World() {
@@ -66,15 +77,15 @@ void World::updateViewport(float posX, float posY, float viewportWidth, float vi
 	viewportSize = glm::vec2(viewportWidth, viewportHeight);
 }
 
-std::vector<std::shared_ptr<Transform>> World::getObjects() {
+std::vector<std::shared_ptr<Transform>>& World::getObjects() {
 	return objects;
 }
 
-std::vector<std::shared_ptr<Transform>> World::getSelected() {
+std::vector<std::shared_ptr<Transform>>& World::getSelected() {
 	return selected;
 }
 
-std::vector<std::shared_ptr<Transform>> World::getTransformTools() {
+std::vector<std::shared_ptr<Transform>>& World::getTransformTools() {
 	return transform;
 }
 
@@ -124,10 +135,25 @@ void World::checkIntersections() {
 
 void World::createObject() {
 	std::shared_ptr<Transform> object = std::make_shared<Transform>();
-	object->translate(debug, 0.0f, 0.0f);
-	object->setScale(1.0f, 1.0f, 1.0f);
+	object->setRotation(0, debug, 0);
 	object->addLayer(defaultLayer);
 	addObject(object);
+}
+
+glm::vec3 World::getSunDirection() {
+	return sunDirection;
+}
+
+float World::getSunStrength() {
+	return sunStrength;
+}
+
+glm::vec3 World::getAmbientLight() {
+	return ambientLight;
+}
+
+float World::getAmbientStrength() {
+	return ambientStrength;
 }
 
 void World::setDefaultLayer(int ID) {
