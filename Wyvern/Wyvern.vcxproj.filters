@@ -1566,6 +1566,24 @@
     <Image Include="assets\reaction.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\down.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\polyfoam.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\SourceSansPro-Bold.ttf" />

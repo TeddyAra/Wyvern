@@ -658,7 +658,13 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\back.png" />
+    <Image Include="assets\down.png" />
+    <Image Include="assets\front.png" />
+    <Image Include="assets\left.png" />
+    <Image Include="assets\polyfoam.png" />
     <Image Include="assets\reaction.png" />
+    <Image Include="assets\right.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\FontAwesome.ttf" />

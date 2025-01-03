@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <windows.h>
+#include <iostream>
 #include <string>
 
 #include "DebugCommand.h"
@@ -10,7 +12,18 @@
 #include "World.h"
 #include "Renderer.h"
 
+std::string getExecutablePath() {
+	char buffer[MAX_PATH];
+	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+	std::string exePath = std::string(buffer);
+	size_t pos = exePath.find_last_of("\\/");
+	return exePath.substr(0, pos);
+}
+
 Application::Application() {
+	std::string exeDirectory = getExecutablePath();
+	std::string assetsPath = exeDirectory + "/../assets/";
+
 	// Create a window
 	succeeded;
 
@@ -29,9 +42,9 @@ Application::Application() {
 	std::shared_ptr<InteractionController> controller = std::make_shared<InteractionController>(world);
 
 	// Path to shaders
-	std::string mainShaderPath = "assets/mainShader.shader";
-	std::string transformShaderPath = "assets/transformShader.shader";
-	std::string skyboxShaderPath = "assets/skyboxShader.shader";
+	std::string mainShaderPath = assetsPath + "mainShader.shader";
+	std::string transformShaderPath = assetsPath + "transformShader.shader";
+	std::string skyboxShaderPath = assetsPath + "skyboxShader.shader";
 
 	// Add UI
 	auto menu = window->addUI(UIType::Menu, "Menu", 150, 0, 0, 0);
@@ -68,23 +81,23 @@ Application::Application() {
 
 	// Add textures
 	std::shared_ptr<Renderer> renderer = viewport->getRenderer();
-	renderer->addTexture("polyfoam", "assets/polyfoam.png");
+	renderer->addTexture("polyfoam", std::string(assetsPath + "polyfoam.png").c_str());
 
 	// Add a skybox to the world
 	std::vector<std::string> faces = {
-		"assets/right.png",
-		"assets/left.png",
-		"assets/down.png",
-		"assets/up.png",
-		"assets/front.png",
-		"assets/back.png"
+		assetsPath + "right.png",
+		assetsPath + "left.png",
+		assetsPath + "down.png",
+		assetsPath + "up.png",
+		assetsPath + "front.png",
+		assetsPath + "back.png"
 	};
 
 	viewport->getRenderer()->addSkybox(faces, skyboxShaderPath);
 
 	// Add fonts
-	FontManager::addFont("assets/SourceSansPro", 16.0f);
-	FontManager::addFont("assets/FontAwesome", 16.0f, true);
+	FontManager::addFont(assetsPath + "SourceSansPro", 16.0f);
+	FontManager::addFont(assetsPath + "FontAwesome", 16.0f, true);
 	window->addFont("FontAwesome", FontType::regular);
 	window->addFont("SourceSansPro", FontType::bold);
 	window->addFont("SourceSansPro", FontType::regular);
