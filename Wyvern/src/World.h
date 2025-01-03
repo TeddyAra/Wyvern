@@ -34,7 +34,6 @@ public:
 
 	float getDebug();
 	void setDebug(float debug);
-	void createObject();
 
 	glm::vec3 getSunDirection();
 	float getSunStrength();

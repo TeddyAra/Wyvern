@@ -21,7 +21,7 @@ public:
 	static void addObject(std::shared_ptr<Transform> object);
 	static void removeObject(std::shared_ptr<Transform> object);
 
-	static bool ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int layer = -1);
+	static bool ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int layer = -1, float maxLength = -1.0f);
 
 	static void addLayer(int ID, const std::string& layer);
 	static int getLayerIndex(const std::string& layer);

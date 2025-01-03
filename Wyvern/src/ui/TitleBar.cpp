@@ -7,7 +7,10 @@
 TitleBar::TitleBar(GLFWwindow* window, int height)
 	: window(window), height(height), hovering(false), headerFont(nullptr), textFont(nullptr), iconFont(nullptr), fontCount(0)
 {
-
+	widgets = {
+		std::make_shared<UIWidget>(WidgetType::LargeButton, "File", "", nullptr),
+		std::make_shared<UIWidget>(WidgetType::SmallButton, "Save", u8"\uf0c7", nullptr)
+	};
 }
 
 TitleBar::~TitleBar() {
@@ -38,10 +41,22 @@ void TitleBar::draw() {
 	ImGui::PushFont(iconFont);
 
 	// Bar elements
-	//ImGui::Button("FILE", ImVec2(50, 25));
-	const char* icon = u8"\uf0c7";
-	ImGui::Button(icon, ImVec2(25, 25));
-	ImGui::Text("Hi");
+	int position = padding;
+
+	for (std::shared_ptr<UIWidget> widget : widgets) {
+		switch (widget->getType()) {
+			case WidgetType::LargeButton:
+				ImGui::SetCursorPos(ImVec2(position, padding));
+				ImGui::Button(widget->getTitle().c_str(), ImVec2(bigWidth, widgetHeight));
+				position += bigWidth + 2 * padding;
+				break;
+			case WidgetType::SmallButton:
+				ImGui::SetCursorPos(ImVec2(position, padding));
+				ImGui::Button(widget->getIcon(), ImVec2(smallWidth, widgetHeight));
+				position += smallWidth + 2 * padding;
+				break;
+		}
+	}
 
 	// End of bar
 	ImGui::PopFont();

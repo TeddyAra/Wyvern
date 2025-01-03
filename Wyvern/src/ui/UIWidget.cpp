@@ -47,5 +47,6 @@ void UIWidget::setArgs(const std::vector<std::any>& args) {
 }
 
 void UIWidget::execute() {
+	if (command == nullptr) return;
 	command->execute();
 }

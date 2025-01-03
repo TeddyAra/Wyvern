@@ -1,5 +1,5 @@
 #pragma once 
-#pragma warning( disable : 4244 ) 
+//#pragma warning( disable : 4244 ) 
 
 #include <string>
 #include <memory>
@@ -8,7 +8,6 @@
 #include "UIZone.h"
 #include "FontManager.h"
 #include "ICommand.h"
-#include "Renderer.h"
 
 using SizeOrOffset = std::variant<int, std::shared_ptr<int>>;
 

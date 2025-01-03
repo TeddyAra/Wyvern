@@ -22,16 +22,19 @@ uniform vec3 colour;
 uniform vec3 scale;
 
 void main() {
-	gl_Position = projection * view * model * vec4(aPos, 1.0f);
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
 	TexCoord = aTexCoord;
 	
 	vec3 ambientColour = ambientLight * ambientStrength;
 	
-	float shadowStrength = (dot(sunDirection, aNormal) * -sunStrength + 1.0f) / 2.0f;
+	float shadowStrength = (dot(sunDirection, aNormal) * -sunStrength + 1.0) / 2.0;
 	vec3 objectColour = colour * shadowStrength * (1 - ambientStrength);
 
+	mat3 normalMatrix = transpose(inverse(mat3(model)));
+	vec3 transformedNormal = normalize(normalMatrix * aNormal);
+
 	Colour = objectColour + ambientColour;
-	Normal = aNormal;
+	Normal = transformedNormal;
 	Scale = scale;
 }
 
@@ -50,15 +53,15 @@ uniform sampler2D tex;
 void main() {
 	vec2 adjustedTexCoord = TexCoord;
 
-	if (Normal.x != 0.0f || Normal.z != 0.0f) {
-		adjustedTexCoord.x = mod(adjustedTexCoord.x, 1.0f / Scale.z) * Scale.z;
-		adjustedTexCoord.y = mod(adjustedTexCoord.y, 1.0f / Scale.y) * Scale.y;
+	if (Normal.x != 0.0 || Normal.z != 0.0) {
+		adjustedTexCoord.x = mod(adjustedTexCoord.x, 1.0 / Scale.z) * Scale.z;
+		adjustedTexCoord.y = mod(adjustedTexCoord.y, 1.0 / Scale.y) * Scale.y;
 	}
 
-	if (Normal.y != 0.0f) {
-		adjustedTexCoord.x = mod(adjustedTexCoord.x, 1.0f / Scale.x) * Scale.x;
-		adjustedTexCoord.y = mod(adjustedTexCoord.y, 1.0f / Scale.z) * Scale.z;
+	if (Normal.y != 0.0) {
+		adjustedTexCoord.x = mod(adjustedTexCoord.x, 1.0 / Scale.x) * Scale.x;
+		adjustedTexCoord.y = mod(adjustedTexCoord.y, 1.0 / Scale.z) * Scale.z;
 	}
 
-	FragColor = texture(tex, adjustedTexCoord) * vec4(Colour, 1.0f);
+	FragColor = texture(tex, adjustedTexCoord) * vec4(Colour, 1.0);
 }

@@ -1,8 +1,13 @@
 #pragma once
 
+#include "glm/glm.hpp"
+
 #include <memory>
 #include <vector>
 #include <any>
+
+#include "Physics.h"
+#include "HitInfo.h"
 
 class InteractionController;
 

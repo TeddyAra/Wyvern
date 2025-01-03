@@ -4,9 +4,7 @@
 #include <vector>
 
 #include "ICommand.h"
-
-//#include "World.h"
-//#include "HistoryManager.h"
+#include "Camera.h"
 
 class World;
 class HistoryManager;
@@ -16,9 +14,11 @@ public:
 	InteractionController(std::shared_ptr<World> world);
 	~InteractionController();
 
+	std::shared_ptr<Camera> getCamera();
+
 	float getDebug();
 	void setDebug(float debug);
-	void createObject();
+	void addObject(std::shared_ptr<Transform> object);
 
 	void addToHistory(std::shared_ptr<ICommand> command);
 	

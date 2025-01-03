@@ -20,7 +20,7 @@ Texture::Texture(const char* name, const char* texturePath, GLenum textureUnit) 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
-        std::cerr << "Failed to load texture" << std::endl;
+        std::cerr << "Failed to load texture " << texturePath << std::endl;
     }
     stbi_image_free(data);
 }

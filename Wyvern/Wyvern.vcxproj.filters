@@ -138,6 +138,9 @@
     <ClCompile Include="src\renderer\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1136,6 +1139,9 @@
     <ClInclude Include="src\renderer\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\renderer\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1554,6 +1560,7 @@
     </None>
     <None Include="assets\mainShader.shader" />
     <None Include="assets\transformShader.shader" />
+    <None Include="assets\skyboxShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\reaction.png">

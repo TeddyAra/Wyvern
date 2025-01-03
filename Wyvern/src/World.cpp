@@ -40,7 +40,6 @@ World::World(int defaultLayer)
 	std::shared_ptr<Transform> base = std::make_shared<Transform>();
 	base->setScale(baseWidth, baseHeight, baseWidth);
 	base->setPosition(0.0f, baseHeight * -0.5f, 0.0f);
-	base->addLayer(defaultLayer);
 	addObject(base);
 }
 
@@ -90,6 +89,7 @@ std::vector<std::shared_ptr<Transform>>& World::getTransformTools() {
 }
 
 void World::addObject(std::shared_ptr<Transform> object) {
+	object->addLayer(defaultLayer);
 	objects.push_back(object);
 	Physics::addObject(object);
 }
@@ -131,13 +131,6 @@ void World::checkIntersections() {
 			selected.push_back(info.object);
 		}
 	}
-}
-
-void World::createObject() {
-	std::shared_ptr<Transform> object = std::make_shared<Transform>();
-	object->setRotation(0, debug, 0);
-	object->addLayer(defaultLayer);
-	addObject(object);
 }
 
 glm::vec3 World::getSunDirection() {

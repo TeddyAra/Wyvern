@@ -33,6 +33,12 @@ void UIBarMenu::draw() {
 			case WidgetType::InputFloat:
 				drawInputFloat(widgets, j);
 				break;
+
+			case WidgetType::Empty:
+				smallWidgetCount = 0;
+				posY = originalY;
+				posX += bigWidth + padding;
+				break;
 			}
 
 			ImGui::PopID();
@@ -74,14 +80,14 @@ void UIBarMenu::drawBigButton(std::vector<std::shared_ptr<UIWidget>> widgets, in
 
 	ImGui::PushFont(iconFont);
 	ImGui::SetWindowFontScale(1.5f);
-	if (ImGui::Button(widgets[index]->getIcon(), ImVec2(60, bigHeight))) {
+	if (ImGui::Button(widgets[index]->getIcon(), ImVec2(60, bigHeight - 6))) {
 		widgets[index]->execute();
 	}
 	ImGui::SetWindowFontScale(1.0f);
 	ImGui::PopFont();
 
 	ImGui::SetCursorPosX(posX + smallWidth / 2 - (ImGui::CalcTextSize(widgets[index]->getTitle().c_str()).x / 2));
-	ImGui::SetCursorPosY(posY + bigHeight - textHeight * 2);
+	ImGui::SetCursorPosY(posY + bigHeight - textHeight * 2 - 6);
 
 	ImGui::PushFont(headerFont);
 	ImGui::Text(widgets[index]->getTitle().c_str(), ImVec2(smallWidth, textHeight));
@@ -98,7 +104,7 @@ void UIBarMenu::drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, 
 	}
 
 	ImGui::SetCursorPosX(posX + 5);
-	ImGui::SetCursorPosY(posY + smallHeight / 2 - (ImGui::CalcTextSize(widgets[index]->getIcon()).y / 2));
+	ImGui::SetCursorPosY(posY + smallHeight / 2 - (ImGui::CalcTextSize(widgets[index]->getIcon()).y / 2) + 2);
 
 	ImGui::PushFont(iconFont);
 	ImGui::Text(widgets[index]->getIcon());

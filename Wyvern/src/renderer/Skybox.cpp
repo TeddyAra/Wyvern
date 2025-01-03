@@ -9,12 +9,12 @@ Skybox::Skybox(std::vector<std::string> faces) {
     int width, height, nrChannels;
     unsigned char* data;
     for (unsigned int i = 0; i < faces.size(); i++) {
-        data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 3);
+        data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 4);
         if (data) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         } else {
-            std::cerr << "Failed to load texture" << std::endl;
+            std::cerr << "Failed to load texture " << faces[i] << std::endl;
             stbi_image_free(data);
         }
     }

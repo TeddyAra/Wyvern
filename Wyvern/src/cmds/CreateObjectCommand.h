@@ -6,4 +6,8 @@ class CreateObjectCommand : public ICommand {
 public:
 	explicit CreateObjectCommand(std::shared_ptr<InteractionController> controller);
 	void execute() override;
+
+private:
+	float maxRayLength = 20.0f;
+	float standardLength = 10.0f;
 };

@@ -80,6 +80,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;src;src\vendor;src\cmds;src\ui;src\behaviours;src\physics;src\renderer</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,7 @@
     <ClCompile Include="src\renderer\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\cmds\CreateObjectCommand.cpp" />
+    <ClCompile Include="src\renderer\Debug.cpp" />
     <ClCompile Include="src\renderer\Framebuffer.cpp" />
     <ClCompile Include="src\physics\BoxCollider.cpp" />
     <ClCompile Include="src\physics\HitInfo.cpp" />
@@ -190,6 +192,7 @@
     <ClInclude Include="src\cmds\UndoCommand.h" />
     <ClInclude Include="src\physics\BoxCollider.h" />
     <ClInclude Include="src\physics\Collider.h" />
+    <ClInclude Include="src\renderer\Debug.h" />
     <ClInclude Include="src\renderer\Framebuffer.h" />
     <ClInclude Include="src\HistoryManager.h" />
     <ClInclude Include="src\physics\HitInfo.h" />
@@ -513,6 +516,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\mainShader.shader" />
+    <None Include="assets\skyboxShader.shader" />
     <None Include="assets\transformShader.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />

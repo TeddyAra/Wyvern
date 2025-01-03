@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Debug.h"
+
 const unsigned int mainIndices[] = {
 	 0,  2,  3,
 	 0,  3,  1,
@@ -195,12 +197,18 @@ void Renderer::render() {
 	// Set viewport
 	glViewport(0, 0, texSize.x, texSize.y);
 
+	if (skybox != nullptr) {
+		drawSkybox();
+		mainBuffer->bind();
+		mainShader->bind();
+	}
+
 	// Set texture
 	GLuint texture = getTexture("polyfoam");
 	if (texture == 0) return;
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	// Set uniforms
+	// Get uniform locations
 	GLuint sunDirLoc = glGetUniformLocation(mainShader->getID(), "sunDirection");
 	GLuint sunStrLoc = glGetUniformLocation(mainShader->getID(), "sunStrength");
 	GLuint ambLightLoc = glGetUniformLocation(mainShader->getID(), "ambientLight");
@@ -213,6 +221,7 @@ void Renderer::render() {
 	GLuint colourLoc = glGetUniformLocation(mainShader->getID(), "colour");
 	GLuint scaleLoc = glGetUniformLocation(mainShader->getID(), "scale");
 
+	// Set uniforms
 	glm::vec3 sunDirection = world->getSunDirection();
 	glUniform3f(sunDirLoc, sunDirection.x, sunDirection.y, sunDirection.z);
 
@@ -243,7 +252,7 @@ void Renderer::render() {
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(object->getModelMatrix()));
 
 		glm::vec3 colour = object->getColour();
-		glUniform3f(colourLoc, colour.r, colour.g, colour.g);
+		glUniform3f(colourLoc, colour.r, colour.g, colour.b);
 
 		glm::vec3 scale = object->getScale();
 		glUniform3f(scaleLoc, scale.x, scale.y, scale.z);
@@ -300,6 +309,28 @@ void Renderer::render() {
 	framebuffer->unbind();
 }
 
+void Renderer::drawSkybox() {
+	glDepthMask(GL_FALSE);
+	glEnable(GL_DEPTH_TEST);
+
+	skyboxShader->bind();
+	skyboxBuffer->bind();
+
+	GLuint viewLoc = glGetUniformLocation(skyboxShader->getID(), "view");
+	GLuint projectionLoc = glGetUniformLocation(skyboxShader->getID(), "projection");
+
+	glm::mat4 view = world->getCamera()->getViewMatrix();
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	glm::mat4 projection = world->getCamera()->getProjectionMatrix(glm::vec2(texSize.x, texSize.y));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->getID());
+	glDrawElements(GL_TRIANGLES, sizeof(mainIndices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+
+	glDepthMask(GL_TRUE);
+}
+
 GLuint Renderer::getFramebufferTexture() {
 	return framebuffer->getTexture();
 }
@@ -322,17 +353,13 @@ ImVec2 Renderer::getSize() {
 	return texSize;
 }
 
-void Renderer::addSkybox(std::vector<std::string> faces) {
+void Renderer::addSkybox(std::vector<std::string> faces, std::string& skyboxShaderPath) {
 	skybox = std::make_unique<Skybox>(faces);
-}
 
-void Renderer::addLine(glm::vec3 posA, glm::vec3 posB, glm::vec4 colour) {
-	Line line(posA, posB, colour);
-	lines.push_back(line);
-}
+	skyboxBuffer = std::make_unique<Buffer>(mainVertices, sizeof(mainVertices), mainIndices, sizeof(mainIndices));
+	skyboxBuffer->addLayout(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 
-void Renderer::clearLines() {
-	lines.clear();
+	skyboxShader = std::make_unique<Shader>(skyboxShaderPath);
 }
 
 void Renderer::drawLines() {
@@ -342,7 +369,7 @@ void Renderer::drawLines() {
 	glm::mat4 unitMat(1.0f);
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(unitMat));
 
-	for (const Line& line : lines) {
+	for (const Line& line : Debug::getLines()) {
 		glUniform4f(colourLoc, line.colour.r, line.colour.g, line.colour.b, line.colour.a);
 
 		glLineWidth(2.0f);

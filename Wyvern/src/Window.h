@@ -1,5 +1,6 @@
 #pragma once
-#pragma warning( disable : 4244 ) 
+
+#include <GL/glew.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

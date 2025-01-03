@@ -21,18 +21,6 @@
 #include "Texture.h"
 #include "Skybox.h"
 
-struct Line {
-	glm::vec3 posA;
-	glm::vec3 posB;
-	glm::vec4 colour;
-
-	Line(glm::vec3 posA, glm::vec3 posB, glm::vec4 colour) {
-		this->posA = posA;
-		this->posB = posB;
-		this->colour = colour;
-	}
-};
-
 class Renderer {
 public:
 	Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string& shaderPath, std::string& transformShaderPath);
@@ -46,15 +34,11 @@ public:
 	void updateSize(int posX, int posY, int width, int height);
 	ImVec2 getSize();
 
-	void addSkybox(std::vector<std::string> faces);
-
-	void addLine(glm::vec3 posA, glm::vec3 posB, glm::vec4 colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-	void clearLines();
+	void addSkybox(std::vector<std::string> faces, std::string& skyboxShaderPath);
 
 private:
 	GLFWwindow* window;
 	std::shared_ptr<World> world;
-	std::vector<Line> lines;
 	std::vector<std::shared_ptr<Texture>> textures;
 	std::unique_ptr<Skybox> skybox;
 
@@ -66,11 +50,15 @@ private:
 	std::vector<unsigned int> transformIndices;
 	std::vector<glm::vec3> transformVertices;
 
+	std::unique_ptr<Buffer> skyboxBuffer;
+	std::unique_ptr<Shader> skyboxShader;
+
 	std::unique_ptr<Framebuffer> framebuffer;
 
 	ImVec2 texSize;
 
 	void drawLines();
+	void drawSkybox();
 	GLuint getTexture(const char* name);
 
 	void setupOpenGLState();

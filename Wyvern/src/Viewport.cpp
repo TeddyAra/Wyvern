@@ -1,7 +1,5 @@
 #include "Viewport.h"
 
-#include <iostream>
-
 void Viewport::draw() {
 	ImVec2 viewportPos = ImVec2(ImGui::GetWindowPos().x + ImGui::GetCursorPosX(), ImGui::GetWindowPos().y + ImGui::GetCursorPosY());
 

@@ -16,7 +16,7 @@ void Physics::removeObject(std::shared_ptr<Transform> object) {
 	}
 }
 
-bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int layer) {
+bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int layer, float maxLength) {
 	direction = glm::normalize(direction);
 	
 	float shortestDistance = std::numeric_limits<float>::max();
@@ -44,7 +44,7 @@ bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int laye
 			glm::vec3 pos3 = glm::vec3(matrix * glm::vec4(vertices[indices[i + 2]], 1.0f));
 
 			if (glm::intersectRayTriangle(origin, direction, pos1, pos2, pos3, triangleBaryPosition, triangleDistance)) {
-				if (triangleDistance < 0) continue;
+				if (triangleDistance < 0 || (triangleDistance > maxLength && maxLength > 0.0f)) continue;
 
 				if (triangleDistance < shortestDistance) {
 					shortestDistance = triangleDistance;

@@ -11,7 +11,12 @@ UIBar::UIBar(GLFWwindow* window, std::string name, int titleBarHeight, SizeOrOff
 	top(top), right(right), bottom(bottom), left(left), 
 	width(std::make_shared<int>(0)), height(std::make_shared<int>(0)), fontCount(0), iconFont(nullptr), textFont(nullptr), headerFont(nullptr), widgetIndex(0)
 {
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4 titleBarColor = ImVec4(0.141f, 0.278f, 0.443f, 1.0f);
 
+	style.Colors[ImGuiCol_TitleBg] = titleBarColor;
+	style.Colors[ImGuiCol_TitleBgActive] = titleBarColor;
+	style.Colors[ImGuiCol_TitleBgCollapsed] = titleBarColor;
 }
 
 UIBar::~UIBar() {

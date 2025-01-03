@@ -10,7 +10,8 @@ enum WidgetType {
 	LargeButton,
 	SmallButton,
 	Toggle,
-	InputFloat
+	InputFloat,
+	Empty
 };
 
 class UIWidget {
