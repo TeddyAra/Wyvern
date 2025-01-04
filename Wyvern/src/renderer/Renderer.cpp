@@ -301,7 +301,7 @@ void Renderer::render() {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	drawLines();
+	//drawLines();
 
 	// Unbind everything
 	transformBuffer->unbind();

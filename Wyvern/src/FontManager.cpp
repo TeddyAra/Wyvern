@@ -10,8 +10,11 @@ std::map<std::string, int> FontManager::fontIndices;
 void FontManager::addFont(std::string location, float size, bool single) {
 	ImGuiIO& io = ImGui::GetIO();
 
-	const std::string prefix = "assets/";
-	std::string name = location.substr(prefix.size());
+	size_t pos = location.find_last_of("/\\");
+	std::string name = location;
+	if (pos != std::string::npos) {
+		name = location.substr(pos + 1);
+	}
 
 	if (single) {
 		if (addFontVariant(io, location + ".ttf", size, true)) {
