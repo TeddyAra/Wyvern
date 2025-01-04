@@ -29,6 +29,10 @@ void InteractionController::addObject(std::shared_ptr<Transform> object) {
 	world->addObject(object);
 }
 
+void InteractionController::changeTool(TransformTools::Tool tool) {
+	world->changeTool(tool);
+}
+
 void InteractionController::addToHistory(std::shared_ptr<ICommand> command) {
 	history->addCommand(command);
 }

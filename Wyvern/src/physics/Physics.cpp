@@ -76,6 +76,17 @@ bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int laye
 	return true;
 }
 
+bool Physics::rayPlane(glm::vec3 origin, glm::vec3 direction, glm::vec3 planeOrigin, glm::vec3 planeNormal, HitInfo& info, float maxLength) {
+	float length = -1.0f;
+	if (glm::intersectRayPlane(origin, direction, planeOrigin, planeNormal, length)) {
+		if (length < 0 || (maxLength != -1 && length > maxLength)) return false;
+		info.distance = length;
+		return true;
+	}
+
+	return false;
+}
+
 void Physics::addLayer(int ID, const std::string& layer) {
 	if (ID < 0) {
 		std::cerr << "Layer must have a positive ID" << std::endl;

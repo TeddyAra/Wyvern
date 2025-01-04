@@ -141,6 +141,12 @@
     <ClCompile Include="src\renderer\Debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TransformTools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cmds\SwitchToolCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1142,6 +1148,12 @@
     <ClInclude Include="src\renderer\Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\TransformTools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\SwitchToolCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1582,6 +1594,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\up.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

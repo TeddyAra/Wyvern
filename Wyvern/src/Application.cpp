@@ -8,6 +8,9 @@
 #include "UndoCommand.h"
 #include "RedoCommand.h"
 #include "CreateObjectCommand.h"
+#include "SwitchToolCommand.h"
+#include "TransformTools.h"
+
 #include "InteractionController.h"
 #include "World.h"
 #include "Renderer.h"
@@ -22,12 +25,12 @@ std::string getExecutablePath() {
 
 Application::Application() {
 	std::string exeDirectory = getExecutablePath();
-	std::string assetsPath = exeDirectory + "/../assets/";
+	std::string assetsPath = exeDirectory + "/assets/";
 
 	// Create a window
 	succeeded;
 
-	window = std::make_shared<Window>(1600, 900, 400, 200, "Wyvern", false, succeeded);
+	window = std::make_shared<Window>(1600, 900, 1020, 670, "Wyvern", false, succeeded);
 	if (!succeeded) {
 		std::cout << "Something went wrong with GLFW/GLEW initialization or window creation" << std::endl;
 		return;
@@ -36,6 +39,9 @@ Application::Application() {
 	// Add physics layers
 	Physics::addLayer(0, "main");
 	Physics::addLayer(1, "transform");
+	Physics::addLayer(2, "move");
+	Physics::addLayer(3, "scale");
+	Physics::addLayer(4, "rotate");
 
 	// Create world and interaction controller
 	world = std::make_shared<World>(Physics::getLayerIndex("main"));
@@ -59,10 +65,10 @@ Application::Application() {
 	menu->addWidget(WidgetType::SmallButton, "Duplicate",	u8"\uf0fe", nullptr);
 
 	menu->newZone("Tools");
-	menu->addWidget(WidgetType::LargeButton, "Select",	u8"\uf245", nullptr);
-	menu->addWidget(WidgetType::LargeButton, "Move",	u8"\uf0b2", nullptr);
-	menu->addWidget(WidgetType::LargeButton, "Scale",	u8"\uf065", nullptr);
-	menu->addWidget(WidgetType::LargeButton, "Rotate",	u8"\uf021", nullptr);
+	menu->addWidget(WidgetType::LargeButton, "Select",	u8"\uf245", std::make_shared<SwitchToolCommand>(controller, TransformTools::Tool::Select));
+	menu->addWidget(WidgetType::LargeButton, "Move",	u8"\uf0b2", std::make_shared<SwitchToolCommand>(controller, TransformTools::Tool::Move));
+	menu->addWidget(WidgetType::LargeButton, "Scale",	u8"\uf065", std::make_shared<SwitchToolCommand>(controller, TransformTools::Tool::Scale));
+	menu->addWidget(WidgetType::LargeButton, "Rotate",	u8"\uf021", std::make_shared<SwitchToolCommand>(controller, TransformTools::Tool::Rotate));
 
 	menu->newZone("Snapping");
 	menu->addWidget(WidgetType::Toggle, "Rotate", "", nullptr);

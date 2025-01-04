@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "Physics.h"
+#include "TransformTools.h"
 
 #include "BoxCollider.h"
 #include "CylinderCollider.h"
@@ -21,11 +22,17 @@ public:
 	World(int defaultLayer);
 	~World();
 
+	static World* getWorld();
+
 	std::shared_ptr<Camera> getCamera();
 	void start();
 	void update();
 
 	void updateViewport(float posX, float posY, float viewportWidth, float viewportHeight);
+	glm::vec2 getViewportPos();
+	glm::vec2 getViewportSize();
+
+	void changeTool(TransformTools::Tool tool);
 
 	std::vector<std::shared_ptr<Transform>>& getObjects();
 	std::vector<std::shared_ptr<Transform>>& getSelected();
@@ -47,11 +54,10 @@ private:
 	std::vector<std::shared_ptr<Transform>> selected;
 	std::vector<std::shared_ptr<Transform>> transform;
 	std::shared_ptr<Camera> camera;
+	std::unique_ptr<TransformTools> transformTools;
 
 	glm::vec2 viewportPos;
 	glm::vec2 viewportSize;
-
-	void checkIntersections();
 
 	glm::vec3 sunDirection;
 	float sunStrength;
@@ -60,4 +66,6 @@ private:
 
 	int defaultLayer;
 	float debug;
+
+	static World* worldInstance;
 };

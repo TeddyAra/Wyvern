@@ -5,6 +5,7 @@
 
 #include "ICommand.h"
 #include "Camera.h"
+#include "TransformTools.h"
 
 class World;
 class HistoryManager;
@@ -19,6 +20,8 @@ public:
 	float getDebug();
 	void setDebug(float debug);
 	void addObject(std::shared_ptr<Transform> object);
+
+	void changeTool(TransformTools::Tool tool);
 
 	void addToHistory(std::shared_ptr<ICommand> command);
 	

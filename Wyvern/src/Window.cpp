@@ -25,12 +25,13 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 	window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
 
 	if (!window) {
+		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		succeeded = false;
 		return;
 	}
 
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window); 
 
 	// Initialize GLEW
 	if (glewInit() != GLEW_OK) {
@@ -43,6 +44,8 @@ Window::Window(int width, int height, int minimumWidth, int minimumHeight, std::
 
 	glfwSwapInterval(1);
 	glfwSetCursorPosCallback(window, Input::mouseCallback);
+	glfwSetWindowSizeLimits(window, minimumWidth, minimumHeight, GLFW_DONT_CARE, GLFW_DONT_CARE);
+
 	Input::setWindow(window);
 
 	// Initialize ImGui
@@ -109,6 +112,8 @@ std::shared_ptr<UIBar> Window::addUI(UIType type, std::string name, SizeOrOffset
 
 std::shared_ptr<Viewport> Window::addViewport(std::string name, SizeOrOffset top, SizeOrOffset right, SizeOrOffset bottom, SizeOrOffset left, std::shared_ptr<World> world, std::string& shaderPath, std::string& transformShaderPath) {
 	viewport = std::make_shared<Viewport>(window, name, titleBarHeight, top, right, bottom, left, true, world, shaderPath, transformShaderPath);
+	glfwSetWindowUserPointer(window, this);
+	glfwSetWindowSizeCallback(window, Viewport::sizeCallback);
 	return viewport;
 }
 
@@ -121,7 +126,9 @@ void Window::draw() {
 	}
 
 	// Clear the buffer
-	viewport->clear();
+	if (viewport) {
+		viewport->clear();
+	}
 
 	// Start new ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -129,7 +136,9 @@ void Window::draw() {
 	ImGui::NewFrame();
 
 	// Draw title bar
-	titleBar->draw();
+	if (titleBar) {
+		titleBar->draw();
+	}
 
 	// Draw UI bars
 	for (auto bar : ui) {
@@ -137,7 +146,9 @@ void Window::draw() {
 	}
 
 	// Draw viewport
-	viewport->render();
+	if (viewport) {
+		viewport->render();
+	}
 
 	// Render ImGui
 	ImGui::Render();

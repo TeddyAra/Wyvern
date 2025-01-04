@@ -277,22 +277,40 @@ void Renderer::render() {
 
 		for (int i = 0; i < transform.size(); i++) {
 			glm::vec4 colour(1.0f, 1.0f, 1.0f, 1.0f);
+			glm::vec3 translation;
 
 			// Set colour
 			switch (i) {
-				case 0: case 1:
+				case 0:
 					colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					translation = selected[0]->getRight() * (selected[0]->getScale().x + 1.0f);
 					break;
-				case 2: case 3:
+				case 1:
+					colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					translation = selected[0]->getRight() * -(selected[0]->getScale().x + 1.0f);
+					break;
+				case 2: 
 					colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					translation = selected[0]->getUp() * (selected[0]->getScale().y + 1.0f);
 					break;
-				case 4: case 5:
+				case 3:
+					colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					translation = selected[0]->getUp() * -(selected[0]->getScale().y + 1.0f);
+					break;
+				case 4:
 					colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+					translation = selected[0]->getFront() * (selected[0]->getScale().z + 1.0f);
+					break;
+				case 5:
+					colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+					translation = selected[0]->getFront() * -(selected[0]->getScale().z + 1.0f);
 					break;
 			}
 
+			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), translation);
+
 			glUniform4f(colourLoc, colour.r, colour.g, colour.b, colour.a);
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(selected[0]->getModelMatrix() * transform[i]->getModelMatrix()));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(selected[0]->getModelMatrix() * translationMatrix * transform[i]->getModelMatrix()));
 
 			// Draw object
 			glDrawElements(GL_TRIANGLES, transformIndices.size(), GL_UNSIGNED_INT, 0);

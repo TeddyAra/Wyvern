@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\behaviours\CameraBehaviour.cpp" />
+    <ClCompile Include="src\cmds\SwitchToolCommand.cpp" />
     <ClCompile Include="src\physics\CylinderCollider.cpp" />
     <ClCompile Include="src\renderer\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\renderer\Shader.cpp" />
     <ClCompile Include="src\renderer\Skybox.cpp" />
     <ClCompile Include="src\renderer\Texture.cpp" />
+    <ClCompile Include="src\TransformTools.cpp" />
     <ClCompile Include="src\ui\TitleBar.cpp" />
     <ClCompile Include="src\ui\UIBar.cpp" />
     <ClCompile Include="src\ui\UIBarList.cpp" />
@@ -183,6 +185,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\behaviours\Behaviour.h" />
     <ClInclude Include="src\behaviours\CameraBehaviour.h" />
+    <ClInclude Include="src\cmds\SwitchToolCommand.h" />
     <ClInclude Include="src\physics\CylinderCollider.h" />
     <ClInclude Include="src\renderer\Buffer.h" />
     <ClInclude Include="src\Camera.h" />
@@ -206,6 +209,7 @@
     <ClInclude Include="src\renderer\Skybox.h" />
     <ClInclude Include="src\renderer\Texture.h" />
     <ClInclude Include="src\Transform.h" />
+    <ClInclude Include="src\TransformTools.h" />
     <ClInclude Include="src\ui\UIBar.h" />
     <ClInclude Include="src\ui\UIBarList.h" />
     <ClInclude Include="src\ui\UIBarMenu.h" />
@@ -665,6 +669,7 @@
     <Image Include="assets\polyfoam.png" />
     <Image Include="assets\reaction.png" />
     <Image Include="assets\right.png" />
+    <Image Include="assets\up.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\FontAwesome.ttf" />

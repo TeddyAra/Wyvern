@@ -4,12 +4,22 @@
 
 #include "CameraBehaviour.h"
 
+World* World::worldInstance;
+
 World::World(int defaultLayer)
-	: debug(0.0f), camera(std::make_shared<Camera>(60)), defaultLayer(defaultLayer), 
+	: debug(0.0f), camera(std::make_shared<Camera>(60)), defaultLayer(defaultLayer),
 	sunDirection(glm::normalize(glm::vec3(0.1f, -1.0f, 0.5f))), sunStrength(0.8f),
 	ambientLight(glm::vec3(0.0f, 0.15f, 0.85f)), ambientStrength(0.1f)
 {
+	if (worldInstance) { 
+		std::cerr << "World already exists" << std::endl;
+		return;
+	}
+	
+	worldInstance = this;
+
 	camera->setBehaviour(std::make_shared<CameraBehaviour>());
+	transformTools = std::make_unique<TransformTools>();
 
 	glm::vec3 directions[] = {
 		{  1.0f,  0.0f,  0.0f },
@@ -24,10 +34,10 @@ World::World(int defaultLayer)
 		std::shared_ptr<Transform> tool = std::make_shared<Transform>();
 		tool->setScale(0.1f, 0.1f, 2.0f);
 		tool->lookAt(direction);
-		tool->translate(direction * 2.0f);
 
 		tool->removeLayer(Physics::getLayerIndex("main"));
 		tool->addLayer(Physics::getLayerIndex("transform"));
+		tool->addLayer(Physics::getLayerIndex("move"));
 		tool->setCollider(std::make_shared<CylinderCollider>());
 
 		transform.push_back(tool);
@@ -49,6 +59,10 @@ World::~World() {
 	transform.clear();
 }
 
+World* World::getWorld() {
+	return worldInstance;
+}
+
 std::shared_ptr<Camera> World::getCamera() {
 	return camera;
 }
@@ -64,16 +78,28 @@ void World::start() {
 void World::update() {
 	camera->update();
 
-	checkIntersections();
+	transformTools->checkTool();
 
 	for (std::shared_ptr<Transform> object : objects) {
 		object->update();
 	}
 }
 
+void World::changeTool(TransformTools::Tool tool) {
+	transformTools->changeTool(tool);
+}
+
 void World::updateViewport(float posX, float posY, float viewportWidth, float viewportHeight) {
 	viewportPos = glm::vec2(posX, posY);
 	viewportSize = glm::vec2(viewportWidth, viewportHeight);
+}
+
+glm::vec2 World::getViewportPos() {
+	return viewportPos;
+}
+
+glm::vec2 World::getViewportSize() {
+	return viewportSize;
 }
 
 std::vector<std::shared_ptr<Transform>>& World::getObjects() {
@@ -100,37 +126,6 @@ float World::getDebug() {
 
 void World::setDebug(float debug) {
 	this->debug = debug;
-}
-
-void World::checkIntersections() {
-	if (Input::getMouseDown(0)) {
-		// Ignore mouse click if it isn't in the viewport
-		if (!Input::isPosInsideRect(Input::getMousePosition(), viewportPos, viewportSize)) {
-			return;
-		}
-
-		glm::vec2 mousePos = Input::getMousePosition() - viewportPos;
-
-		glm::vec3 rayOrigin = camera->getPosition();
-		glm::vec3 rayDirection = camera->getModelMatrix() * glm::vec4(Input::posToRayDirection(mousePos, viewportSize, camera->getFov()), 0.0f);
-		rayDirection = glm::normalize(rayDirection);
-
-		HitInfo info;
-		if (Physics::ray(rayOrigin, rayDirection, info, Physics::getLayerIndex("transform"))) {
-			std::cout << "Transform" << std::endl;
-			return;
-		}
-
-		// Clear selection if left control isn't held
-		if (!Input::getKey(GLFW_KEY_LEFT_CONTROL)) {
-			selected.clear();
-		}
-
-		if (Physics::ray(rayOrigin, rayDirection, info, Physics::getLayerIndex("main"))) {
-			std::cout << "Main" << std::endl;
-			selected.push_back(info.object);
-		}
-	}
 }
 
 glm::vec3 World::getSunDirection() {

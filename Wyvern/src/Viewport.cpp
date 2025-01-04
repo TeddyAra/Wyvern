@@ -1,5 +1,7 @@
 #include "Viewport.h"
 
+Viewport* Viewport::viewportInstance;
+
 void Viewport::draw() {
 	ImVec2 viewportPos = ImVec2(ImGui::GetWindowPos().x + ImGui::GetCursorPosX(), ImGui::GetWindowPos().y + ImGui::GetCursorPosY());
 
@@ -21,6 +23,14 @@ void Viewport::resize() {
 	resized = false;
 }
 
+void Viewport::sizeCallback(GLFWwindow* window, int width, int height) {
+		Viewport::getViewport()->resize();
+}
+
 std::shared_ptr<Renderer> Viewport::getRenderer() {
 	return renderer;
+}
+
+Viewport* Viewport::getViewport() {
+	return viewportInstance;
 }
