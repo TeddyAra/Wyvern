@@ -13,13 +13,15 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 #include <string>
+#include <memory>
+#include <vector>
 
-#include "World.h"
-#include "Shader.h"
-#include "Buffer.h"
-#include "Framebuffer.h"
-#include "Texture.h"
-#include "Skybox.h"
+class World;
+class Shader;
+class Buffer;
+class Framebuffer;
+class Texture;
+class Skybox;
 
 class Renderer {
 public:

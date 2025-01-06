@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="src\behaviours\CameraBehaviour.cpp" />
     <ClCompile Include="src\cmds\SwitchToolCommand.cpp" />
+    <ClCompile Include="src\cmds\ToggleHitboxesCommand.cpp" />
     <ClCompile Include="src\physics\CylinderCollider.cpp" />
     <ClCompile Include="src\renderer\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="src\behaviours\Behaviour.h" />
     <ClInclude Include="src\behaviours\CameraBehaviour.h" />
     <ClInclude Include="src\cmds\SwitchToolCommand.h" />
+    <ClInclude Include="src\cmds\ToggleHitboxesCommand.h" />
     <ClInclude Include="src\physics\CylinderCollider.h" />
     <ClInclude Include="src\renderer\Buffer.h" />
     <ClInclude Include="src\Camera.h" />
@@ -522,6 +524,9 @@
     <None Include="assets\mainShader.shader" />
     <None Include="assets\skyboxShader.shader" />
     <None Include="assets\transformShader.shader" />
+    <None Include="Debug\assets\mainShader.shader" />
+    <None Include="Debug\assets\skyboxShader.shader" />
+    <None Include="Debug\assets\transformShader.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
@@ -670,11 +675,22 @@
     <Image Include="assets\reaction.png" />
     <Image Include="assets\right.png" />
     <Image Include="assets\up.png" />
+    <Image Include="Debug\assets\back.png" />
+    <Image Include="Debug\assets\down.png" />
+    <Image Include="Debug\assets\front.png" />
+    <Image Include="Debug\assets\left.png" />
+    <Image Include="Debug\assets\polyfoam.png" />
+    <Image Include="Debug\assets\reaction.png" />
+    <Image Include="Debug\assets\right.png" />
+    <Image Include="Debug\assets\up.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\FontAwesome.ttf" />
     <Font Include="assets\SourceSansPro-Bold.ttf" />
     <Font Include="assets\SourceSansPro-Regular.ttf" />
+    <Font Include="Debug\assets\FontAwesome.ttf" />
+    <Font Include="Debug\assets\SourceSansPro-Bold.ttf" />
+    <Font Include="Debug\assets\SourceSansPro-Regular.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

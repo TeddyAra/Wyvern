@@ -3,8 +3,8 @@
 #include <string>
 #include <iostream>
 #include <map>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+
+#include "Renderer.h"
 
 class Input {
 public:

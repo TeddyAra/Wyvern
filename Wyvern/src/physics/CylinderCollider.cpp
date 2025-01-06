@@ -9,18 +9,18 @@ CylinderCollider::CylinderCollider()
 {
 	const int faceCount = 16;
 
-	glm::vec3 axis(0.0f, 1.0f, 0.0f);
+	glm::vec3 axis(0.0f, 0.0f, 1.0f);
 
-	vertices.push_back(glm::vec3(0.0f, -0.5f, 0.0f));
-	vertices.push_back(glm::vec3(0.0f,  0.5f, 0.0f));
+	vertices.push_back(axis * 0.5f);
+	vertices.push_back(axis * -0.5f);
 
 	for (float i = 0; i < 360; i += 360 / faceCount) {
-		glm::vec3 vertex(0.0f, 0.0f, 0.5f);
+		glm::vec3 vertex(0.0f, 0.5f, 0.0f);
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(i), axis);
 		vertex = glm::vec3(rotationMatrix * glm::vec4(vertex, 0.0f));
 
-		vertices.push_back(vertex - glm::vec3(0.0f, 0.5f, 0.0f));
-		vertices.push_back(vertex + glm::vec3(0.0f, 0.5f, 0.0f));
+		vertices.push_back(vertex - glm::vec3(0.0f, 0.0f, 0.5f));
+		vertices.push_back(vertex + glm::vec3(0.0f, 0.0f, 0.5f));
 	}
 
 	if (vertices.size() < 8) {

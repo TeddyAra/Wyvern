@@ -23,6 +23,9 @@ public:
 
 	void changeTool(TransformTools::Tool tool);
 
+	std::vector<std::shared_ptr<Transform>>& getObjects();
+	std::vector<std::shared_ptr<Transform>>& getTransformTools();
+
 	void addToHistory(std::shared_ptr<ICommand> command);
 	
 	void undo();

@@ -21,13 +21,8 @@ void CreateObjectCommand::execute() {
 	if (Physics::ray(origin, direction, info, Physics::getLayerIndex("main"), maxRayLength)) {
 		object->setPosition(info.hitPoint + info.normal * 0.5f);
 		object->setRotation(info.object->getRotation());
-
-		Debug::addLine(origin, info.hitPoint);
-		Debug::addLine(info.hitPoint, info.hitPoint + info.normal * 2.0f);
 	} else {
 		object->setPosition(origin + direction * standardLength);
-
-		Debug::addLine(origin, origin + direction * standardLength);
 	}
 
 	controller->addObject(object);

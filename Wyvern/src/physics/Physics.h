@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Renderer.h"
+
 #include <memory>
 #include <vector>
 #include <algorithm>

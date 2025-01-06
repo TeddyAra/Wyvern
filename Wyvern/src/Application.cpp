@@ -9,8 +9,9 @@
 #include "RedoCommand.h"
 #include "CreateObjectCommand.h"
 #include "SwitchToolCommand.h"
-#include "TransformTools.h"
+#include "ToggleHitboxesCommand.h"
 
+#include "TransformTools.h"
 #include "InteractionController.h"
 #include "World.h"
 #include "Renderer.h"
@@ -84,6 +85,7 @@ Application::Application() {
 	menu->newZone("Test");
 	menu->addWidget(WidgetType::SmallButton, "Play", u8"\uf04b", nullptr);
 	menu->addWidget(WidgetType::SmallButton, "Stop", u8"\uf04d", nullptr);
+	menu->addWidget(WidgetType::Toggle, "Hitboxes", "", std::make_shared<ToggleHitboxesCommand>(controller));
 
 	// Add textures
 	std::shared_ptr<Renderer> renderer = viewport->getRenderer();

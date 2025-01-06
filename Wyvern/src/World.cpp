@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "CameraBehaviour.h"
+#include "Debug.h"
 
 World* World::worldInstance;
 
@@ -21,29 +22,6 @@ World::World(int defaultLayer)
 	camera->setBehaviour(std::make_shared<CameraBehaviour>());
 	transformTools = std::make_unique<TransformTools>();
 
-	glm::vec3 directions[] = {
-		{  1.0f,  0.0f,  0.0f },
-		{ -1.0f,  0.0f,  0.0f },
-		{  0.0f,  1.0f,  0.0f },
-		{  0.0f, -1.0f,  0.0f },
-		{  0.0f,  0.0f,  1.0f },
-		{  0.0f,  0.0f, -1.0f }
-	};
-
-	for (const glm::vec3& direction : directions) {
-		std::shared_ptr<Transform> tool = std::make_shared<Transform>();
-		tool->setScale(0.1f, 0.1f, 2.0f);
-		tool->lookAt(direction);
-
-		tool->removeLayer(Physics::getLayerIndex("main"));
-		tool->addLayer(Physics::getLayerIndex("transform"));
-		tool->addLayer(Physics::getLayerIndex("move"));
-		tool->setCollider(std::make_shared<CylinderCollider>());
-
-		transform.push_back(tool);
-		Physics::addObject(tool);
-	}
-
 	const float baseWidth = 100.0f;
 	const float baseHeight = 25.0f;
 
@@ -56,7 +34,6 @@ World::World(int defaultLayer)
 World::~World() {
 	objects.clear();
 	selected.clear();
-	transform.clear();
 }
 
 World* World::getWorld() {
@@ -89,6 +66,10 @@ void World::changeTool(TransformTools::Tool tool) {
 	transformTools->changeTool(tool);
 }
 
+TransformTools::Tool World::getTool() {
+	return transformTools->getTool();
+}
+
 void World::updateViewport(float posX, float posY, float viewportWidth, float viewportHeight) {
 	viewportPos = glm::vec2(posX, posY);
 	viewportSize = glm::vec2(viewportWidth, viewportHeight);
@@ -111,13 +92,14 @@ std::vector<std::shared_ptr<Transform>>& World::getSelected() {
 }
 
 std::vector<std::shared_ptr<Transform>>& World::getTransformTools() {
-	return transform;
+	return transformTools->getTransformTools();
 }
 
 void World::addObject(std::shared_ptr<Transform> object) {
 	object->addLayer(defaultLayer);
 	objects.push_back(object);
 	Physics::addObject(object);
+	Debug::addObject(object);
 }
 
 float World::getDebug() {

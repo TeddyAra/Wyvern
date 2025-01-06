@@ -147,6 +147,9 @@
     <ClCompile Include="src\cmds\SwitchToolCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\cmds\ToggleHitboxesCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1154,6 +1157,9 @@
     <ClInclude Include="src\cmds\SwitchToolCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\cmds\ToggleHitboxesCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1573,6 +1579,9 @@
     <None Include="assets\mainShader.shader" />
     <None Include="assets\transformShader.shader" />
     <None Include="assets\skyboxShader.shader" />
+    <None Include="Debug\assets\mainShader.shader" />
+    <None Include="Debug\assets\skyboxShader.shader" />
+    <None Include="Debug\assets\transformShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\reaction.png">
@@ -1599,10 +1608,37 @@
     <Image Include="assets\up.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Debug\assets\back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\down.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\polyfoam.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\reaction.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Debug\assets\up.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\SourceSansPro-Bold.ttf" />
     <Font Include="assets\SourceSansPro-Regular.ttf" />
     <Font Include="assets\FontAwesome.ttf" />
+    <Font Include="Debug\assets\FontAwesome.ttf" />
+    <Font Include="Debug\assets\SourceSansPro-Bold.ttf" />
+    <Font Include="Debug\assets\SourceSansPro-Regular.ttf" />
   </ItemGroup>
 </Project>

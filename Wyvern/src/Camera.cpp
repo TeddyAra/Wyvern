@@ -19,7 +19,7 @@ glm::mat4 Camera::getViewMatrix() {
 }
 
 glm::mat4 Camera::getProjectionMatrix(glm::vec2 viewportSize) {
-	return glm::perspective(glm::radians(fov), viewportSize.x / viewportSize.y, 0.1f, 100.0f);
+	return glm::perspective(glm::radians(fov), viewportSize.x / viewportSize.y, 0.1f, 500.0f);
 }
 
 void Camera::setFov(float fov) {

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Debug.h"
+
 std::vector<std::shared_ptr<Transform>> Physics::objects;
 std::map<int, std::string> Physics::layers;
 
@@ -27,7 +29,7 @@ bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int laye
 	glm::vec3 closestPos2;
 	glm::vec3 closestPos3;
 
-	for (std::shared_ptr<Transform> object : objects) {
+	for (const std::shared_ptr<Transform>& object : objects) {
 		if (!object->getCollider() || (!object->checkLayer(layer) && layer >= 0)) continue;
 
 		std::vector<glm::vec3> vertices = object->getCollider()->getVertices();
@@ -35,13 +37,17 @@ bool Physics::ray(glm::vec3 origin, glm::vec3 direction, HitInfo& info, int laye
 		
 		glm::mat4 matrix = object->getModelMatrix();
 
+		for (int i = 0; i < vertices.size(); i++) {
+			vertices[i] = glm::vec3(matrix * glm::vec4(vertices[i], 1.0f));
+		}
+
 		for (int i = 0; i < indices.size(); i += 3) {
 			glm::vec2 triangleBaryPosition;
 			float triangleDistance;
 
-			glm::vec3 pos1 = glm::vec3(matrix * glm::vec4(vertices[indices[i]], 1.0f));
-			glm::vec3 pos2 = glm::vec3(matrix * glm::vec4(vertices[indices[i + 1]], 1.0f));
-			glm::vec3 pos3 = glm::vec3(matrix * glm::vec4(vertices[indices[i + 2]], 1.0f));
+			glm::vec3 pos1 = vertices[indices[i]];
+			glm::vec3 pos2 = vertices[indices[i + 1]];
+			glm::vec3 pos3 = vertices[indices[i + 2]];
 
 			if (glm::intersectRayTriangle(origin, direction, pos1, pos2, pos3, triangleBaryPosition, triangleDistance)) {
 				if (triangleDistance < 0 || (triangleDistance > maxLength && maxLength > 0.0f)) continue;
@@ -81,6 +87,7 @@ bool Physics::rayPlane(glm::vec3 origin, glm::vec3 direction, glm::vec3 planeOri
 	if (glm::intersectRayPlane(origin, direction, planeOrigin, planeNormal, length)) {
 		if (length < 0 || (maxLength != -1 && length > maxLength)) return false;
 		info.distance = length;
+		info.hitPoint = origin + direction * length;
 		return true;
 	}
 

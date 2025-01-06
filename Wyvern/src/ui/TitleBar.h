@@ -1,7 +1,6 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+#include "Renderer.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"

@@ -12,7 +12,7 @@ DebugCommand::DebugCommand(std::shared_ptr<InteractionController> controller)
 
 void DebugCommand::execute() {
 	if (args.size() == 0) {
-		std::cout << "No arguments given to debug command" << std::endl;
+		std::cerr << "No arguments given to debug command" << std::endl;
 		return;
 	}
 
@@ -27,7 +27,7 @@ void DebugCommand::execute() {
 	}
 
 	if (!cast) {
-		std::cout << "Wrong arguments given to debug command" << std::endl;
+		std::cerr << "Wrong argument(s) given to debug command" << std::endl;
 		return;
 	}
 

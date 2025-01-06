@@ -33,6 +33,14 @@ void InteractionController::changeTool(TransformTools::Tool tool) {
 	world->changeTool(tool);
 }
 
+std::vector<std::shared_ptr<Transform>>& InteractionController::getObjects() {
+	return world->getObjects();
+}
+
+std::vector<std::shared_ptr<Transform>>& InteractionController::getTransformTools() {
+	return world->getTransformTools();
+}
+
 void InteractionController::addToHistory(std::shared_ptr<ICommand> command) {
 	history->addCommand(command);
 }

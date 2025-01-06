@@ -13,7 +13,7 @@
 class Transform {
 public:
 	Transform() 
-		: position(glm::vec3(0, 0, 0)), rotation(glm::quat(glm::vec3(0, 0, 0))), scale(glm::vec3(1, 1, 1)), origin(glm::vec3(0.5f, 0.5f, 0.5f)), 
+		: position(glm::vec3(0, 0, 0)), rotation(glm::quat(glm::vec3(0, 0, 0))), scale(glm::vec3(1, 1, 1)), origin(glm::vec3(0.0f, 0.0f, 0.0f)), 
 		front(glm::vec3(0, 0, 1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)), 
 		collider(std::make_shared<BoxCollider>()), colour(glm::vec3(0.9f, 0.9f, 0.9f)) {}
 	virtual ~Transform() = default;
@@ -181,9 +181,9 @@ public:
 	glm::mat4 getModelMatrix() {
 		glm::mat4 matrix = glm::mat4(1.0f);
 
+		matrix = glm::translate(matrix, origin);
 		matrix = glm::translate(matrix, position);
 		matrix *= glm::mat4_cast(rotation);
-		//matrix = glm::translate(matrix, -origin);
 		matrix = glm::scale(matrix, scale);
 
 		return matrix;

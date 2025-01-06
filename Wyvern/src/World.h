@@ -33,6 +33,7 @@ public:
 	glm::vec2 getViewportSize();
 
 	void changeTool(TransformTools::Tool tool);
+	TransformTools::Tool getTool();
 
 	std::vector<std::shared_ptr<Transform>>& getObjects();
 	std::vector<std::shared_ptr<Transform>>& getSelected();
@@ -52,7 +53,6 @@ public:
 private:
 	std::vector<std::shared_ptr<Transform>> objects;
 	std::vector<std::shared_ptr<Transform>> selected;
-	std::vector<std::shared_ptr<Transform>> transform;
 	std::shared_ptr<Camera> camera;
 	std::unique_ptr<TransformTools> transformTools;
 

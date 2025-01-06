@@ -130,7 +130,10 @@ void UIBarMenu::drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int i
 	smallWidgetCount++;
 
 	ImGui::PushFont(headerFont);
-	ImGui::Checkbox(widgets[index]->getTitle().c_str(), widgets[index]->getBool());
+	if (ImGui::Checkbox(widgets[index]->getTitle().c_str(), widgets[index]->getBool())) {
+		widgets[index]->setArgs({ *widgets[index]->getBool() });
+		widgets[index]->execute();
+	}
 	ImGui::PopFont();
 
 	if (smallWidgetCount != 3) {

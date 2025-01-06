@@ -4,6 +4,13 @@
 
 #include "Debug.h"
 
+#include "World.h"
+#include "Shader.h"
+#include "Buffer.h"
+#include "Framebuffer.h"
+#include "Texture.h"
+#include "Skybox.h"
+
 const unsigned int mainIndices[] = {
 	 0,  2,  3,
 	 0,  3,  1,
@@ -69,7 +76,7 @@ const float mainVertices[] = {
 
 void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices) {
 	const int faceCount = 16;
-	const float coneHeight = 0.1f;
+	const float coneHeight = 0.2f;
 	const float coneRadius = 1.0f;
 
 	glm::vec3 axis(0.0f, 0.0f, 1.0f);
@@ -268,49 +275,19 @@ void Renderer::render() {
 	modelLoc = glGetUniformLocation(transformShader->getID(), "model");
 	projectionLoc = glGetUniformLocation(transformShader->getID(), "projection");
 	colourLoc = glGetUniformLocation(transformShader->getID(), "colour");
+	GLuint distanceLoc = glGetUniformLocation(transformShader->getID(), "distance");
 
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	
-	if (selected.size() > 0) {
+	if (selected.size() > 0 && world->getTool() != TransformTools::Tool::Select) {
+
 		glDisable(GL_DEPTH_TEST);
 
 		for (int i = 0; i < transform.size(); i++) {
-			glm::vec4 colour(1.0f, 1.0f, 1.0f, 1.0f);
-			glm::vec3 translation;
-
-			// Set colour
-			switch (i) {
-				case 0:
-					colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-					translation = selected[0]->getRight() * (selected[0]->getScale().x + 1.0f);
-					break;
-				case 1:
-					colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-					translation = selected[0]->getRight() * -(selected[0]->getScale().x + 1.0f);
-					break;
-				case 2: 
-					colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-					translation = selected[0]->getUp() * (selected[0]->getScale().y + 1.0f);
-					break;
-				case 3:
-					colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-					translation = selected[0]->getUp() * -(selected[0]->getScale().y + 1.0f);
-					break;
-				case 4:
-					colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-					translation = selected[0]->getFront() * (selected[0]->getScale().z + 1.0f);
-					break;
-				case 5:
-					colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-					translation = selected[0]->getFront() * -(selected[0]->getScale().z + 1.0f);
-					break;
-			}
-
-			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), translation);
-
+			glm::vec4 colour = glm::vec4(transform[i]->getColour(), 1.0f);
 			glUniform4f(colourLoc, colour.r, colour.g, colour.b, colour.a);
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(selected[0]->getModelMatrix() * translationMatrix * transform[i]->getModelMatrix()));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform[i]->getModelMatrix()));
 
 			// Draw object
 			glDrawElements(GL_TRIANGLES, transformIndices.size(), GL_UNSIGNED_INT, 0);
@@ -319,7 +296,7 @@ void Renderer::render() {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	//drawLines();
+	drawLines();
 
 	// Unbind everything
 	transformBuffer->unbind();
@@ -381,21 +358,15 @@ void Renderer::addSkybox(std::vector<std::string> faces, std::string& skyboxShad
 }
 
 void Renderer::drawLines() {
+	glDisable(GL_DEPTH_TEST);
+
 	GLuint modelLoc = glGetUniformLocation(transformShader->getID(), "model");
 	GLuint colourLoc = glGetUniformLocation(transformShader->getID(), "colour");
 
 	glm::mat4 unitMat(1.0f);
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(unitMat));
 
-	for (const Line& line : Debug::getLines()) {
-		glUniform4f(colourLoc, line.colour.r, line.colour.g, line.colour.b, line.colour.a);
-
-		glLineWidth(2.0f);
-		glBegin(GL_LINES);
-		glVertex3f(line.posA.x, line.posA.y, line.posA.z);
-		glVertex3f(line.posB.x, line.posB.y, line.posB.z);
-		glEnd();
-	}
+	Debug::drawHitboxes(colourLoc);
 }
 
 GLuint Renderer::getTexture(const char* name) {
