@@ -28,6 +28,7 @@ World::World(int defaultLayer)
 	std::shared_ptr<Transform> base = std::make_shared<Transform>();
 	base->setScale(baseWidth, baseHeight, baseWidth);
 	base->setPosition(0.0f, baseHeight * -0.5f, 0.0f);
+	base->setGrid(true);
 	addObject(base);
 }
 
@@ -100,6 +101,23 @@ void World::addObject(std::shared_ptr<Transform> object) {
 	objects.push_back(object);
 	Physics::addObject(object);
 	Debug::addObject(object);
+	object->start();
+}
+
+void World::setMoveSnap(float snap) {
+	transformTools->setMoveSnap(snap);
+}
+
+void World::setRotationSnap(float snap) {
+	transformTools->setRotationSnap(snap);
+}
+
+float World::getMoveSnap() {
+	return transformTools->getMoveSnap();
+}
+
+float World::getRotationSnap() {
+	return transformTools->getRotationSnap();
 }
 
 float World::getDebug() {

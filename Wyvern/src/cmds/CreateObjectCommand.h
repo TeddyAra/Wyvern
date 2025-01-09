@@ -8,6 +8,6 @@ public:
 	void execute() override;
 
 private:
-	float maxRayLength = 20.0f;
+	float maxRayLength = 50.0f;
 	float standardLength = 10.0f;
 };

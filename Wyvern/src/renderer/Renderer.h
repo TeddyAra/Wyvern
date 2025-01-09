@@ -38,6 +38,15 @@ public:
 
 	void addSkybox(std::vector<std::string> faces, std::string& skyboxShaderPath);
 
+	struct IndicesInfo {
+		int moveStart;
+		int moveCount;
+		int scaleStart;
+		int scaleCount;
+		int rotateStart;
+		int rotateCount;
+	};
+
 private:
 	GLFWwindow* window;
 	std::shared_ptr<World> world;
@@ -58,10 +67,16 @@ private:
 	std::unique_ptr<Framebuffer> framebuffer;
 
 	ImVec2 texSize;
+	IndicesInfo info;
 
 	void drawLines();
 	void drawSkybox();
 	GLuint getTexture(const char* name);
+
+	void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices, Renderer::IndicesInfo& info);
+	void fillMoveVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices);
+	void fillScaleVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices);
+	void fillRotateVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices);
 
 	void setupOpenGLState();
 };

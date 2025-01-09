@@ -34,6 +34,14 @@ void UIBarMenu::draw() {
 				drawInputFloat(widgets, j);
 				break;
 
+			case WidgetType::Text:
+				drawText(widgets, j, false);
+				break;
+
+			case WidgetType::ShortText:
+				drawText(widgets, j, true);
+				break;
+
 			case WidgetType::Empty:
 				smallWidgetCount = 0;
 				posY = originalY;
@@ -117,13 +125,7 @@ void UIBarMenu::drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, 
 	ImGui::Text(widgets[index]->getTitle().c_str());
 	ImGui::PopFont();
 
-	if (smallWidgetCount != 3) {
-		posY += smallHeight + padding;
-	} else {
-		smallWidgetCount = 0;
-		posY = originalY;
-		posX += bigWidth + padding;
-	}
+	updatePos();
 }
 
 void UIBarMenu::drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int index) {
@@ -136,13 +138,7 @@ void UIBarMenu::drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int i
 	}
 	ImGui::PopFont();
 
-	if (smallWidgetCount != 3) {
-		posY += smallHeight + padding;
-	} else {
-		smallWidgetCount = 0;
-		posY = originalY;
-		posX += bigWidth + padding;
-	}
+	updatePos();
 }
 
 void UIBarMenu::drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, int index) {
@@ -158,11 +154,31 @@ void UIBarMenu::drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, i
 	}
 	ImGui::PopFont();
 
+	updatePos();
+}
+
+void UIBarMenu::drawText(std::vector<std::shared_ptr<UIWidget>> widgets, int index, bool shortText) {
+	this->shortText = shortText;
+	smallWidgetCount++;
+
+	ImGui::PushFont(headerFont);
+	ImGui::PushItemWidth(bigWidth);
+	ImGui::Text(widgets[index]->getTitle().c_str());
+	ImGui::PopFont();
+
+	updatePos();
+	this->shortText = false;
+}
+
+void UIBarMenu::updatePos() {
 	if (smallWidgetCount != 3) {
 		posY += smallHeight + padding;
 	} else {
 		smallWidgetCount = 0;
 		posY = originalY;
 		posX += bigWidth + padding;
+		if (shortText) {
+			posX -= 40;
+		} 
 	}
 }

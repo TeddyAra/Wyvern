@@ -48,6 +48,21 @@ public:
 		position += translation;
 	}
 
+	void snapPosition(float snapping) {
+		for (int axis = 0; axis < 3; axis++) {
+			float remainder = fmod(position[axis], snapping);
+			if (remainder < snapping / 2) {
+				position[axis] -= remainder;
+			} else {
+				position[axis] += -remainder + snapping;
+			}
+		}
+	}
+
+	void snapRotation(float snapping) {
+
+	}
+
 	// Rotation
 	glm::quat getRotation() {
 		return rotation;
@@ -232,6 +247,14 @@ public:
 		return colour;
 	}
 
+	void setGrid(bool value) {
+		grid = value;
+	}
+
+	bool getGrid() {
+		return grid;
+	}
+
 protected:
 	glm::vec3 position;
 	glm::quat rotation;
@@ -244,6 +267,7 @@ protected:
 	glm::vec3 up;
 
 	glm::vec3 colour;
+	bool grid;
 
 	std::shared_ptr<Behaviour> behaviour;
 	std::shared_ptr<Collider> collider;

@@ -17,6 +17,11 @@ public:
 
 	std::shared_ptr<Camera> getCamera();
 
+	void setMoveSnap(float snap);
+	void setRotationSnap(float snap);
+	float getMoveSnap();
+	float getRotationSnap();
+
 	float getDebug();
 	void setDebug(float debug);
 	void addObject(std::shared_ptr<Transform> object);
@@ -24,6 +29,7 @@ public:
 	void changeTool(TransformTools::Tool tool);
 
 	std::vector<std::shared_ptr<Transform>>& getObjects();
+	std::vector<std::shared_ptr<Transform>>& getSelected();
 	std::vector<std::shared_ptr<Transform>>& getTransformTools();
 
 	void addToHistory(std::shared_ptr<ICommand> command);

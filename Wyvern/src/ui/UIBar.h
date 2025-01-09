@@ -1,5 +1,5 @@
 #pragma once 
-//#pragma warning( disable : 4244 ) 
+#pragma warning( disable : 4244 ) 
 
 #include <string>
 #include <memory>
@@ -21,6 +21,8 @@ public:
 	virtual void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
 	virtual void drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
 	virtual void drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, int index) = 0;
+	virtual void drawText(std::vector<std::shared_ptr<UIWidget>> widgets, int index, bool shortText) = 0;
+
 	void render();
 	std::shared_ptr<int> getWidthPtr();
 	std::shared_ptr<int> getHeightPtr();

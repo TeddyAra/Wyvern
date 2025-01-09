@@ -118,6 +118,9 @@ std::shared_ptr<Viewport> Window::addViewport(std::string name, SizeOrOffset top
 }
 
 void Window::draw() {
+	glfwPollEvents();
+	Input::update();
+
 	// Handle resizing and moving
 	if (titleBarHidden) {
 		checkResize();
@@ -153,10 +156,6 @@ void Window::draw() {
 	// Render ImGui
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	//glfwSwapBuffers(window);
-	glfwPollEvents();
-	Input::update();
 }
 
 void Window::addFont(std::string font, FontType type) {

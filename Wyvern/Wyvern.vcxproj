@@ -138,6 +138,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\behaviours\CameraBehaviour.cpp" />
+    <ClCompile Include="src\cmds\CommandTemplate.cpp" />
+    <ClCompile Include="src\cmds\ResetSnapCommand.cpp" />
+    <ClCompile Include="src\cmds\SetMoveSnapCommand.cpp" />
     <ClCompile Include="src\cmds\SwitchToolCommand.cpp" />
     <ClCompile Include="src\cmds\ToggleHitboxesCommand.cpp" />
     <ClCompile Include="src\physics\CylinderCollider.cpp" />
@@ -186,6 +189,9 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\behaviours\Behaviour.h" />
     <ClInclude Include="src\behaviours\CameraBehaviour.h" />
+    <ClInclude Include="src\cmds\CommandTemplate.h" />
+    <ClInclude Include="src\cmds\ResetSnapCommand.h" />
+    <ClInclude Include="src\cmds\SetMoveSnapCommand.h" />
     <ClInclude Include="src\cmds\SwitchToolCommand.h" />
     <ClInclude Include="src\cmds\ToggleHitboxesCommand.h" />
     <ClInclude Include="src\physics\CylinderCollider.h" />

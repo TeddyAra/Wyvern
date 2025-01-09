@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 #include <any>
+#include <optional>
+#include <typeinfo>
 
 #include "Physics.h"
 #include "HitInfo.h"
@@ -19,6 +21,17 @@ public:
 	virtual ~ICommand() = default;
 	void setArgs(std::vector<std::any> args) {
 		this->args = args;
+	}
+
+	template<typename T>
+	std::optional<T> getArg() {
+		for (std::any arg : args) {
+			if (arg.type() == typeid(T)) {
+				return std::any_cast<T>(arg);
+			}
+		}
+
+		return std::nullopt;
 	}
 
 protected:

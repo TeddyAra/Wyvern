@@ -71,12 +71,11 @@ void Debug::drawHitboxes(GLuint colourLoc) {
 				glEnd();
 			}
 		}
-
-		glEnable(GL_DEPTH_TEST);
 	}
 
+	glEnable(GL_DEPTH_TEST);
 	glLineWidth(4.0f);
-	glUniform4f(colourLoc, 0.141f, 0.278f, 0.443f, 1.0f);
+	glUniform4f(colourLoc, 0.3f, 0.5f, 0.8f, 1.0f);
 
 	for (const std::shared_ptr<Transform>& object : World::getWorld()->getSelected()) {
 		if (!object->getCollider()) continue;
@@ -98,10 +97,6 @@ void Debug::drawHitboxes(GLuint colourLoc) {
 		glm::vec3 pos6 = vertices[5];
 		glm::vec3 pos7 = vertices[6];
 		glm::vec3 pos8 = vertices[7];
-
-		// 3   4 | 7   8
-		//       |
-		// 1   2 | 5   6
 
 		glBegin(GL_LINES);
 		glVertex3f(pos1.x, pos1.y, pos1.z);
@@ -132,4 +127,24 @@ void Debug::drawHitboxes(GLuint colourLoc) {
 		glVertex3f(pos8.x, pos8.y, pos8.z);
 		glEnd();
 	}
+}
+
+void Debug::drawCircle(glm::vec3 pos, glm::vec3 normal, float radius, float steps, glm::vec4 colour, GLuint colourLoc) {
+	glm::vec3 tangent = glm::cross(normal, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (glm::length(tangent) < 0.0001f) {
+		tangent = glm::cross(normal, glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+	tangent = glm::normalize(tangent);
+	glm::vec3 biTangent = glm::normalize(glm::cross(normal, tangent));
+
+	glLineWidth(4.0f);
+	glUniform4f(colourLoc, colour.r, colour.g, colour.b, colour.a);
+
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i < steps; i++) {
+		float angle = 2.0f * glm::pi<float>() * i / steps;
+		glm::vec3 point = pos + radius * (cos(angle) * tangent + sin(angle) * biTangent);
+		glVertex3f(point.x, point.y, point.z);
+	}
+	glEnd();
 }

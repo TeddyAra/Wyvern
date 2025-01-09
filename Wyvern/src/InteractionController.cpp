@@ -17,6 +17,22 @@ std::shared_ptr<Camera> InteractionController::getCamera() {
 	return world->getCamera();
 }
 
+void InteractionController::setMoveSnap(float snap) {
+	world->setMoveSnap(snap);
+}
+
+void InteractionController::setRotationSnap(float snap) {
+	world->setRotationSnap(snap);
+}
+
+float InteractionController::getMoveSnap() {
+	return world->getMoveSnap();
+}
+
+float InteractionController::getRotationSnap() {
+	return world->getRotationSnap();
+}
+
 float InteractionController::getDebug() {
 	return world->getDebug();
 }
@@ -35,6 +51,10 @@ void InteractionController::changeTool(TransformTools::Tool tool) {
 
 std::vector<std::shared_ptr<Transform>>& InteractionController::getObjects() {
 	return world->getObjects();
+}
+
+std::vector<std::shared_ptr<Transform>>& InteractionController::getSelected() {
+	return world->getSelected();
 }
 
 std::vector<std::shared_ptr<Transform>>& InteractionController::getTransformTools() {

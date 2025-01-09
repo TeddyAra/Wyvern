@@ -78,3 +78,7 @@ void UIBarList::drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, i
 	ImGui::PushItemWidth(rightSize - 8);
 	ImGui::InputFloat("", widgets[index]->getFloat());
 }
+
+void UIBarList::drawText(std::vector<std::shared_ptr<UIWidget>> widgets, int index, bool shortText) {
+
+}

@@ -31,6 +31,7 @@ public:
 	static void addObject(std::shared_ptr<Transform> object);
 	static void setDrawHitboxes(bool value);
 	static void drawHitboxes(GLuint colourLoc);
+	static void drawCircle(glm::vec3 pos, glm::vec3 normal, float radius, float steps, glm::vec4 colour, GLuint colourLoc);
 
 private:
 	static std::vector<Line> lines;

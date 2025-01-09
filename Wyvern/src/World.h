@@ -40,6 +40,11 @@ public:
 	std::vector<std::shared_ptr<Transform>>& getTransformTools();
 	void addObject(std::shared_ptr<Transform> object);
 
+	void setMoveSnap(float snap);
+	void setRotationSnap(float snap);
+	float getMoveSnap();
+	float getRotationSnap();
+
 	float getDebug();
 	void setDebug(float debug);
 

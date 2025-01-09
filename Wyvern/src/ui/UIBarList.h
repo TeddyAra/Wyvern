@@ -1,5 +1,6 @@
 #pragma once
 #pragma warning( disable : 4244 ) 
+#pragma warning( disable : 4018 ) 
 
 #include "UIBar.h"
 
@@ -12,6 +13,7 @@ public:
 	void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
 	void drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
 	void drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
+	void drawText(std::vector<std::shared_ptr<UIWidget>> widgets, int index, bool shortText) override;
 
 private:
 	int topOffset = 24;

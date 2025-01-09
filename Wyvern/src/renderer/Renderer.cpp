@@ -74,7 +74,21 @@ const float mainVertices[] = {
 	 0.5f,  0.5f,  0.5f,    1.0f,  1.0f,    1.0f,  0.0f,  0.0f
 };
 
-void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices) {
+void Renderer::fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices, Renderer::IndicesInfo& info) {
+	info.moveStart = 0;
+	fillMoveVectors(indices, vertices);
+	info.moveCount = indices.size();
+
+	info.scaleStart = info.moveCount;
+	fillScaleVectors(indices, vertices);
+	info.scaleCount = indices.size() - info.moveCount;
+
+	info.rotateStart = info.moveCount + info.scaleCount;
+	fillRotateVectors(indices, vertices);
+	info.rotateCount = indices.size() - info.moveCount - info.scaleCount;
+}
+
+void Renderer::fillMoveVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices) {
 	const int faceCount = 16;
 	const float coneHeight = 0.2f;
 	const float coneRadius = 1.0f;
@@ -82,8 +96,8 @@ void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::v
 	glm::vec3 axis(0.0f, 0.0f, 1.0f);
 
 	vertices.push_back(glm::vec3(0.0f, 0.0f, -0.5f));
-	vertices.push_back(glm::vec3(0.0f, 0.0f,  0.5f - coneHeight));
-	vertices.push_back(glm::vec3(0.0f, 0.0f,  0.5f));
+	vertices.push_back(glm::vec3(0.0f, 0.0f, 0.5f - coneHeight));
+	vertices.push_back(glm::vec3(0.0f, 0.0f, 0.5f));
 
 	for (float i = 0; i < 360; i += 360 / faceCount) {
 		glm::vec3 vertex(0.0f, 0.5f, 0.0f);
@@ -103,9 +117,9 @@ void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::v
 
 	for (int i = 6; i < vertices.size(); i += 3) {
 		// Bottom
-		indices.push_back(0    );
+		indices.push_back(0);
 		indices.push_back(i - 3);
-		indices.push_back(i    );
+		indices.push_back(i);
 
 		// Side
 		indices.push_back(i - 3);
@@ -114,16 +128,16 @@ void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::v
 
 		indices.push_back(i - 3);
 		indices.push_back(i + 1);
-		indices.push_back(i    );
+		indices.push_back(i);
 
 		// Cone bottom
-		indices.push_back(1    );
+		indices.push_back(1);
 		indices.push_back(i - 1);
 		indices.push_back(i + 2);
 
 		// Cone top
 		indices.push_back(i - 1);
-		indices.push_back(2    );
+		indices.push_back(2);
 		indices.push_back(i + 2);
 	}
 
@@ -154,6 +168,71 @@ void fillTransformVectors(std::vector<unsigned int>& indices, std::vector<glm::v
 	indices.push_back(5);
 }
 
+void Renderer::fillScaleVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices) {
+	const int divisions = 2;
+	std::vector<glm::vec3> sphereVertices;
+
+	glm::vec3 directions[] = {
+		{ -0.5f, -0.5f, -0.5f },
+		{  1.0f,  0.0f,  0.0f },
+		{  0.0f,  1.0f,  0.0f },
+
+		{  0.5f, -0.5f, -0.5f },
+		{  0.0f,  0.0f,  1.0f },
+		{  0.0f,  1.0f,  0.0f },
+
+		{  0.5f, -0.5f,  0.5f },
+		{ -1.0f,  0.0f,  0.0f },
+		{  0.0f,  1.0f,  0.0f },
+
+		{ -0.5f, -0.5f,  0.5f },
+		{  0.0f,  0.0f, -1.0f },
+		{  0.0f,  1.0f,  0.0f },
+
+		{ -0.5f,  0.5f, -0.5f },
+		{  1.0f,  0.0f,  0.0f },
+		{  0.0f,  0.0f,  1.0f },
+
+		{ -0.5f, -0.5f,  0.5f },
+		{  1.0f,  0.0f,  0.0f },
+		{  0.0f,  0.0f, -1.0f }
+	};
+
+	for (int i = 0; i < sizeof(directions) / sizeof(directions[0]); i += 3) {
+		for (float y = 0.0f; y <= 1.0f; y += 1.0f / (divisions + 1)) {
+			for (float x = 0.0f; x <= 1.0f; x += 1.0f / (divisions + 1)) {
+				glm::vec3 pos = directions[i] + directions[i + 1] * x + directions[i + 2] * y;
+				sphereVertices.push_back(pos);
+
+				if (x != 0.0f && y != 0.0f) {
+					int topRight = vertices.size() + sphereVertices.size() - 1;
+					int topLeft = topRight - 1;
+					int bottomRight = topRight - divisions - 2;
+					int bottomLeft = bottomRight - 1;
+
+					indices.push_back(bottomLeft);
+					indices.push_back(topLeft);
+					indices.push_back(topRight);
+
+					indices.push_back(bottomLeft);
+					indices.push_back(topRight);
+					indices.push_back(bottomRight);
+				}
+			}
+		}
+	}
+
+	for (glm::vec3& vertex : sphereVertices) {
+		vertex = glm::normalize(vertex) * 0.5f;
+	}
+
+	vertices.insert(vertices.end(), sphereVertices.begin(), sphereVertices.end());
+}
+
+void Renderer::fillRotateVectors(std::vector<unsigned int>& indices, std::vector<glm::vec3>& vertices) {
+
+}
+
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 	std::cerr << "OpenGL Debug Message: " << message << std::endl;
 }
@@ -165,7 +244,7 @@ Renderer::Renderer(GLFWwindow* window, std::shared_ptr<World> world, std::string
 {
 	setupOpenGLState();
 
-	fillTransformVectors(transformIndices, transformVertices);
+	fillTransformVectors(transformIndices, transformVertices, info);
 
 	// Main buffer and shader
 	mainBuffer = std::make_unique<Buffer>(mainVertices, sizeof(mainVertices), mainIndices, sizeof(mainIndices));
@@ -227,6 +306,7 @@ void Renderer::render() {
 
 	GLuint colourLoc = glGetUniformLocation(mainShader->getID(), "colour");
 	GLuint scaleLoc = glGetUniformLocation(mainShader->getID(), "scale");
+	GLuint gridLoc = glGetUniformLocation(mainShader->getID(), "grid");
 
 	// Set uniforms
 	glm::vec3 sunDirection = world->getSunDirection();
@@ -264,6 +344,9 @@ void Renderer::render() {
 		glm::vec3 scale = object->getScale();
 		glUniform3f(scaleLoc, scale.x, scale.y, scale.z);
 
+		int grid = object->getGrid();
+		glUniform1i(gridLoc, grid);
+
 		// Draw object
 		glDrawElements(GL_TRIANGLES, sizeof(mainIndices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	}
@@ -275,14 +358,15 @@ void Renderer::render() {
 	modelLoc = glGetUniformLocation(transformShader->getID(), "model");
 	projectionLoc = glGetUniformLocation(transformShader->getID(), "projection");
 	colourLoc = glGetUniformLocation(transformShader->getID(), "colour");
-	GLuint distanceLoc = glGetUniformLocation(transformShader->getID(), "distance");
 
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	
-	if (selected.size() > 0 && world->getTool() != TransformTools::Tool::Select) {
 
-		glDisable(GL_DEPTH_TEST);
+	drawLines();
+
+	if (selected.size() > 0 && world->getTool() != TransformTools::Tool::Select) {
+		float radius = glm::length(transform[0]->getPosition() - world->getSelected()[0]->getPosition());
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		for (int i = 0; i < transform.size(); i++) {
 			glm::vec4 colour = glm::vec4(transform[i]->getColour(), 1.0f);
@@ -290,13 +374,48 @@ void Renderer::render() {
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform[i]->getModelMatrix()));
 
 			// Draw object
-			glDrawElements(GL_TRIANGLES, transformIndices.size(), GL_UNSIGNED_INT, 0);
+			int size = 0;
+			int offset = 0;
+
+			switch (world->getTool()) {
+			case TransformTools::Tool::Move:
+				size = info.moveCount;
+				offset = info.moveStart;
+				break;
+			case TransformTools::Tool::Scale:
+				size = info.scaleCount;
+				offset = info.scaleStart;
+				break;
+			case TransformTools::Tool::Rotate:
+				size = info.scaleCount;
+				offset = info.scaleStart;
+				break;
+			}
+
+			glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
+
+			if (world->getTool() == TransformTools::Tool::Rotate && i % 2 == 0) {
+				glm::mat4 unitMat(1.0f);
+				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(unitMat));
+
+				glm::vec3 normal = transform[i]->getFront();
+				glm::vec4 colour;
+				switch (i) {
+				case 0:
+					colour = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+					break;
+				case 2:
+					colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					break;
+				case 4:
+					colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					break;
+				}
+
+				Debug::drawCircle(world->getSelected()[0]->getPosition(), normal, radius, 64, colour, colourLoc);
+			}
 		}
-
-		glEnable(GL_DEPTH_TEST);
 	}
-
-	drawLines();
 
 	// Unbind everything
 	transformBuffer->unbind();
@@ -358,8 +477,6 @@ void Renderer::addSkybox(std::vector<std::string> faces, std::string& skyboxShad
 }
 
 void Renderer::drawLines() {
-	glDisable(GL_DEPTH_TEST);
-
 	GLuint modelLoc = glGetUniformLocation(transformShader->getID(), "model");
 	GLuint colourLoc = glGetUniformLocation(transformShader->getID(), "colour");
 

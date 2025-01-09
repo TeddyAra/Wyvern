@@ -10,6 +10,8 @@
 #include "CreateObjectCommand.h"
 #include "SwitchToolCommand.h"
 #include "ToggleHitboxesCommand.h"
+#include "SetMoveSnapCommand.h"
+#include "ResetSnapCommand.h"
 
 #include "TransformTools.h"
 #include "InteractionController.h"
@@ -31,7 +33,7 @@ Application::Application() {
 	// Create a window
 	succeeded;
 
-	window = std::make_shared<Window>(1600, 900, 1020, 670, "Wyvern", false, succeeded);
+	window = std::make_shared<Window>(1600, 900, 1190, 670, "Wyvern", false, succeeded);
 	if (!succeeded) {
 		std::cout << "Something went wrong with GLFW/GLEW initialization or window creation" << std::endl;
 		return;
@@ -40,9 +42,11 @@ Application::Application() {
 	// Add physics layers
 	Physics::addLayer(0, "main");
 	Physics::addLayer(1, "transform");
-	Physics::addLayer(2, "move");
-	Physics::addLayer(3, "scale");
-	Physics::addLayer(4, "rotate");
+	Physics::addLayer(2, "x");
+	Physics::addLayer(3, "y");
+	Physics::addLayer(4, "z");
+	Physics::addLayer(5, "pos");
+	Physics::addLayer(6, "neg");
 
 	// Create world and interaction controller
 	world = std::make_shared<World>(Physics::getLayerIndex("main"));
@@ -76,10 +80,17 @@ Application::Application() {
 	menu->addWidget(WidgetType::Toggle, "Move", "", nullptr);
 	menu->addWidget(WidgetType::Empty, "", "", nullptr);
 	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
-	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
+	menu->addWidget(WidgetType::InputFloat, "", "", std::make_shared<SetMoveSnapCommand>(controller));
+	menu->addWidget(WidgetType::SmallButton, "Reset", u8"\uf2f1", std::make_shared<ResetSnapCommand>(controller));
 
 	menu->newZone("Parts");
 	menu->addWidget(WidgetType::LargeButton, "Create", u8"\uf1b2", std::make_shared<CreateObjectCommand>(controller));
+	menu->addWidget(WidgetType::ShortText, "Red", "", nullptr);
+	menu->addWidget(WidgetType::ShortText, "Green", "", nullptr);
+	menu->addWidget(WidgetType::ShortText, "Blue", "", nullptr);
+	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
+	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
+	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
 	menu->addWidget(WidgetType::LargeButton, "Colour", u8"\uf1fc", nullptr);
 
 	menu->newZone("Test");

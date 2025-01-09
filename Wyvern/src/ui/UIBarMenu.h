@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning( disable : 4244 ) 
+#pragma warning( disable : 4018 ) 
 
 #include "UIBar.h"
 
@@ -11,6 +13,7 @@ public:
 	void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
 	void drawToggle(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
 	void drawInputFloat(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override;
+	void drawText(std::vector<std::shared_ptr<UIWidget>> widgets, int index, bool shortText) override;
 
 private:
 	int padding = 15;
@@ -25,4 +28,7 @@ private:
 	int bigWidth = 90;
 	int smallWidgetCount = 0;
 	int minX = posX;
+	bool shortText;
+
+	void updatePos();
 };

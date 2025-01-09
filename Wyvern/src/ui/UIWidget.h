@@ -11,6 +11,8 @@ enum WidgetType {
 	SmallButton,
 	Toggle,
 	InputFloat,
+	Text,
+	ShortText,
 	Empty
 };
 
@@ -18,7 +20,7 @@ class UIWidget {
 public:
 	UIWidget(WidgetType type, std::string title, const char* icon, std::shared_ptr<ICommand> command);
 	~UIWidget();
-
+	
 	WidgetType getType();
 	std::string getTitle();
 	const char* getIcon();

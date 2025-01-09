@@ -43,6 +43,7 @@ float* UIWidget::getFloat() {
 }
 
 void UIWidget::setArgs(const std::vector<std::any>& args) {
+	if (command == nullptr) return;
 	command->setArgs(args);
 }
 

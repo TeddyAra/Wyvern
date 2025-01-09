@@ -150,6 +150,15 @@
     <ClCompile Include="src\cmds\ToggleHitboxesCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\cmds\CommandTemplate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cmds\SetMoveSnapCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cmds\ResetSnapCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1158,6 +1167,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\cmds\ToggleHitboxesCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\SetMoveSnapCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\CommandTemplate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\ResetSnapCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
