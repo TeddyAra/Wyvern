@@ -48,9 +48,6 @@
     <ClCompile Include="src\InteractionController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\cmds\DebugCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -157,6 +154,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\cmds\ResetSnapCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cmds\SetRotationSnapCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cmds\ToggleMoveSnapCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cmds\ToggleRotationSnapCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1055,9 +1061,6 @@
     <ClInclude Include="src\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cmds\DebugCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\UIBarMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1176,6 +1179,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\cmds\ResetSnapCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\SetRotationSnapCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\ToggleMoveSnapCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cmds\ToggleRotationSnapCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

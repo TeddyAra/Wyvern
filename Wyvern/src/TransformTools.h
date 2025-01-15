@@ -20,6 +20,8 @@ public:
 		Rotate = 3
 	};
 
+	void toggleMoveSnap(bool value);
+	void toggleRotationSnap(bool value);
 	void setMoveSnap(float snap);
 	void setRotationSnap(float snap);
 	float getMoveSnap();
@@ -41,6 +43,8 @@ private:
 	glm::vec3 scaleOriginalScale;
 	glm::vec3 rotateOriginalScale;
 
+	bool moveSnapToggle;
+	bool rotationSnapToggle;
 	float moveSnap;
 	float rotationSnap;
 

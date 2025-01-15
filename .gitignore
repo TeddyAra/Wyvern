@@ -33,5 +33,6 @@
 
 # Own
 *.ini
-Debug
 .vs
+
+Wyvern/Wyvern/Debug

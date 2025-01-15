@@ -141,8 +141,11 @@
     <ClCompile Include="src\cmds\CommandTemplate.cpp" />
     <ClCompile Include="src\cmds\ResetSnapCommand.cpp" />
     <ClCompile Include="src\cmds\SetMoveSnapCommand.cpp" />
+    <ClCompile Include="src\cmds\SetRotationSnapCommand.cpp" />
     <ClCompile Include="src\cmds\SwitchToolCommand.cpp" />
     <ClCompile Include="src\cmds\ToggleHitboxesCommand.cpp" />
+    <ClCompile Include="src\cmds\ToggleMoveSnapCommand.cpp" />
+    <ClCompile Include="src\cmds\ToggleRotationSnapCommand.cpp" />
     <ClCompile Include="src\physics\CylinderCollider.cpp" />
     <ClCompile Include="src\renderer\Buffer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -153,7 +156,6 @@
     <ClCompile Include="src\physics\HitInfo.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\cmds\DebugCommand.cpp" />
     <ClCompile Include="src\cmds\RedoCommand.cpp" />
     <ClCompile Include="src\cmds\UndoCommand.cpp" />
     <ClCompile Include="src\HistoryManager.cpp" />
@@ -192,13 +194,15 @@
     <ClInclude Include="src\cmds\CommandTemplate.h" />
     <ClInclude Include="src\cmds\ResetSnapCommand.h" />
     <ClInclude Include="src\cmds\SetMoveSnapCommand.h" />
+    <ClInclude Include="src\cmds\SetRotationSnapCommand.h" />
     <ClInclude Include="src\cmds\SwitchToolCommand.h" />
     <ClInclude Include="src\cmds\ToggleHitboxesCommand.h" />
+    <ClInclude Include="src\cmds\ToggleMoveSnapCommand.h" />
+    <ClInclude Include="src\cmds\ToggleRotationSnapCommand.h" />
     <ClInclude Include="src\physics\CylinderCollider.h" />
     <ClInclude Include="src\renderer\Buffer.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\cmds\CreateObjectCommand.h" />
-    <ClInclude Include="src\cmds\DebugCommand.h" />
     <ClInclude Include="src\cmds\RedoCommand.h" />
     <ClInclude Include="src\cmds\UndoCommand.h" />
     <ClInclude Include="src\physics\BoxCollider.h" />

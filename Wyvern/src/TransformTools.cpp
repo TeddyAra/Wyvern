@@ -43,6 +43,14 @@ TransformTools::~TransformTools() {
 
 }
 
+void TransformTools::toggleMoveSnap(bool value) {
+	moveSnapToggle = value;
+}
+
+void TransformTools::toggleRotationSnap(bool value) {
+	rotationSnapToggle = value;
+}
+
 void TransformTools::setMoveSnap(float snap) { 
 	moveSnap = snap;
 }
@@ -52,11 +60,11 @@ void TransformTools::setRotationSnap(float snap) {
 }
 
 float TransformTools::getMoveSnap() {
-	return moveSnap;
+	return moveSnapToggle ? moveSnap : 0;
 }
 
 float TransformTools::getRotationSnap() {
-	return rotationSnap;
+	return rotationSnapToggle ? rotationSnap : 0;
 }
 
 void TransformTools::changeTool(Tool tool) {
@@ -183,7 +191,7 @@ void TransformTools::checkTool() {
 				float translation = glm::dot(planeDirection, info.hitPoint - planeOrigin);
 
 				// Snapping
-				if (moveSnap != 0.0f) {
+				if (moveSnap != 0.0f && moveSnapToggle) {
 					float remainder = fmod(translation, moveSnap);
 					if (remainder < moveSnap / 2) {
 						translation -= remainder;
@@ -211,6 +219,16 @@ void TransformTools::checkTool() {
 				float sign = glm::dot(cross, planeNormal) < 0 ? -1.0f : 1.0f;
 
 				float angle = glm::degrees(acos(dot)) * sign;
+
+				// Snapping
+				if (rotationSnap != 0.0f && rotationSnapToggle) {
+					float remainder = fmod(angle, rotationSnap);
+					if (remainder < rotationSnap / 2) {
+						angle -= remainder;
+					} else {
+						angle += -remainder + moveSnap;
+					}
+				}
 
 				world->getSelected()[0]->setRotation(originalRotation);
 				world->getSelected()[0]->rotateAroundAxis(planeNormal, angle);

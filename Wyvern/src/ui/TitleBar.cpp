@@ -58,6 +58,9 @@ void TitleBar::draw() {
 		}
 	}
 
+	ImGui::SetCursorPos(ImVec2(position, padding));
+	ImGui::Text(std::string("FPS: " + std::to_string(ImGui::GetIO().Framerate)).c_str());
+
 	// End of bar
 	ImGui::PopFont();
 	ImGui::End();

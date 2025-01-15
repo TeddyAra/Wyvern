@@ -21,6 +21,7 @@ public:
 		viewportInstance = this;
 		glfwSetFramebufferSizeCallback(window, sizeCallback);
 	}
+
 	void draw() override;
 	void drawBigButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override {};
 	void drawSmallButton(std::vector<std::shared_ptr<UIWidget>> widgets, int index) override {};

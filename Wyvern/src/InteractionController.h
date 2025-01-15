@@ -17,13 +17,13 @@ public:
 
 	std::shared_ptr<Camera> getCamera();
 
+	void toggleMoveSnap(bool value);
+	void toggleRotationSnap(bool value);
 	void setMoveSnap(float snap);
 	void setRotationSnap(float snap);
 	float getMoveSnap();
 	float getRotationSnap();
 
-	float getDebug();
-	void setDebug(float debug);
 	void addObject(std::shared_ptr<Transform> object);
 
 	void changeTool(TransformTools::Tool tool);

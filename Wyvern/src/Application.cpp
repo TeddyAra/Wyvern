@@ -4,13 +4,15 @@
 #include <iostream>
 #include <string>
 
-#include "DebugCommand.h"
 #include "UndoCommand.h"
 #include "RedoCommand.h"
 #include "CreateObjectCommand.h"
 #include "SwitchToolCommand.h"
 #include "ToggleHitboxesCommand.h"
 #include "SetMoveSnapCommand.h"
+#include "SetRotationSnapCommand.h"
+#include "ToggleMoveSnapCommand.h"
+#include "ToggleRotationSnapCommand.h"
 #include "ResetSnapCommand.h"
 
 #include "TransformTools.h"
@@ -76,10 +78,10 @@ Application::Application() {
 	menu->addWidget(WidgetType::LargeButton, "Rotate",	u8"\uf021", std::make_shared<SwitchToolCommand>(controller, TransformTools::Tool::Rotate));
 
 	menu->newZone("Snapping");
-	menu->addWidget(WidgetType::Toggle, "Rotate", "", nullptr);
-	menu->addWidget(WidgetType::Toggle, "Move", "", nullptr);
+	menu->addWidget(WidgetType::Toggle, "Rotate", "", std::make_shared<ToggleRotationSnapCommand>(controller));
+	menu->addWidget(WidgetType::Toggle, "Move", "", std::make_shared<ToggleMoveSnapCommand>(controller));
 	menu->addWidget(WidgetType::Empty, "", "", nullptr);
-	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
+	menu->addWidget(WidgetType::InputFloat, "", "", std::make_shared<SetRotationSnapCommand>(controller));
 	menu->addWidget(WidgetType::InputFloat, "", "", std::make_shared<SetMoveSnapCommand>(controller));
 	menu->addWidget(WidgetType::SmallButton, "Reset", u8"\uf2f1", std::make_shared<ResetSnapCommand>(controller));
 
@@ -112,7 +114,7 @@ Application::Application() {
 		assetsPath + "back.png"
 	};
 
-	viewport->getRenderer()->addSkybox(faces, skyboxShaderPath);
+	renderer->addSkybox(faces, skyboxShaderPath);
 
 	// Add fonts
 	FontManager::addFont(assetsPath + "SourceSansPro", 16.0f);

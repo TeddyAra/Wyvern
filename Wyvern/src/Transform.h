@@ -60,7 +60,16 @@ public:
 	}
 
 	void snapRotation(float snapping) {
-
+		glm::vec3 euler = getEulerRotation();
+		for (int axis = 0; axis < 3; axis++) {
+			float remainder = fmod(euler[axis], snapping);
+			if (remainder < snapping / 2) {
+				euler[axis] -= remainder;
+			} else {
+				euler[axis] += -remainder + snapping;
+			}
+		}
+		setRotation(euler);
 	}
 
 	// Rotation

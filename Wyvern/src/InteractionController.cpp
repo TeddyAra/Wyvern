@@ -17,6 +17,14 @@ std::shared_ptr<Camera> InteractionController::getCamera() {
 	return world->getCamera();
 }
 
+void InteractionController::toggleMoveSnap(bool value) {
+	world->toggleMoveSnap(value);
+}
+
+void InteractionController::toggleRotationSnap(bool value) {
+	world->toggleRotationSnap(value);
+}
+
 void InteractionController::setMoveSnap(float snap) {
 	world->setMoveSnap(snap);
 }
@@ -31,14 +39,6 @@ float InteractionController::getMoveSnap() {
 
 float InteractionController::getRotationSnap() {
 	return world->getRotationSnap();
-}
-
-float InteractionController::getDebug() {
-	return world->getDebug();
-}
-
-void InteractionController::setDebug(float debug) {
-	world->setDebug(debug);
 }
 
 void InteractionController::addObject(std::shared_ptr<Transform> object) {

@@ -40,13 +40,12 @@ public:
 	std::vector<std::shared_ptr<Transform>>& getTransformTools();
 	void addObject(std::shared_ptr<Transform> object);
 
+	void toggleMoveSnap(bool value);
+	void toggleRotationSnap(bool value);
 	void setMoveSnap(float snap);
 	void setRotationSnap(float snap);
 	float getMoveSnap();
 	float getRotationSnap();
-
-	float getDebug();
-	void setDebug(float debug);
 
 	glm::vec3 getSunDirection();
 	float getSunStrength();
@@ -70,7 +69,8 @@ private:
 	float ambientStrength;
 
 	int defaultLayer;
-	float debug;
 
 	static World* worldInstance;
+	void createObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 size, glm::vec3 col);
+	void createWorld();
 };
