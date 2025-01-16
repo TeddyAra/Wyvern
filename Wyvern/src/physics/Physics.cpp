@@ -5,7 +5,8 @@
 #include "Debug.h"
 
 std::vector<std::shared_ptr<Transform>> Physics::objects;
-std::map<int, std::string> Physics::layers;
+//std::map<int, std::string> Physics::layers;
+std::map<std::string, int> Physics::layers;
 
 void Physics::addObject(std::shared_ptr<Transform> object) {
 	objects.push_back(object);
@@ -100,23 +101,38 @@ void Physics::addLayer(int ID, const std::string& layer) {
 		return;
 	}
 
-	if (layers.find(ID) != layers.end()) {
-		std::cout << "Layer with ID " << ID << " already exists" << std::endl;
-		return;
+	//if (layers.find(ID) != layers.end()) {
+	//	std::cout << "Layer with ID " << ID << " already exists" << std::endl;
+	//	return;
+	//}
+
+	std::map<std::string, int>::iterator it;
+	for (it = layers.begin(); it != layers.end(); it++) {
+		if (it->second == ID) {
+			std::cerr << "Layer with ID " << ID << " already exists" << std::endl;
+		}
 	}
 
-	layers[ID] = layer;
+	layers[layer] = ID;
 }
 
 int Physics::getLayerIndex(const std::string& layer) {
 	int ID = -1;
 
-	std::map<int, std::string>::iterator it;
-	for (it = layers.begin(); it != layers.end(); it++) {
-		if (it->second == layer) {
-			ID = it->first;
-			break;
-		}
+	// TODO: Swap id and layer name, then use layers.find(layer)
+
+	//std::map<int, std::string>::iterator it;
+	//for (it = layers.begin(); it != layers.end(); it++) {
+	//	if (it->second == layer) {
+	//		ID = it->first;
+	//		break;
+	//	}
+	//}
+
+	std::map<std::string, int>::iterator it;
+	it = layers.find(layer);
+	if (it != layers.end()) {
+		ID = it->second;
 	}
 
 	if (ID >= 0) {

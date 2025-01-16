@@ -32,11 +32,6 @@ const unsigned int mainIndices[] = {
 };
 
 const float mainVertices[] = {
-/*
-*	Vertex---------------  UV------------  Normal---------------
-*	x      y      z        u      v        x      y      z
-*/
-
 	// Front face
 	-0.5f, -0.5f, -0.5f,    0.0f,  0.0f,    0.0f,  0.0f, -1.0f,
 	 0.5f, -0.5f, -0.5f,    1.0f,  0.0f,    0.0f,  0.0f, -1.0f,
@@ -269,6 +264,7 @@ Renderer::~Renderer() {
 
 }
 
+// TODO: Change to addTextureConsecutive(), and add addTexture() with the index as a parameter
 void Renderer::addTexture(const char* name, const char* path) {
 	std::shared_ptr<Texture> texture = std::make_shared<Texture>(name, path, GL_TEXTURE0 + textures.size());
 	textures.push_back(texture);

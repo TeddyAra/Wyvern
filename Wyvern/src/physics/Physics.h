@@ -33,5 +33,6 @@ public:
 
 private:
 	static std::vector<std::shared_ptr<Transform>> objects;
-	static std::map<int, std::string> layers;
+	//static std::map<int, std::string> layers;
+	static std::map<std::string, int> layers;
 };

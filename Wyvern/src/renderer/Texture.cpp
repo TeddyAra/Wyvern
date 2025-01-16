@@ -36,3 +36,5 @@ GLuint Texture::getID() {
 std::string& Texture::getName() {
     return name;
 }
+
+// TODO: Add getIndex() or similar to get the index of the texture
