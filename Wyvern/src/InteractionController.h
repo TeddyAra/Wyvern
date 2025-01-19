@@ -17,6 +17,9 @@ public:
 
 	std::shared_ptr<Camera> getCamera();
 
+	void setColour(float colour, int index);
+	void applyColour();
+
 	void toggleMoveSnap(bool value);
 	void toggleRotationSnap(bool value);
 	void setMoveSnap(float snap);

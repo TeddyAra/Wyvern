@@ -32,6 +32,9 @@ public:
 	glm::vec2 getViewportPos();
 	glm::vec2 getViewportSize();
 
+	void applyColour();
+	void setColour(float colour, int index);
+
 	void changeTool(TransformTools::Tool tool);
 	TransformTools::Tool getTool();
 
@@ -68,6 +71,7 @@ private:
 	glm::vec3 ambientLight;
 	float ambientStrength;
 
+	glm::vec3 colour;
 	int defaultLayer;
 
 	static World* worldInstance;

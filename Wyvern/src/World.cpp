@@ -30,6 +30,7 @@ World::World(int defaultLayer)
 	base->setPosition(0.0f, baseHeight * -0.5f, 0.0f);
 	base->setGrid(true);
 	addObject(base);
+	base->setColour(0.9f, 0.9f, 0.9f);
 
 	createWorld();
 }
@@ -86,6 +87,16 @@ glm::vec2 World::getViewportSize() {
 	return viewportSize;
 }
 
+void World::applyColour() {
+	for (std::shared_ptr<Transform> object : selected) {
+		object->setColour(colour);
+	}
+}
+
+void World::setColour(float colour, int index) {
+	this->colour[index] = colour;
+}
+
 std::vector<std::shared_ptr<Transform>>& World::getObjects() {
 	return objects;
 }
@@ -100,6 +111,7 @@ std::vector<std::shared_ptr<Transform>>& World::getTransformTools() {
 
 void World::addObject(std::shared_ptr<Transform> object) {
 	object->addLayer(defaultLayer);
+	object->setColour(colour);
 	objects.push_back(object);
 	Physics::addObject(object);
 	Debug::addObject(object);
@@ -161,8 +173,8 @@ void World::createObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 size, glm::vec3
 	object->setPosition(pos);
 	object->setRotation(rot);
 	object->setScale(size);
-	object->setColour(col);
 	addObject(object);
+	object->setColour(col);
 }
 
 void World::createWorld() {    

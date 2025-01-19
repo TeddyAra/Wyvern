@@ -138,8 +138,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\behaviours\CameraBehaviour.cpp" />
+    <ClCompile Include="src\cmds\ApplyColourCommand.cpp" />
     <ClCompile Include="src\cmds\CommandTemplate.cpp" />
     <ClCompile Include="src\cmds\ResetSnapCommand.cpp" />
+    <ClCompile Include="src\cmds\SetColourCommand.cpp" />
     <ClCompile Include="src\cmds\SetMoveSnapCommand.cpp" />
     <ClCompile Include="src\cmds\SetRotationSnapCommand.cpp" />
     <ClCompile Include="src\cmds\SwitchToolCommand.cpp" />
@@ -191,8 +193,10 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\behaviours\Behaviour.h" />
     <ClInclude Include="src\behaviours\CameraBehaviour.h" />
+    <ClInclude Include="src\cmds\ApplyColourCommand.h" />
     <ClInclude Include="src\cmds\CommandTemplate.h" />
     <ClInclude Include="src\cmds\ResetSnapCommand.h" />
+    <ClInclude Include="src\cmds\SetColourCommand.h" />
     <ClInclude Include="src\cmds\SetMoveSnapCommand.h" />
     <ClInclude Include="src\cmds\SetRotationSnapCommand.h" />
     <ClInclude Include="src\cmds\SwitchToolCommand.h" />

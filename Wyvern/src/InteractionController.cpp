@@ -17,6 +17,14 @@ std::shared_ptr<Camera> InteractionController::getCamera() {
 	return world->getCamera();
 }
 
+void InteractionController::setColour(float colour, int index) {
+	world->setColour(colour, index);
+}
+
+void InteractionController::applyColour() {
+	world->applyColour();
+}
+
 void InteractionController::toggleMoveSnap(bool value) {
 	world->toggleMoveSnap(value);
 }

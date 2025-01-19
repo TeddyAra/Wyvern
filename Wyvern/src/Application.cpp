@@ -14,6 +14,8 @@
 #include "ToggleMoveSnapCommand.h"
 #include "ToggleRotationSnapCommand.h"
 #include "ResetSnapCommand.h"
+#include "SetColourCommand.h"
+#include "ApplyColourCommand.h"
 
 #include "TransformTools.h"
 #include "InteractionController.h"
@@ -61,9 +63,9 @@ Application::Application() {
 
 	// Add UI
 	auto menu = window->addUI(UIType::Menu, "Menu", 150, 0, 0, 0);
-	auto properties = window->addUI(UIType::List, "Properties", 0, 300, 300, 0);
-	auto hierarchy = window->addUI(UIType::List, "Hierarchy", menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
-	auto viewport = window->addViewport("Viewport", menu->getHeightPtr(), hierarchy->getWidthPtr(), 0, 0, world, mainShaderPath, transformShaderPath);
+	//auto properties = window->addUI(UIType::List, "Properties", 0, 300, 300, 0);
+	//auto hierarchy = window->addUI(UIType::List, "Hierarchy", menu->getHeightPtr(), 300, properties->getHeightPtr(), 0);
+	auto viewport = window->addViewport("Viewport", menu->getHeightPtr(), 0 /*hierarchy->getWidthPtr()*/, 0, 0, world, mainShaderPath, transformShaderPath);
 
 	menu->newZone("Clipboard");
 	menu->addWidget(WidgetType::LargeButton, "Paste",		u8"\uf0ea", nullptr);
@@ -90,10 +92,10 @@ Application::Application() {
 	menu->addWidget(WidgetType::ShortText, "Red", "", nullptr);
 	menu->addWidget(WidgetType::ShortText, "Green", "", nullptr);
 	menu->addWidget(WidgetType::ShortText, "Blue", "", nullptr);
-	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
-	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
-	menu->addWidget(WidgetType::InputFloat, "", "", nullptr);
-	menu->addWidget(WidgetType::LargeButton, "Colour", u8"\uf1fc", nullptr);
+	menu->addWidget(WidgetType::InputFloat, "", "", std::make_shared<SetColourCommand>(controller, 0));
+	menu->addWidget(WidgetType::InputFloat, "", "", std::make_shared<SetColourCommand>(controller, 1));
+	menu->addWidget(WidgetType::InputFloat, "", "", std::make_shared<SetColourCommand>(controller, 2));
+	menu->addWidget(WidgetType::LargeButton, "Colour", u8"\uf1fc", std::make_shared<ApplyColourCommand>(controller));
 
 	menu->newZone("Test");
 	menu->addWidget(WidgetType::SmallButton, "Play", u8"\uf04b", nullptr);
